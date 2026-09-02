@@ -32,7 +32,13 @@ export default function Home() {
   return (
     <>
       <section className="hero">
-        <div className="hero-scene" aria-hidden />
+        <div className="hero-scene">
+          <img
+            src="/hero-production.jpg"
+            alt="Atelier industriel de production et de transformation du bois"
+          />
+          <div className="hero-scene-overlay" aria-hidden="true" />
+        </div>
         <div className="hero-content">
           <p className="hero-kicker">Combustibles pour particuliers et professionnels</p>
           <h1 className="hero-title">Une chaleur sur laquelle vous pouvez compter.</h1>
@@ -51,12 +57,25 @@ export default function Home() {
 
       <section className="section">
         <h2 className="section-title">Trouvez le combustible adapté à votre appareil</h2>
-        <div className="cat-tiles">
-          {CATEGORIES.map((c) => (
+        <div className="cat-tiles cat-tiles-primary">
+          {CATEGORIES.slice(0, 2).map((c) => (
             <Link key={c.id} to={`/catalogue/${c.id}`} className="cat-tile">
-              <c.icon size={28} strokeWidth={1.4} />
-              <strong>{c.name}</strong>
-              <span>{c.blurb}</span>
+              <img src={c.image} alt="" loading="lazy" />
+              <span className="cat-tile-overlay">
+                <strong>{c.name}</strong>
+                <span>Voir les produits <span aria-hidden="true">→</span></span>
+              </span>
+            </Link>
+          ))}
+        </div>
+        <div className="cat-tiles cat-tiles-secondary">
+          {CATEGORIES.slice(2).map((c) => (
+            <Link key={c.id} to={`/catalogue/${c.id}`} className="cat-tile">
+              <img src={c.image} alt="" loading="lazy" />
+              <span className="cat-tile-overlay">
+                <strong>{c.name}</strong>
+                <span>Voir les produits <span aria-hidden="true">→</span></span>
+              </span>
             </Link>
           ))}
         </div>

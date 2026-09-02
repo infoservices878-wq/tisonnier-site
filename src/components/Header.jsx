@@ -29,7 +29,7 @@ export default function Header() {
         <span className="topbar-item topbar-shipping">
           Livraison offerte dès {formatPrice(FREE_SHIPPING_THRESHOLD)} · sinon {formatPrice(SHIPPING_FEE)} · délai de 6 à 8 jours
         </span>
-        <span className="topbar-item topbar-legal">Tisonnier SAS · Vente de combustibles solides</span>
+        <span className="topbar-item topbar-legal">OSSAU BOIS SAS · Vente de combustibles solides</span>
         <div className="topbar-item topbar-country" aria-label="Pays de livraison sélectionné">
           <Globe size={14} strokeWidth={1.8} />
           <span>Livraison en</span>

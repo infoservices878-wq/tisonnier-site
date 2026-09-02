@@ -1,7 +1,7 @@
 /** Contenu légal de démonstration — à remplacer avant mise en production */
 
 export const COMPANY = {
-  name: "Tisonnier SAS",
+  name: "OSSAU BOIS SAS",
   legalForm: "Société par actions simplifiée",
   capital: "10 000 €",
   address: "12 rue des Combustibles",
@@ -11,7 +11,7 @@ export const COMPANY = {
   siret: "123 456 789 00012",
   tva: "FR12 123456789",
   manager: "Jean Dupont",
-  email: "contact@tisonnier.fr",
+  email: "contact@OSSAU BOIS.fr",
   phone: "+33 1 23 45 67 89",
   phoneHref: "tel:+33123456789",
   hours: "Lundi–vendredi, 08:00–16:00",
@@ -85,7 +85,7 @@ export const PRIVACY_SECTIONS = [
   },
   {
     title: "6. Destinataires",
-    html: `Personnel habilité de Tisonnier et prestataires techniques strictement
+    html: `Personnel habilité de OSSAU BOIS et prestataires techniques strictement
       nécessaires (hébergeur, transporteur). Aucune vente de données.`,
   },
   {
@@ -112,7 +112,7 @@ export const CGV_SECTIONS = [
   {
     title: "Article 2 — Produits et prix",
     html: `Les caractéristiques essentielles des produits figurent sur les fiches
-      catalogue. Les prix sont indiqués en euros TTC. Tisonnier se réserve
+      catalogue. Les prix sont indiqués en euros TTC. OSSAU BOIS se réserve
       le droit de modifier ses tarifs ; le prix applicable est celui affiché
       au moment de la validation de la commande.`,
   },
@@ -149,7 +149,7 @@ export const CGV_SECTIONS = [
   },
   {
     title: "Article 8 — Responsabilité",
-    html: `Tisonnier ne saurait être tenu responsable des dommages indirects.
+    html: `OSSAU BOIS ne saurait être tenu responsable des dommages indirects.
       L'usage des combustibles doit respecter les consignes des appareils
       de chauffage et la réglementation en vigueur.`,
   },

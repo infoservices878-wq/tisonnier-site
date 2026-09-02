@@ -1,11 +1,11 @@
-# Tisonnier — site e-commerce (React + Vite)
+# OSSAU BOIS — site e-commerce (React + Vite)
 
 Architecture modulaire prête pour une connexion **WooCommerce**.
 
 ## Structure
 
 ```
-tisonnier-site/
+OSSAU BOIS-site/
 ├── public/
 │   └── favicon.svg
 ├── src/

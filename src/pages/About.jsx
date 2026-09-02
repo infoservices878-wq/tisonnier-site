@@ -5,7 +5,7 @@ export default function About() {
     <section className="section">
       <h1 className="page-title">L&apos;entreprise</h1>
       <p className="page-lede">
-        Tisonnier est une structure de démonstration dédiée à la vente de combustibles solides
+        OSSAU BOIS est une structure de démonstration dédiée à la vente de combustibles solides
         avec une exigence de clarté sur les fiches produit et la logistique.
       </p>
       <div className="about-grid">

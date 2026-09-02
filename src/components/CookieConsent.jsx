@@ -4,18 +4,18 @@ export default function CookieConsent() {
   const [choice, setChoice] = useState(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("tisonnier-cookie");
+    const stored = localStorage.getItem("OSSAU BOIS-cookie");
     if (stored) setChoice(stored);
 
     const openSettings = () => setChoice(null);
-    window.addEventListener("tisonnier:manage-cookies", openSettings);
-    return () => window.removeEventListener("tisonnier:manage-cookies", openSettings);
+    window.addEventListener("OSSAU BOIS:manage-cookies", openSettings);
+    return () => window.removeEventListener("OSSAU BOIS:manage-cookies", openSettings);
   }, []);
 
   if (choice !== null) return null;
 
   const save = (value) => {
-    localStorage.setItem("tisonnier-cookie", value);
+    localStorage.setItem("OSSAU BOIS-cookie", value);
     setChoice(value);
   };
 

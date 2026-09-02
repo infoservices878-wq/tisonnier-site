@@ -13,7 +13,7 @@ const CONFIG = {
   },
   "/politique-de-confidentialite": {
     title: "Politique de confidentialité",
-    lede: "Comment Tisonnier traite les données personnelles collectées via le site (version démonstration).",
+    lede: "Comment OSSAU BOIS traite les données personnelles collectées via le site (version démonstration).",
     sections: PRIVACY_SECTIONS,
   },
   "/conditions-generales-de-vente": {

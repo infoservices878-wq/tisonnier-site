@@ -4,7 +4,7 @@ import { CATEGORIES } from "../data/categories";
 import { COMPANY } from "../data/legalContent";
 
 function openCookieSettings() {
-  window.dispatchEvent(new Event("tisonnier:manage-cookies"));
+  window.dispatchEvent(new Event("OSSAU BOIS:manage-cookies"));
 }
 
 export default function Footer() {
@@ -15,7 +15,7 @@ export default function Footer() {
           <div className="footer-brand">
             <Logo />
             <p className="footer-desc">
-              Tisonnier réunit combustibles solides, informations produit
+              OSSAU BOIS réunit combustibles solides, informations produit
               transparentes et logistique sur palette pour les particuliers
               et professionnels.
             </p>
@@ -92,7 +92,7 @@ export default function Footer() {
 
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
-          <span>© 2026 Tisonnier</span>
+          <span>© 2026 OSSAU BOIS</span>
           <span className="footer-bottom-sep">{COMPANY.name}</span>
           <span className="footer-bottom-sep">{COMPANY.rcs}</span>
         </div>
