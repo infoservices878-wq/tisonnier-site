@@ -1,41 +1,88 @@
-# Tisonnier — site de démonstration
+# Tisonnier — site e-commerce (React + Vite)
 
-Site e-commerce (React + Vite) pour une marque fictive de combustibles solides
-(granulés, briquettes, bois de chauffage, charbon, allume-feu), inspiré du
-fonctionnement d'un site comme PelletWerk mais avec identité, contenus et
-design originaux.
+Architecture modulaire prête pour une connexion **WooCommerce**.
 
-## Lancer le projet en local
+## Structure
 
-Prérequis : [Node.js](https://nodejs.org) 18 ou plus récent.
+```
+tisonnier-site/
+├── public/
+│   └── favicon.svg
+├── src/
+│   ├── assets/
+│   ├── components/          # UI réutilisable
+│   │   ├── CookieConsent.jsx
+│   │   ├── FaqSection.jsx
+│   │   ├── Footer.jsx
+│   │   ├── Header.jsx
+│   │   ├── Logo.jsx
+│   │   ├── ProductCard.jsx
+│   │   └── ScrollToTop.jsx
+│   ├── context/
+│   │   └── CartContext.jsx
+│   ├── data/                # Données locales (remplaçables par WC)
+│   │   ├── categories.js
+│   │   ├── faq.js
+│   │   ├── legalContent.js
+│   │   └── products.js
+│   ├── hooks/
+│   ├── lib/
+│   │   ├── format.js
+│   │   └── woocommerce.js   # Stub API WooCommerce
+│   ├── pages/
+│   │   ├── About.jsx
+│   │   ├── Cart.jsx
+│   │   ├── Catalogue.jsx
+│   │   ├── Contact.jsx
+│   │   ├── Delivery.jsx
+│   │   ├── FAQ.jsx
+│   │   ├── Home.jsx
+│   │   ├── LegalPage.jsx
+│   │   ├── NotFound.jsx
+│   │   └── ProductDetail.jsx
+│   ├── App.jsx              # Routes uniquement
+│   ├── index.css
+│   └── main.jsx
+├── .env.example
+├── package.json
+├── vite.config.js
+└── README.md
+```
+
+## Démarrage
 
 ```bash
 npm install
 npm run dev
 ```
 
-Le site est alors accessible sur http://localhost:5173
+## Routes
 
-## Build de production
+| URL | Page |
+|-----|------|
+| `/` | Accueil (+ FAQ) |
+| `/catalogue` | Catalogue |
+| `/catalogue/:categoryId` | Filtre catégorie |
+| `/produit/:productId` | Fiche produit |
+| `/panier` | Panier |
+| `/contact` | Contact |
+| `/entreprise` | À propos |
+| `/livraison` | Livraison / retrait |
+| `/faq` | FAQ |
+| `/mentions-legales` | Mentions légales |
+| `/politique-de-confidentialite` | Confidentialité |
+| `/conditions-generales-de-vente` | CGV |
+
+## WooCommerce (plus tard)
+
+1. Copier `.env.example` → `.env`
+2. Renseigner `VITE_WC_URL`, clé et secret
+3. Utiliser `src/lib/woocommerce.js` dans Catalogue / ProductDetail
+4. Remplacer progressivement `data/products.js` par l’API WC
+
+## Build
 
 ```bash
 npm run build
 npm run preview
 ```
-
-Les fichiers finaux sont générés dans le dossier `dist/`.
-
-## Structure
-
-```
-index.html          point d'entrée HTML
-src/main.jsx         montage React
-src/App.jsx           composant unique : toutes les pages, données produits, styles
-```
-
-## À faire avant une mise en ligne réelle
-
-- Remplacer les informations fictives (entreprise, adresse, téléphone, e-mail)
-- Brancher un vrai backend pour le panier, le paiement et l'envoi du formulaire de contact
-- Ajouter un vrai routing par URL (ex. react-router) si besoin de liens partageables par page
-- Remplacer les icônes de visuel produit par de vraies photos
