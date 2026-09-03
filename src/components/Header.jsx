@@ -26,7 +26,7 @@ export default function Header() {
             key: `category-${category.id}`,
             label: category.name,
             type: "Catégorie",
-            to: `/catalogue/${category.id}`,
+            to: `/catalogue?q=${encodeURIComponent(category.name)}`,
           })),
         ...PRODUCTS
           .filter((product) => product.name.toLowerCase().includes(normalizedSearch))
@@ -34,7 +34,7 @@ export default function Header() {
             key: `product-${product.id}`,
             label: product.name,
             type: "Produit",
-            to: `/produit/${product.id}`,
+            to: `/catalogue?q=${encodeURIComponent(product.name)}`,
           })),
       ].slice(0, 5)
     : [];
@@ -78,20 +78,36 @@ export default function Header() {
             onFocus={() => setShowSuggestions(true)}
             aria-label="Rechercher un produit"
           />
+          {search && (
+            <button
+              type="button"
+              className="search-clear"
+              onClick={() => {
+                setSearch("");
+                setShowSuggestions(false);
+              }}
+              aria-label="Effacer la recherche"
+            >
+              <X size={15} strokeWidth={2} />
+            </button>
+          )}
           <button type="submit" className="search-submit">Rechercher</button>
           {showSuggestions && suggestions.length > 0 && (
             <div className="search-suggestions" role="listbox" aria-label="Suggestions de recherche">
               {suggestions.map((suggestion) => (
-                <Link
+                <button
                   key={suggestion.key}
-                  to={suggestion.to}
+                  type="button"
                   className="search-suggestion"
-                  onMouseDown={() => setShowSuggestions(false)}
-                  onClick={() => setSearch(suggestion.label)}
+                  onClick={() => {
+                    setSearch(suggestion.label);
+                    setShowSuggestions(false);
+                    navigate(suggestion.to);
+                  }}
                 >
                   <span className="search-suggestion-label">{suggestion.label}</span>
                   <span className="search-suggestion-type">{suggestion.type}</span>
-                </Link>
+                </button>
               ))}
             </div>
           )}

@@ -51,10 +51,12 @@
         .search-icon { margin-left: 12px; color: var(--ink-soft); flex-shrink: 0; }
         .search-bar input { flex: 1; border: none; background: transparent; padding: 10px 10px; color: var(--ink); }
         .search-bar input:focus { outline: none; }
+        .search-clear { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; padding: 5px; color: var(--ink-soft); }
+        .search-clear:hover { color: var(--ink); }
         .search-submit { background: var(--pine); color: var(--paper); padding: 10px 18px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
         .search-submit:hover { background: var(--pine-dark); }
         .search-suggestions { position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 45; background: var(--card); border: 1px solid var(--line); box-shadow: 0 8px 18px rgba(34,29,20,0.14); }
-        .search-suggestion { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; color: var(--ink); border-bottom: 1px solid var(--line); text-decoration: none; }
+        .search-suggestion { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; color: var(--ink); border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; font-family: inherit; }
         .search-suggestion:last-child { border-bottom: none; }
         .search-suggestion:hover { background: var(--paper); }
         .search-suggestion-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
@@ -370,6 +372,7 @@
           .nav-search-wrap { order: 0; flex: 1 1 auto; min-width: 0; }
           .nav-search-wrap .search-icon { margin-left: 8px; }
           .nav-search-wrap input { min-width: 0; padding: 8px 6px; font-size: 12px; }
+          .nav-search-wrap .search-clear { padding: 4px; }
           .nav-search-wrap .search-submit { padding: 8px 9px; font-size: 11px; }
           .nav-actions { margin-left: 0; flex: 0 0 auto; }
           .menu-toggle { padding: 7px; }
