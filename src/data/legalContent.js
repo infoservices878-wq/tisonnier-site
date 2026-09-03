@@ -71,9 +71,9 @@ export const PRIVACY_SECTIONS = [
   {
     title: "3. Finalités",
     html: `<ul>
-      <li>Répondre aux demandes de contact et de devis</li>
-      <li>Traiter les commandes et la relation client</li>
-      <li>Améliorer le site et la sécurité (logs techniques)</li>
+      <li> - Répondre aux demandes de contact et de devis</li>
+      <li> - Traiter les commandes et la relation client</li>
+      <li> - Améliorer le site et la sécurité (logs techniques)</li>
     </ul>`,
   },
   {

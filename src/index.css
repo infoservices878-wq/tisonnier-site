@@ -331,7 +331,7 @@
         .field input, .field textarea { border: 1px solid var(--line); background: var(--card); padding: 10px 12px; border-radius: 2px; color: var(--ink); }
         .field input:focus, .field textarea:focus { outline: 2px solid var(--ember); outline-offset: 1px; }
 
-        /* -------- Footer (style PelletWerk) -------- */
+        /* -------- Footer (style Ossaubois) -------- */
         .footer { background: #1a2a1a; color: #f6f0e2; margin-top: 48px; }
         .footer-top { border-bottom: 1px solid rgba(246, 240, 226, 0.12); }
         .footer-top-inner {

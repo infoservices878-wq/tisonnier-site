@@ -93,7 +93,7 @@ export default function Footer() {
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
           <span>© 2026 OSSAU BOIS</span>
-          <span className="footer-bottom-sep">{COMPANY.name}</span>
+          <span className="footer-bottom-sep">Tous droits réservés</span>
           <span className="footer-bottom-sep">{COMPANY.rcs}</span>
         </div>
       </div>
