@@ -552,9 +552,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .service-card-label { display: block; margin-top: 22px; color: var(--bronze); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; }
 .service-card h2 { font-size: 24px; margin: 7px 0 10px; }
 .service-card p { color: var(--ink-soft); font-size: 14px; max-width: 48ch; }
-.service-card-featured p, .service-card-featured li { color: rgba(246,240,226,.8); }
+.service-card-featured p { color: var(--paper); }
+.service-card.service-card-featured li { color: #fff; }
 .service-card ul { margin: 22px 0 0; }
-.service-card li { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 13px; }
+.service-card li { display: flex; align-items: flex-start; gap: 8px; padding: 9px 0; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 13px; line-height: 1.45; }
 .service-card-featured li { border-color: rgba(246,240,226,.18); }
 .service-card li svg { flex-shrink: 0; }
 .delivery-timeline { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--line); margin-bottom: 42px; }
