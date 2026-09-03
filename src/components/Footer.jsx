@@ -13,7 +13,7 @@ export default function Footer() {
       <div className="footer-top">
         <div className="footer-top-inner">
           <div className="footer-brand">
-            <Logo />
+            <Logo textOnly />
             <p className="footer-desc">
               OSSAU BOIS réunit combustibles solides, informations produit
               transparentes et logistique sur palette pour les particuliers

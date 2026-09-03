@@ -95,13 +95,46 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section fulfillment-section">
+        <div className="fulfillment-image">
+          <img src="/delivery-truck.jpg" alt="Camion Ossau Bois en livraison" loading="lazy" />
+        </div>
+        <div className="fulfillment-content">
+          <p className="fulfillment-kicker">Livraison ou retrait</p>
+          <h2 className="fulfillment-title">Votre combustible arrive dans les meilleures conditions</h2>
+          <p className="fulfillment-lede">
+            Nous organisons chaque commande pour que la réception soit aussi claire que le choix du produit.
+            À domicile ou à l&apos;entrepôt, vous connaissez les modalités avant de valider.
+          </p>
+          <div className="fulfillment-details">
+            <div>
+              <strong>Livraison sur palette</strong>
+              <span>Au bord de voie carrossable, avec hayon selon les conditions d&apos;accès.</span>
+            </div>
+            <div>
+              <strong>Retrait à Phalsbourg</strong>
+              <span>Sur rendez-vous confirmé, avec un véhicule adapté au poids de la palette.</span>
+            </div>
+          </div>
+          <Link to="/contact" className="btn btn-primary">Nous contacter</Link>
+        </div>
+      </section>
+
       <section className="section steps-section">
-        <h2 className="section-title">Commander en trois étapes</h2>
-        <div className="steps">
+        <div className="steps-section-inner">
+          <p className="steps-kicker">Commander simplement</p>
+          <div className="steps-intro">
+            <h2 className="section-title">Trois étapes claires pour préparer votre livraison</h2>
+            <p className="steps-lede">
+              Comparez les combustibles, choisissez le mode de réception qui vous convient,
+              puis recevez une confirmation précise avant le départ de votre commande.
+            </p>
+          </div>
+          <div className="steps">
           {[
-            { n: "1", title: "Choisir un produit", text: "Comparez le conditionnement, les spécifications et le prix." },
-            { n: "2", title: "Livraison ou retrait", text: "Faites-vous livrer la palette ou réservez un retrait avec paiement sur place." },
-            { n: "3", title: "Confirmation écrite", text: "Recevez par e-mail le récapitulatif et le créneau prévu." },
+            { n: "01", title: "Choisir le bon combustible", text: "Comparez le format, le conditionnement et les informations utiles à votre appareil." },
+            { n: "02", title: "Organiser la réception", text: "Sélectionnez la livraison sur palette ou un retrait sur rendez-vous à notre entrepôt." },
+            { n: "03", title: "Valider sereinement", text: "Recevez le récapitulatif de votre commande et les indications pratiques par écrit." },
           ].map((s) => (
             <div className="step" key={s.n}>
               <span className="step-n">{s.n}</span>
@@ -109,6 +142,7 @@ export default function Home() {
               <p className="step-text">{s.text}</p>
             </div>
           ))}
+          </div>
         </div>
       </section>
 

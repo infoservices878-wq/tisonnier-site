@@ -79,7 +79,7 @@ export default function Header() {
       </div>
 
       <nav className="category-nav" aria-label="Catalogue">
-        <NavLink to="/catalogue" className={({ isActive }) => "category-nav-link category-nav-primary" + (isActive ? " active" : "")}>
+          <NavLink end to="/catalogue" className={({ isActive }) => "category-nav-link category-nav-primary" + (isActive ? " active" : "") }>
           <span className="category-nav-swatch" />
           Catalogue
         </NavLink>

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ShoppingCart } from "lucide-react";
 import { CATEGORIES } from "../data/categories";
 import { formatPrice } from "../lib/format";
 import { useCart } from "../context/CartContext";
@@ -25,7 +26,8 @@ export default function ProductCard({ product }) {
         <span className="product-packaging">{product.packaging}</span>
         <div className="product-card-footer">
           <span className="product-price">{formatPrice(product.price)}</span>
-          <button type="button" className="btn btn-small" onClick={() => add(product.id)}>
+          <button type="button" className="btn add-cart-button" onClick={() => add(product.id)}>
+            <ShoppingCart size={16} strokeWidth={1.8} />
             Ajouter
           </button>
         </div>

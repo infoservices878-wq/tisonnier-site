@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Check, Minus, Plus, ShieldCheck, Truck, Warehouse } from "lucide-react";
+import { ArrowLeft, Check, Minus, Plus, ShieldCheck, ShoppingCart, Truck, Warehouse } from "lucide-react";
 import { getProductById } from "../data/products";
 import { CATEGORIES } from "../data/categories";
 import { formatPrice } from "../lib/format";
@@ -80,8 +80,8 @@ export default function ProductDetail() {
                 <span>{quantity}</span>
                 <button type="button" onClick={() => setQuantity((value) => value + 1)} aria-label="Augmenter la quantité"><Plus size={16} /></button>
               </div>
-              <button type="button" className="btn btn-primary product-add-button" onClick={addToCart}>
-                {added ? <><Check size={17} /> Ajouté au panier</> : "Ajouter au panier"}
+              <button type="button" className="btn add-cart-button product-add-button" onClick={addToCart}>
+                {added ? <><Check size={17} /> Ajouté au panier</> : <><ShoppingCart size={17} /> Ajouter au panier</>}
               </button>
             </div>
             {added && <Link to="/panier" className="product-cart-link">Voir mon panier →</Link>}
