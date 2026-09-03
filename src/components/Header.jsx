@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import Logo from "./Logo";
 import { CATEGORIES } from "../data/categories";
+import { PRODUCTS } from "../data/products";
 import { useCart } from "../context/CartContext";
 import { formatPrice } from "../lib/format";
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_FEE } from "../data/products";
@@ -13,11 +14,35 @@ export default function Header() {
   const { count } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
+
+  const normalizedSearch = search.trim().toLowerCase();
+  const suggestions = normalizedSearch
+    ? [
+        ...CATEGORIES
+          .filter((category) => category.name.toLowerCase().includes(normalizedSearch))
+          .map((category) => ({
+            key: `category-${category.id}`,
+            label: category.name,
+            type: "Catégorie",
+            to: `/catalogue/${category.id}`,
+          })),
+        ...PRODUCTS
+          .filter((product) => product.name.toLowerCase().includes(normalizedSearch))
+          .map((product) => ({
+            key: `product-${product.id}`,
+            label: product.name,
+            type: "Produit",
+            to: `/produit/${product.id}`,
+          })),
+      ].slice(0, 5)
+    : [];
 
   const submitSearch = (e) => {
     e.preventDefault();
     navigate(search ? `/catalogue?q=${encodeURIComponent(search)}` : "/catalogue");
+    setShowSuggestions(false);
     setMenuOpen(false);
   };
 
@@ -46,10 +71,30 @@ export default function Header() {
             type="text"
             placeholder="Rechercher un combustible ou un produit"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setShowSuggestions(true);
+            }}
+            onFocus={() => setShowSuggestions(true)}
             aria-label="Rechercher un produit"
           />
           <button type="submit" className="search-submit">Rechercher</button>
+          {showSuggestions && suggestions.length > 0 && (
+            <div className="search-suggestions" role="listbox" aria-label="Suggestions de recherche">
+              {suggestions.map((suggestion) => (
+                <Link
+                  key={suggestion.key}
+                  to={suggestion.to}
+                  className="search-suggestion"
+                  onMouseDown={() => setShowSuggestions(false)}
+                  onClick={() => setSearch(suggestion.label)}
+                >
+                  <span className="search-suggestion-label">{suggestion.label}</span>
+                  <span className="search-suggestion-type">{suggestion.type}</span>
+                </Link>
+              ))}
+            </div>
+          )}
         </form>
         <div className="nav-actions">
           <Link to="/contact" className="action-btn">
