@@ -37,7 +37,7 @@ function getAssistantReply(question) {
     return `OSSAU BOIS est identifiée comme une entreprise active : ${COMPANY.legalForm}, SIREN ${COMPANY.siren}, SIRET ${COMPANY.siret}, RCS Pau, siège à ${COMPANY.city}, capital de ${COMPANY.capital}. Vous pouvez consulter l’extrait INPI (${COMPANY.inpiExtractUrl}). Les documents du site ne remplacent pas les justificatifs officiels les plus récents.`;
   }
   if (hasKeyword(query, ["raison sociale", "adresse entreprise", "dirigeant", "immatriculation", "gérant", "gerant"])) {
-    return `Les informations publiques indiquent ${COMPANY.name}, ${COMPANY.legalForm}, siège : ${COMPANY.address}, ${COMPANY.city}, ${COMPANY.country}, ${COMPANY.rcs}. Les gérants indiqués sont ${COMPANY.manager}. Vous pouvez vérifier ces éléments sur Pappers : ${COMPANY.registryUrl}.`;
+    return `Les informations publiques indiquent ${COMPANY.name}, ${COMPANY.legalForm}, siège : ${COMPANY.address}, ${COMPANY.city}, ${COMPANY.country}, ${COMPANY.rcs}. Les gérants indiqués sont ${COMPANY.manager}. Vous pouvez vérifier ces éléments dans les registres officiels et consulter l’extrait INPI (${COMPANY.inpiExtractUrl}).`;
   }
   if (hasKeyword(query, ["authentifie", "certifie", "garantie entreprise", "comment vous faire confiance", "justificatif", "attestation"])) {
     return `Pour une vérification indépendante, consultez l’extrait INPI et les informations légales du site. Les fiches produit, la confirmation écrite et les coordonnées de contact vous permettent également de conserver une trace claire de l’échange. Pour les documents les plus récents, demandez confirmation à ${COMPANY.email}.`;
