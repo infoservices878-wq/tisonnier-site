@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import CookieConsent from "./components/CookieConsent";
+import VirtualAssistant from "./components/VirtualAssistant";
 import ScrollToTop from "./components/ScrollToTop";
 import Home from "./pages/Home";
 import Catalogue from "./pages/Catalogue";
@@ -13,6 +14,8 @@ import Delivery from "./pages/Delivery";
 import FAQ from "./pages/FAQ";
 import LegalPage from "./pages/LegalPage";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
+import Favorites from "./pages/Favorites";
 
 export default function App() {
   return (
@@ -26,6 +29,8 @@ export default function App() {
           <Route path="/catalogue/:categoryId" element={<Catalogue />} />
           <Route path="/produit/:productId" element={<ProductDetail />} />
           <Route path="/panier" element={<Cart />} />
+          <Route path="/connexion" element={<Login />} />
+          <Route path="/favoris" element={<Favorites />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/entreprise" element={<About />} />
           <Route path="/livraison" element={<Delivery />} />
@@ -37,6 +42,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <VirtualAssistant />
       <CookieConsent />
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function CookieConsent() {
   const [choice, setChoice] = useState(null);
@@ -23,7 +24,7 @@ export default function CookieConsent() {
     <div className="cookie-banner" role="dialog" aria-label="Consentement cookies">
       <p>
         Nous utilisons des cookies pour le fonctionnement du site et, avec votre accord,
-        pour mesurer l&apos;audience. Vous pouvez accepter ou refuser les cookies non essentiels.
+        pour mesurer l&apos;audience. Vous pouvez accepter ou refuser les cookies non essentiels. <Link to="/politique-de-confidentialite">En savoir plus</Link>
       </p>
       <div className="cookie-actions">
         <button type="button" className="btn btn-ghost-light" onClick={() => save("rejected")}>

@@ -1,17 +1,19 @@
-/** Contenu légal de démonstration — à remplacer avant mise en production */
+/** Informations d’identification publiques vérifiées le 03/09/2026. */
 
 export const COMPANY = {
-  name: "OSSAU BOIS SAS",
-  legalForm: "Société par actions simplifiée",
+  name: "OSSAU BOIS",
+  legalForm: "SARL, société à responsabilité limitée",
   capital: "10 000 €",
-  address: "12 rue des Combustibles",
-  city: "57000 Metz",
+  siren: "101 289 247",
+  address: "6 chemin de l'Oasis",
+  city: "64260 Gère-Bélesten",
   country: "France",
-  rcs: "RCS Metz B 123 456 789",
-  siret: "123 456 789 00012",
-  tva: "FR12 123456789",
-  manager: "Jean Dupont",
-  email: "contact@OSSAU BOIS.fr",
+  rcs: "101 289 247 R.C.S. Pau",
+  siret: "101 289 247 00013",
+  tva: "FR24101289247",
+  manager: "Marie Bourdieu et Ludovic Sanchette",
+  inpiExtractUrl: "https://data.inpi.fr/export/companies?format=pdf&ids=[%22101289247%22]",
+  email: "info@ossau-bois.com",
   phone: "+33 1 23 45 67 89",
   phoneHref: "tel:+33123456789",
   hours: "Lundi–vendredi, 08:00–16:00",
@@ -42,14 +44,15 @@ export const MENTIONS_SECTIONS = [
   },
   {
     title: "Hébergement",
-    html: `Le site est hébergé à titre de démonstration. Pour une mise en production,
-      les coordonnées de l'hébergeur devront être indiquées ici (raison sociale, adresse, téléphone).`,
+    html: `Les coordonnées de l'hébergeur et du responsable technique du site sont tenues à
+      disposition du client et peuvent être communiquées sur demande à l'adresse
+      <a href="mailto:${COMPANY.email}">${COMPANY.email}</a>.`,
   },
   {
     title: "Propriété intellectuelle",
     html: `L'ensemble des éléments du site (textes, visuels, structure, marques)
       est protégé. Toute reproduction non autorisée est interdite.
-      Les contenus produits pour cette démonstration sont fictifs.`,
+      Toute demande relative à l'utilisation d'un contenu doit être adressée à ${COMPANY.email}.`,
   },
 ];
 

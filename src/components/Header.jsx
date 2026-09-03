@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
-  Menu, X, ShoppingCart, Search, Globe, ChevronDown, MessageCircle, ClipboardList,
+  Menu, X, ShoppingCart, Search, Globe, ChevronDown, UserRound, Heart,
 } from "lucide-react";
 import Logo from "./Logo";
 import { CATEGORIES } from "../data/categories";
@@ -113,13 +113,13 @@ export default function Header() {
           )}
         </form>
         <div className="nav-actions">
-          <Link to="/contact" className="action-btn">
-            <MessageCircle size={20} strokeWidth={1.6} />
-            <span>Contact</span>
+          <Link to="/connexion" className="action-btn">
+            <UserRound size={20} strokeWidth={1.6} />
+            <span>Connexion</span>
           </Link>
-          <Link to="/livraison" className="action-btn">
-            <ClipboardList size={20} strokeWidth={1.6} />
-            <span>Livraison</span>
+          <Link to="/favoris" className="action-btn">
+            <Heart size={20} strokeWidth={1.6} />
+            <span>Favoris</span>
           </Link>
           <Link to="/panier" className="action-btn cart-btn" aria-label="Voir le panier">
             <span className="action-btn-icon-wrap">
@@ -173,6 +173,8 @@ export default function Header() {
           <Link to="/entreprise" className="nav-drawer-link" onClick={close}>Entreprise</Link>
           <Link to="/faq" className="nav-drawer-link" onClick={close}>FAQ</Link>
           <Link to="/contact" className="nav-drawer-link" onClick={close}>Contact</Link>
+          <Link to="/connexion" className="nav-drawer-link" onClick={close}>Connexion</Link>
+          <Link to="/favoris" className="nav-drawer-link" onClick={close}>Favoris</Link>
           <Link to="/panier" className="nav-drawer-link" onClick={close}>Panier ({count})</Link>
         </div>
       )}

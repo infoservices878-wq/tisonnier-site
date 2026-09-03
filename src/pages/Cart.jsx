@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Plus, Minus, Trash2 } from "lucide-react";
+import { ArrowRight, ShieldCheck, Truck } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { formatPrice } from "../lib/format";
 
@@ -20,7 +21,7 @@ export default function Cart() {
 
   return (
     <section className="section">
-      <h1 className="page-title">Panier ({count})</h1>
+      <div className="cart-heading"><div><span className="section-kicker">VOTRE SÉLECTION</span><h1 className="page-title">Panier ({count})</h1><p>Vérifiez vos références et choisissez ensuite le mode de réception adapté.</p></div><ShieldCheck size={42} strokeWidth={1.2} /></div>
       <div className="cart-layout">
         <div className="cart-lines">
           {lines.map(({ product, qty, lineTotal }) => (
@@ -58,6 +59,7 @@ export default function Cart() {
           <button type="button" className="btn btn-primary btn-block" disabled>
             Commander (démo)
           </button>
+          <div className="cart-summary-note"><Truck size={17} /><span>Livraison offerte dès {formatPrice(FREE_SHIPPING_THRESHOLD)}</span></div>
           <p className="summary-hint">Paiement réel à brancher via WooCommerce.</p>
         </aside>
       </div>

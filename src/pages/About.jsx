@@ -1,13 +1,14 @@
-import { Award, Package, TreePine } from "lucide-react";
+import { Award, ArrowRight, Check, Package, TreePine } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function About() {
   return (
     <section className="section">
-      <h1 className="page-title">L&apos;entreprise</h1>
-      <p className="page-lede">
-        OSSAU BOIS est une structure de démonstration dédiée à la vente de combustibles solides
-        avec une exigence de clarté sur les fiches produit et la logistique.
-      </p>
+      <div className="page-hero page-hero-dark">
+        <div><span className="section-kicker">NOTRE MANIÈRE DE FAIRE</span><h1 className="page-title">Un combustible fiable commence par une information claire.</h1><p>OSSAU BOIS sélectionne des combustibles solides et met les informations essentielles au même endroit, pour décider avec confiance.</p></div>
+        <TreePine size={58} strokeWidth={1.1} />
+      </div>
+      <div className="about-story"><div><span className="section-kicker">Une sélection lisible</span><h2>Du produit à la réception, chaque détail compte.</h2></div><p>Nous pensons le catalogue autour des usages réels : comprendre le combustible, vérifier ses caractéristiques, choisir le bon conditionnement et anticiper la réception. Cette méthode donne une place égale à la qualité du produit et à la simplicité de la commande.</p></div>
       <div className="about-grid">
         <div className="about-block">
           <Award size={22} strokeWidth={1.5} />
@@ -25,10 +26,12 @@ export default function About() {
           <p>Le conditionnement sur palette housse limite la manutention et protège les sacs pendant le transport.</p>
         </div>
       </div>
+      <div className="about-promise"><div><span className="section-kicker">Nos engagements</span><h2>Une relation commerciale sans zones grises</h2></div><ul><li><Check size={17} /> Des caractéristiques présentées sans détour</li><li><Check size={17} /> Des modalités de livraison annoncées avant validation</li><li><Check size={17} /> Une équipe joignable pour les questions pratiques</li></ul><Link to="/contact" className="btn btn-primary">Parler à l&apos;équipe <ArrowRight size={16} /></Link></div>
       <div className="callout">
         <p>
-          Cette page présente une entreprise fictive à but de démonstration : les informations
-          juridiques réelles restent à compléter avant toute mise en ligne effective.
+          Les informations d’identification d’OSSAU BOIS sont issues de données publiques et
+          doivent être maintenues à jour. Consultez les Mentions légales et les justificatifs
+          officiels avant toute relation commerciale importante.
         </p>
       </div>
     </section>
