@@ -7,11 +7,15 @@ import Logo from "./Logo";
 import { CATEGORIES } from "../data/categories";
 import { PRODUCTS } from "../data/products";
 import { useCart } from "../context/CartContext";
+import { useFavorites } from "../context/FavoritesContext";
+import { useAccount } from "../context/AccountContext";
 import { formatPrice } from "../lib/format";
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_FEE } from "../data/products";
 
 export default function Header() {
   const { count } = useCart();
+  const { favoriteCount } = useFavorites();
+  const { account } = useAccount();
   const [menuOpen, setMenuOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -115,10 +119,13 @@ export default function Header() {
         <div className="nav-actions">
           <Link to="/connexion" className="action-btn">
             <UserRound size={20} strokeWidth={1.6} />
-            <span>Connexion</span>
+            <span>{account ? account.name : "Connexion"}</span>
           </Link>
           <Link to="/favoris" className="action-btn">
-            <Heart size={20} strokeWidth={1.6} />
+            <span className="action-btn-icon-wrap">
+              <Heart size={20} strokeWidth={1.6} />
+              {favoriteCount > 0 && <span className="cart-count">{favoriteCount}</span>}
+            </span>
             <span>Favoris</span>
           </Link>
           <Link to="/panier" className="action-btn cart-btn" aria-label="Voir le panier">

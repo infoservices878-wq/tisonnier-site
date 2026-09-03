@@ -523,11 +523,21 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .account-aside-line { display: flex; gap: 8px; align-items: flex-start; margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(246,240,226,.2); color: rgba(246,240,226,.75); font-size: 12px; }
 .account-aside-line svg { color: var(--ember); flex-shrink: 0; }
 .account-aside-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 24px; color: var(--paper); font-size: 13px; text-decoration: underline; }
+.account-connected { display: flex; gap: 18px; align-items: flex-start; max-width: 760px; padding: 30px; background: var(--card); border: 1px solid var(--line); }
+.account-connected > svg { color: var(--ember); flex-shrink: 0; }
+.account-connected h2 { font-size: 23px; margin: 8px 0; }
+.account-connected p { color: var(--ink-soft); font-size: 13px; margin-bottom: 20px; }
+.account-connected > div > div { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.account-connected .account-text-button { margin: 0; }
+.account-form-success { margin: 0 0 14px; color: var(--pine); font-size: 13px; font-weight: 600; }
 .favorites-empty { display: flex; flex-direction: column; align-items: center; padding: 56px 24px; border: 1px solid var(--line); text-align: center; }
 .favorites-empty-icon { display: flex; align-items: center; justify-content: center; width: 62px; height: 62px; margin-bottom: 22px; background: rgba(184,69,31,.1); color: var(--ember); }
 .favorites-empty h2 { font-size: 27px; margin: 9px 0 8px; }
 .favorites-empty p { max-width: 46ch; color: var(--ink-soft); margin: 0 0 22px; }
 .favorites-empty .btn, .favorites-points { display: inline-flex; align-items: center; gap: 7px; }
+.favorites-results-heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 20px; }
+.favorites-results-heading h2 { font-size: 27px; margin-top: 7px; }
+.favorites-results-heading > svg { color: var(--ember); }
 .favorites-points { display: grid; grid-template-columns: 1fr; gap: 1px; margin-top: 24px; background: var(--line); }
 .favorites-points > div { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; padding: 18px; background: var(--card); }
 .favorites-points svg { grid-row: span 2; color: var(--ember); }
@@ -636,6 +646,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   color: var(--bronze);
 }
 .product-card-icon { display: flex; }
+.product-card-image-link { position: absolute; inset: 0; display: block; }
+.favorite-button { position: absolute; z-index: 3; top: 12px; right: 12px; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 1px solid rgba(246,240,226,.7); border-radius: 50%; background: rgba(34,29,20,.35); color: var(--paper); }
+.favorite-button:hover, .favorite-button.is-favorite { background: var(--ember); border-color: var(--ember); color: var(--paper); }
+.favorite-button-detail { position: static; flex-shrink: 0; width: 42px; height: 42px; background: var(--card); border-color: var(--line); color: var(--ember); }
+.product-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 
 .cart-layout {
   display: grid; gap: 28px;

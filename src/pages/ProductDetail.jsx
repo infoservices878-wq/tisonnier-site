@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Check, Minus, Plus, ShieldCheck, ShoppingCart, Truck, Warehouse } from "lucide-react";
+import { ArrowLeft, Check, Heart, Minus, Plus, ShieldCheck, ShoppingCart, Truck, Warehouse } from "lucide-react";
 import { getProductById } from "../data/products";
 import { CATEGORIES } from "../data/categories";
 import { formatPrice } from "../lib/format";
 import { useCart } from "../context/CartContext";
+import { useFavorites } from "../context/FavoritesContext";
 
 export default function ProductDetail() {
   const { productId } = useParams();
   const product = getProductById(productId);
   const { add, FREE_SHIPPING_THRESHOLD, SHIPPING_FEE } = useCart();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
@@ -56,7 +58,17 @@ export default function ProductDetail() {
 
         <div className="product-detail-info">
           <span className="product-tag">{cat?.name}</span>
-          <h1 className="product-detail-title">{product.name}</h1>
+          <div className="product-title-row">
+            <h1 className="product-detail-title">{product.name}</h1>
+            <button
+              type="button"
+              className={`favorite-button favorite-button-detail${isFavorite(product.id) ? " is-favorite" : ""}`}
+              onClick={() => toggleFavorite(product.id)}
+              aria-label={isFavorite(product.id) ? "Retirer des favoris" : "Ajouter aux favoris"}
+            >
+              <Heart size={19} fill={isFavorite(product.id) ? "currentColor" : "none"} />
+            </button>
+          </div>
           <p className="product-detail-reference">Référence : {product.reference || product.id}{product.brand && ` · Marque : ${product.brand}`}</p>
           <p className="product-detail-description">{product.description}</p>
           <div className="product-highlights">

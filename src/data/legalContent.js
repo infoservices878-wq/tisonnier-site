@@ -11,7 +11,7 @@ export const COMPANY = {
   rcs: "101 289 247 R.C.S. Pau",
   siret: "101 289 247 00013",
   tva: "FR24101289247",
-  manager: "Marie Bourdieu et Ludovic Sanchette",
+  manager: "Marie Bourdieu",
   inpiExtractUrl: "https://data.inpi.fr/export/companies?format=pdf&ids=[%22101289247%22]",
   email: "info@ossau-bois.com",
   phone: "+33 1 23 45 67 89",
