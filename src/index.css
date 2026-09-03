@@ -358,8 +358,17 @@
         }
         .footer-bottom-sep { color: rgba(246, 240, 226, 0.45); }
         @media (max-width: 640px) {
+          .nav-main { flex-wrap: nowrap; gap: 8px; padding: 9px 12px; }
+          .nav-main .logo { width: 78px; height: 42px; flex: 0 0 78px; }
+          .nav-search-wrap { order: 0; flex: 1 1 auto; min-width: 0; }
+          .nav-search-wrap .search-icon { margin-left: 8px; }
+          .nav-search-wrap input { min-width: 0; padding: 8px 6px; font-size: 12px; }
+          .nav-search-wrap .search-submit { padding: 8px 9px; font-size: 11px; }
+          .nav-actions { margin-left: 0; flex: 0 0 auto; }
+          .menu-toggle { padding: 7px; }
           .footer-brand { flex-direction: column; align-items: flex-start; gap: 0; }
-          .footer-desc { margin-top: 14px; }
+          .footer .logo { height: 48px; }
+          .footer-desc { margin-top: 4px; }
           .footer-contact-box { text-align: left; width: 100%; }
           .footer-top-inner { padding: 28px 18px 24px; }
           .footer-main-inner { padding: 28px 18px 32px; }
