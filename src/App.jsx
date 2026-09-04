@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Catalogue from "./pages/Catalogue";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
+import Order from "./pages/Order";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
 import Delivery from "./pages/Delivery";
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/catalogue/:categoryId" element={<Catalogue />} />
           <Route path="/produit/:productId" element={<ProductDetail />} />
           <Route path="/panier" element={<Cart />} />
+          <Route path="/commande" element={<Order />} />
           <Route path="/connexion" element={<Login />} />
           <Route path="/favoris" element={<Favorites />} />
           <Route path="/contact" element={<Contact />} />

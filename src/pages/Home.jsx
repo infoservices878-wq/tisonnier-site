@@ -34,8 +34,10 @@ export default function Home() {
       <section className="hero">
         <div className="hero-scene">
           <img
-            src="/hero-production.jpg"
+            src="/optimized/hero-production.webp"
             alt="Atelier industriel de production et de transformation du bois"
+            fetchPriority="high"
+            decoding="async"
           />
           <div className="hero-scene-overlay" aria-hidden="true" />
         </div>
@@ -97,7 +99,7 @@ export default function Home() {
 
       <section className="section fulfillment-section">
         <div className="fulfillment-image">
-          <img src="/delivery-truck.jpg" alt="Camion Ossau Bois en livraison" loading="lazy" />
+          <img src="/optimized/delivery-truck.webp" alt="Camion Ossau Bois en livraison" loading="lazy" decoding="async" />
         </div>
         <div className="fulfillment-content">
           <p className="fulfillment-kicker">Livraison ou retrait</p>
