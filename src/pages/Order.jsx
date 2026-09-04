@@ -20,6 +20,36 @@ const initialForm = {
 };
 const FORM_STORAGE_KEY = "ossau-bois-order-form";
 const SUBMITTED_STORAGE_KEY = "ossau-bois-order-submitted";
+const WORDPRESS_API_URL = (import.meta.env.VITE_WORDPRESS_API_URL || "").replace(/\/+$/, "");
+const WORDPRESS_API_KEY = import.meta.env.VITE_WORDPRESS_API_KEY || "";
+
+function buildOrderPayload(form, lines, subtotal, shipping, total) {
+  return {
+    customer: {
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email,
+      phone: form.phone,
+      company: form.company || "",
+      address: form.address || "",
+      postalCode: form.postalCode || "",
+      city: form.city || "",
+      deliveryMode: form.delivery,
+      note: form.note || "",
+    },
+    items: lines.map(({ product, qty }) => ({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      qty,
+    })),
+    totals: {
+      subtotal,
+      shipping,
+      total,
+    },
+  };
+}
 
 function readStoredValue(key, fallback) {
   try {
@@ -37,6 +67,8 @@ export default function Order() {
   const { lines, subtotal, shipping, total, count, clear } = useCart();
   const [form, setForm] = useState(() => ({ ...initialForm, ...readStoredValue(FORM_STORAGE_KEY, {}) }));
   const [submitted, setSubmitted] = useState(() => readStoredValue(SUBMITTED_STORAGE_KEY, null));
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     if (!submitted) localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(form));
@@ -80,11 +112,51 @@ export default function Order() {
   }
 
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
-    localStorage.removeItem(FORM_STORAGE_KEY);
-    setSubmitted({ ...form, reference: createOrderReference() });
-    clear();
+    setSubmitError("");
+
+    setIsSubmitting(true);
+
+    try {
+      if (!WORDPRESS_API_URL || !WORDPRESS_API_KEY) {
+        throw new Error("La connexion WordPress n'est pas configurée.");
+      }
+
+      const response = await fetch(`${WORDPRESS_API_URL}/wp-json/ossau/v1/command`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${WORDPRESS_API_KEY}`,
+        },
+        body: JSON.stringify(buildOrderPayload(form, lines, subtotal, shipping, total)),
+      });
+
+      const text = await response.text();
+      let payload = {};
+      try {
+        payload = text ? JSON.parse(text) : {};
+      } catch {
+        payload = { message: text || "Erreur inconnue" };
+      }
+
+      if (!response.ok || payload.success === false) {
+        throw new Error(payload.message || `Erreur ${response.status}`);
+      }
+
+      localStorage.removeItem(FORM_STORAGE_KEY);
+      setSubmitted({
+        ...form,
+        reference: payload.reference || createOrderReference(),
+        orderId: payload.order_id || null,
+      });
+      clear();
+    } catch (error) {
+      setSubmitError(error.message || "Impossible d’envoyer la commande.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -120,7 +192,12 @@ export default function Order() {
             <div className="order-transfer-note"><CreditCard size={22} /><div><strong>Un paiement clair, sans saisie bancaire en ligne</strong><p>Après validation, nous vous envoyons les coordonnées bancaires et le montant exact à régler par e-mail.</p></div></div>
             <label className="order-checkbox"><input type="checkbox" checked={form.terms} onChange={(event) => update("terms", event.target.checked)} required /><span>J’ai lu et j’accepte les <Link to="/conditions-generales-de-vente">conditions générales de vente</Link>. *</span></label>
           </section>
-          <div className="order-form-actions"><Link to="/panier" className="order-back-link"><ArrowLeft size={16} /> Retour au panier</Link><button className="btn btn-primary" type="submit">Valider ma demande <ArrowRight size={17} /></button></div>
+          {submitError && (
+            <div className="order-form-error" role="alert">
+              {submitError}
+            </div>
+          )}
+          <div className="order-form-actions"><Link to="/panier" className="order-back-link"><ArrowLeft size={16} /> Retour au panier</Link><button className="btn btn-primary" type="submit" disabled={isSubmitting}>{isSubmitting ? "Envoi..." : "Valider ma demande"} <ArrowRight size={17} /></button></div>
         </div>
 
         <aside className="order-sidebar">

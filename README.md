@@ -73,12 +73,22 @@ npm run dev
 | `/politique-de-confidentialite` | Confidentialité |
 | `/conditions-generales-de-vente` | CGV |
 
-## WooCommerce (plus tard)
+## Connexion WordPress et commandes
 
-1. Copier `.env.example` → `.env`
-2. Renseigner `VITE_WC_URL`, clé et secret
-3. Utiliser `src/lib/woocommerce.js` dans Catalogue / ProductDetail
-4. Remplacer progressivement `data/products.js` par l’API WC
+Le formulaire de commande appelle directement l'endpoint WordPress :
+`https://boutique.ossau-bois.com/wp-json/ossau/v1/command`.
+
+Dans `.env`, configure :
+
+```env
+VITE_WORDPRESS_API_URL=https://boutique.ossau-bois.com
+VITE_WORDPRESS_API_KEY=le-token-attendu-par-wordpress
+```
+
+La clé est intégrée au bundle du navigateur au moment du build.
+Le serveur WordPress doit donc autoriser l'origine du frontend avec CORS.
+
+Le catalogue utilise encore les données locales de `src/data/products.js`.
 
 ## Build
 

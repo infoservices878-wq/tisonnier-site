@@ -515,6 +515,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .form-heading p { color: var(--ink-soft); font-size: 13px; margin-bottom: 24px; }
 .account-form .field { margin-bottom: 16px; }
 .account-form .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
+.form-error { margin: 0 0 14px; color: #a33b2f; font-size: 13px; }
 .account-text-button { display: block; margin: 15px auto 0; color: var(--ember-dark); font-size: 13px; text-decoration: underline; }
 .account-aside { padding: 32px; background: var(--pine-dark); color: var(--paper); }
 .account-aside > svg { color: var(--ember); }

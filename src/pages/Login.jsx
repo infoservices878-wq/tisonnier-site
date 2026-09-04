@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 import { useAccount } from "../context/AccountContext";
 
 export default function Login() {
-  const { account, login, register, logout } = useAccount();
+  const { account, authError, login, register, logout } = useAccount();
   const [mode, setMode] = useState("login");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
-    mode === "register" ? register(form) : login(form);
+    mode === "register" ? await register(form) : await login(form);
   };
 
   if (account) {
@@ -38,6 +38,7 @@ export default function Login() {
           {mode === "register" && <label className="field"><span>Nom complet</span><input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></label>}
           <label className="field"><span>Adresse e-mail</span><input type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} placeholder="vous@exemple.fr" required /></label>
           <label className="field"><span>Mot de passe</span><input type="password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} placeholder="Votre mot de passe" minLength={6} required /></label>
+          {authError && <p className="form-error" role="alert">{authError}</p>}
           <button type="submit" className="btn btn-primary btn-block">{mode === "login" ? "Se connecter" : "Créer mon compte"} <ArrowRight size={16} /></button>
           <button type="button" className="account-text-button" onClick={() => setMode(mode === "login" ? "register" : "login")}>{mode === "login" ? "Nouveau client ? Créer un compte" : "Déjà client ? Se connecter"}</button>
         </form>
