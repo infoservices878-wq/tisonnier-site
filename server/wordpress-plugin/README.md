@@ -15,6 +15,8 @@ La version 1.5.0 ajoute la route privee `/wp-json/ossau/v1/auth/orders`. Elle re
 
 La version 1.6.0 ajoute les coordonnees de virement dans l e-mail de confirmation client. Le message precise que le compte est au nom de AURORA RIGGI, titulaire du compte de reglement associe a l activite Ossau Bois.
 
+La version 1.7.0 corrige la limitation des tentatives d authentification : les requetes autorisees ne sont plus comptees, seuls les echecs de connexion ou de creation de compte declenchent la protection temporaire.
+
 Le plugin crée des commandes WooCommerce avec les coordonnées de facturation et de livraison renseignées. La référence retournée est `OB-année-30000`, puis `OB-année-30001`, etc. Elle est stockée dans la méta `_ossau_order_reference`.
 
 À chaque création de commande, deux e-mails HTML sont envoyés automatiquement :

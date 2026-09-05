@@ -19,6 +19,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const navigate = useNavigate();
 
   const normalizedSearch = search.trim().toLowerCase();
@@ -48,6 +49,7 @@ export default function Header() {
     navigate(search ? `/catalogue?q=${encodeURIComponent(search)}` : "/catalogue");
     setShowSuggestions(false);
     setMenuOpen(false);
+    setMobileSearchOpen(false);
   };
 
   const close = () => setMenuOpen(false);
@@ -117,6 +119,19 @@ export default function Header() {
           )}
         </form>
         <div className="nav-actions">
+          <button
+            type="button"
+            className="icon-btn mobile-search-toggle"
+            onClick={() => {
+              setMobileSearchOpen((open) => !open);
+              setMenuOpen(false);
+              setShowSuggestions(false);
+            }}
+            aria-label={mobileSearchOpen ? "Fermer la recherche" : "Ouvrir la recherche"}
+            title={mobileSearchOpen ? "Fermer la recherche" : "Ouvrir la recherche"}
+          >
+            {mobileSearchOpen ? <X size={21} /> : <Search size={20} strokeWidth={1.8} />}
+          </button>
           <Link to="/connexion" className="action-btn">
             <UserRound size={20} strokeWidth={1.6} />
             <span>{account ? account.name : "Connexion"}</span>
@@ -145,6 +160,42 @@ export default function Header() {
           </button>
         </div>
       </div>
+
+      {mobileSearchOpen && (
+        <div className="mobile-search-panel">
+          <form className="mobile-search-form" onSubmit={submitSearch}>
+            <Search size={17} strokeWidth={1.8} className="search-icon" />
+            <input
+              type="text"
+              placeholder="Rechercher un combustible ou un produit"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setShowSuggestions(true);
+              }}
+              onFocus={() => setShowSuggestions(true)}
+              aria-label="Rechercher un produit"
+              autoFocus
+            />
+            {search && (
+              <button type="button" className="search-clear" onClick={() => setSearch("")} aria-label="Effacer la recherche">
+                <X size={15} strokeWidth={2} />
+              </button>
+            )}
+            <button type="submit" className="search-submit">Rechercher</button>
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="search-suggestions" role="listbox" aria-label="Suggestions de recherche">
+                {suggestions.map((suggestion) => (
+                  <button key={suggestion.key} type="button" className="search-suggestion" onClick={() => { setSearch(suggestion.label); navigate(suggestion.to); setShowSuggestions(false); setMobileSearchOpen(false); }}>
+                    <span className="search-suggestion-label">{suggestion.label}</span>
+                    <span className="search-suggestion-type">{suggestion.type}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </form>
+        </div>
+      )}
 
       <nav className="category-nav" aria-label="Catalogue">
           <NavLink end to="/catalogue" className={({ isActive }) => "category-nav-link category-nav-primary" + (isActive ? " active" : "") }>

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Ossau Bois - Commandes API
  * Description: Crée les commandes WooCommerce envoyées depuis le formulaire Ossau Bois.
- * Version: 1.6.0
+ * Version: 1.7.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -76,7 +76,7 @@ function ossau_order_api_permission( WP_REST_Request $request ) {
 
 function ossau_auth_rate_limit_key() {
 	$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown';
-	return 'ossau_auth_attempts_' . md5( $ip );
+	return 'ossau_auth_attempts_v2_' . md5( $ip );
 }
 
 function ossau_public_auth_permission() {
@@ -87,8 +87,13 @@ function ossau_public_auth_permission() {
 		return new WP_Error( 'auth_rate_limited', 'Trop de tentatives. Veuillez reessayer dans quelques minutes.', array( 'status' => 429 ) );
 	}
 
-	set_transient( $key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
 	return true;
+}
+
+function ossau_record_auth_failure() {
+	$key = ossau_auth_rate_limit_key();
+	$attempts = (int) get_transient( $key );
+	set_transient( $key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
 }
 
 function ossau_auth_token_from_request( WP_REST_Request $request ) {
@@ -176,10 +181,12 @@ function ossau_register_customer( WP_REST_Request $request ) {
 	$password = (string) ( $data['password'] ?? '' );
 
 	if ( ! $name || ! is_email( $email ) || strlen( $password ) < 8 ) {
+		ossau_record_auth_failure();
 		return new WP_Error( 'invalid_registration', 'Renseignez votre nom, une adresse e-mail valide et un mot de passe de 8 caracteres minimum.', array( 'status' => 422 ) );
 	}
 
 	if ( email_exists( $email ) ) {
+		ossau_record_auth_failure();
 		return new WP_Error( 'email_exists', 'Cette adresse e-mail est deja enregistree. Connectez-vous.', array( 'status' => 409 ) );
 	}
 
@@ -189,6 +196,7 @@ function ossau_register_customer( WP_REST_Request $request ) {
 		: wp_create_user( $username, $password, $email );
 
 	if ( is_wp_error( $user_id ) ) {
+		ossau_record_auth_failure();
 		return new WP_Error( 'registration_failed', $user_id->get_error_message(), array( 'status' => 422 ) );
 	}
 
@@ -213,6 +221,7 @@ function ossau_login_customer( WP_REST_Request $request ) {
 	$authenticated_user = $user ? wp_authenticate( $user->user_login, $password ) : new WP_Error( 'invalid_login' );
 
 	if ( is_wp_error( $authenticated_user ) ) {
+		ossau_record_auth_failure();
 		return new WP_Error( 'invalid_login', 'E-mail ou mot de passe incorrect.', array( 'status' => 401 ) );
 	}
 
