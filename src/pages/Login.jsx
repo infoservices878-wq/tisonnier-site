@@ -1,7 +1,23 @@
 import { useState } from "react";
-import { ArrowRight, CheckCircle2, Clock3, LockKeyhole, Package, RefreshCw, ShieldCheck, Truck, UserRound } from "lucide-react";
+import { ArrowRight, CheckCircle2, Clock3, Eye, EyeOff, LockKeyhole, Package, RefreshCw, ShieldCheck, Truck, UserRound } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAccount } from "../context/AccountContext";
+
+function PasswordField({ label, value, onChange, placeholder }) {
+  const [isVisible, setIsVisible] = useState(false);
+
+  return (
+    <label className="field">
+      <span>{label}</span>
+      <span className="password-field">
+        <input type={isVisible ? "text" : "password"} value={value} onChange={onChange} placeholder={placeholder} minLength={8} required autoComplete="current-password" />
+        <button type="button" className="password-toggle" onClick={() => setIsVisible((visible) => !visible)} aria-label={isVisible ? "Masquer le mot de passe" : "Afficher le mot de passe"} title={isVisible ? "Masquer le mot de passe" : "Afficher le mot de passe"}>
+          {isVisible ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      </span>
+    </label>
+  );
+}
 
 export default function Login() {
   const { account, authError, isAuthenticating, orders, isLoadingOrders, loadOrders, login, register, forgotPassword, logout } = useAccount();
@@ -57,7 +73,7 @@ export default function Login() {
           {resetSent && <p className="account-form-success" role="status">Si un compte correspond à cette adresse, un e-mail de réinitialisation vient d’être envoyé.</p>}
           {mode === "register" && <label className="field"><span>Nom complet</span><input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></label>}
           <label className="field"><span>Adresse e-mail</span><input type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} placeholder="vous@exemple.fr" required /></label>
-          {mode !== "forgot-password" && <label className="field"><span>Mot de passe</span><input type="password" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} placeholder="Votre mot de passe" minLength={8} required /></label>}
+          {mode !== "forgot-password" && <PasswordField label="Mot de passe" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} placeholder="Votre mot de passe" />}
           {authError && <p className="form-error" role="alert">{authError}</p>}
           <button type="submit" className="btn btn-primary btn-block" disabled={isAuthenticating}>{isAuthenticating ? "Validation..." : mode === "login" ? "Se connecter" : mode === "register" ? "Créer mon compte" : "Recevoir le lien"} <ArrowRight size={16} /></button>
           {mode === "login" && <button type="button" className="account-text-button" disabled={isAuthenticating} onClick={() => { setResetSent(false); setMode("forgot-password"); }}>Mot de passe oublié ?</button>}

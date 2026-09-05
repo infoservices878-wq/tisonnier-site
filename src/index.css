@@ -518,6 +518,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .form-heading h2 { font-size: 24px; margin: 8px 0 5px; }
 .form-heading p { color: var(--ink-soft); font-size: 13px; margin-bottom: 24px; }
 .account-form .field { margin-bottom: 16px; }
+.password-field { position: relative; display: block; }
+.password-field input { width: 100%; padding-right: 44px; }
+.password-toggle { position: absolute; top: 50%; right: 10px; display: inline-flex; align-items: center; justify-content: center; padding: 5px; color: var(--ink-soft); transform: translateY(-50%); }
+.password-toggle:hover, .password-toggle:focus-visible { color: var(--ember-dark); }
+.password-toggle:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
 .account-form .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
 .form-error { margin: 0 0 14px; color: #a33b2f; font-size: 13px; }
 .account-text-button { display: block; margin: 15px auto 0; color: var(--ember-dark); font-size: 13px; text-decoration: underline; }

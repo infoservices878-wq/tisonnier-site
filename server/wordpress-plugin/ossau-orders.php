@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Ossau Bois - Commandes API
  * Description: Crée les commandes WooCommerce envoyées depuis le formulaire Ossau Bois.
- * Version: 1.5.0
+ * Version: 1.6.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -430,14 +430,19 @@ function ossau_order_email( WC_Order $order, $reference, $recipient, $is_interna
 	$subject = $is_internal
 		? sprintf( '[Ossau Bois] Nouvelle commande %s', $reference )
 		: sprintf( '[Ossau Bois] Confirmation de votre commande %s', $reference );
+	$transfer_details = $is_internal ? '' : sprintf(
+		'<div style="margin-top:28px;padding:20px;background:#f7f4ee;border:1px solid #e6e1d8;border-left:4px solid #b8451f;"><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Informations pour votre virement</div><p style="margin:0 0 14px;font-size:14px;line-height:1.6;color:#24241f;">Pour régler cette commande, veuillez effectuer le virement sur le compte utilisé pour les encaissements Ossau Bois. Le titulaire bancaire affiché est <strong>AURORA RIGGI</strong> : il s agit du titulaire du compte de règlement associé à l activité Ossau Bois, même si le nom commercial indiqué sur le site est différent.</p><div style="padding-top:14px;border-top:1px solid #e6e1d8;font-size:14px;line-height:1.9;color:#24241f;"><strong>Titulaire du compte :</strong> AURORA RIGGI<br><strong>IBAN :</strong> FR76 1723 8000 0100 4593 7703 827<br><strong>BIC :</strong> SCSYFRP2<br><strong>RIB :</strong> 17238 00001 00459377038 27</div><p style="margin:14px 0 0;color:#6f6a60;font-size:12px;line-height:1.5;">Merci d indiquer la référence <strong>%s</strong> dans le libellé du virement. En cas de doute, contactez-nous avant d effectuer le règlement.</p></div>',
+		esc_html( $reference )
+	);
 
 	$message = sprintf(
-		'<!doctype html><html><body style="margin:0;padding:0;background:#f4f1ea;font-family:Arial,sans-serif;color:#24241f;"><div style="max-width:640px;margin:0 auto;padding:28px 16px;"><div style="background:#2e3b26;padding:28px 32px;color:#fff;"><div style="font-size:12px;letter-spacing:1.6px;color:#d4a84b;font-weight:700;">OSSAU BOIS</div><h1 style="font-size:25px;line-height:1.25;margin:12px 0 0;color:#fff;">%s</h1></div><div style="background:#fff;padding:30px 32px;"><p style="font-size:16px;line-height:1.6;margin:0 0 24px;">%s</p><div style="padding:16px;background:#f7f4ee;border-left:4px solid #b8451f;margin-bottom:24px;"><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;letter-spacing:1px;">Reference de commande</div><strong style="display:block;font-size:21px;margin-top:5px;color:#24241f;">%s</strong></div><table style="width:100%%;border-collapse:collapse;font-size:14px;"><thead><tr><th style="text-align:left;padding-bottom:9px;color:#6f6a60;font-size:12px;text-transform:uppercase;letter-spacing:.8px;">Articles</th><th style="text-align:right;padding-bottom:9px;color:#6f6a60;font-size:12px;text-transform:uppercase;letter-spacing:.8px;">Montant</th></tr></thead><tbody>%s</tbody><tfoot><tr><td style="padding-top:16px;font-weight:700;font-size:16px;">Total TTC</td><td style="padding-top:16px;text-align:right;font-weight:700;font-size:18px;">%s</td></tr></tfoot></table><div style="margin-top:28px;padding-top:20px;border-top:1px solid #e6e1d8;font-size:14px;line-height:1.6;"><strong>Mode de reception :</strong> %s<br><strong>Coordonnees client :</strong><br>%s</div></div><div style="padding:18px 32px;color:#6f6a60;font-size:12px;line-height:1.5;">OSSAU BOIS · info@ossau-bois.com<br>Conservez la reference %s dans le libelle de votre virement.</div></div></div></body></html>',
+		'<!doctype html><html><body style="margin:0;padding:0;background:#f4f1ea;font-family:Arial,sans-serif;color:#24241f;"><div style="max-width:640px;margin:0 auto;padding:28px 16px;"><div style="background:#2e3b26;padding:28px 32px;color:#fff;"><div style="font-size:12px;letter-spacing:1.6px;color:#d4a84b;font-weight:700;">OSSAU BOIS</div><h1 style="font-size:25px;line-height:1.25;margin:12px 0 0;color:#fff;">%s</h1></div><div style="background:#fff;padding:30px 32px;"><p style="font-size:16px;line-height:1.6;margin:0 0 24px;">%s</p><div style="padding:16px;background:#f7f4ee;border-left:4px solid #b8451f;margin-bottom:24px;"><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;letter-spacing:1px;">Reference de commande</div><strong style="display:block;font-size:21px;margin-top:5px;color:#24241f;">%s</strong></div><table style="width:100%%;border-collapse:collapse;font-size:14px;"><thead><tr><th style="text-align:left;padding-bottom:9px;color:#6f6a60;font-size:12px;text-transform:uppercase;letter-spacing:.8px;">Articles</th><th style="text-align:right;padding-bottom:9px;color:#6f6a60;font-size:12px;text-transform:uppercase;letter-spacing:.8px;">Montant</th></tr></thead><tbody>%s</tbody><tfoot><tr><td style="padding-top:16px;font-weight:700;font-size:16px;">Total TTC</td><td style="padding-top:16px;text-align:right;font-weight:700;font-size:18px;">%s</td></tr></tfoot></table>%s<div style="margin-top:28px;padding-top:20px;border-top:1px solid #e6e1d8;font-size:14px;line-height:1.6;"><strong>Mode de reception :</strong> %s<br><strong>Coordonnees client :</strong><br>%s</div></div><div style="padding:18px 32px;color:#6f6a60;font-size:12px;line-height:1.5;">OSSAU BOIS · info@ossau-bois.com<br>Conservez la reference %s dans le libelle de votre virement.</div></div></div></body></html>',
 		esc_html( $heading ),
 		$intro,
 		esc_html( $reference ),
 		$item_rows,
 		wp_kses_post( $order->get_formatted_order_total() ),
+		$transfer_details,
 		esc_html( $delivery_mode ),
 		$contact,
 		esc_html( $reference )

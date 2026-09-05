@@ -13,6 +13,8 @@ define( 'OSSAU_FRONTEND_URL', 'https://www.ossau-bois.com' );
 
 La version 1.5.0 ajoute la route privee `/wp-json/ossau/v1/auth/orders`. Elle renvoie uniquement les commandes associees a l adresse e-mail du compte connecte. Le dashboard React l utilise pour afficher le suivi de la derniere commande et l historique client. Les commandes existantes sont retrouvees par leur adresse de facturation.
 
+La version 1.6.0 ajoute les coordonnees de virement dans l e-mail de confirmation client. Le message precise que le compte est au nom de AURORA RIGGI, titulaire du compte de reglement associe a l activite Ossau Bois.
+
 Le plugin crée des commandes WooCommerce avec les coordonnées de facturation et de livraison renseignées. La référence retournée est `OB-année-30000`, puis `OB-année-30001`, etc. Elle est stockée dans la méta `_ossau_order_reference`.
 
 À chaque création de commande, deux e-mails HTML sont envoyés automatiquement :
