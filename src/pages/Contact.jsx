@@ -3,16 +3,46 @@ import { ArrowRight, Clock3, MapPin, Phone, Mail, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { COMPANY } from "../data/legalContent";
 
+const WORDPRESS_API_URL = (import.meta.env.VITE_WORDPRESS_API_URL || "").replace(/\/+$/, "");
+const WORDPRESS_API_KEY = import.meta.env.VITE_WORDPRESS_API_KEY || "";
+
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    const subject = `Demande de contact - ${form.name}`;
-    const body = `Nom : ${form.name}\nE-mail : ${form.email}\n\n${form.message}`;
-    window.location.href = `mailto:${COMPANY.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setSent(true);
+    setSubmitError("");
+    setIsSubmitting(true);
+
+    try {
+      if (!WORDPRESS_API_URL || !WORDPRESS_API_KEY) {
+        throw new Error("Le formulaire de contact n'est pas configuré.");
+      }
+
+      const response = await fetch(`${WORDPRESS_API_URL}/wp-json/ossau/v1/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${WORDPRESS_API_KEY}`,
+        },
+        body: JSON.stringify(form),
+      });
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok || payload.success === false) {
+        throw new Error(payload.message || "Votre message n'a pas pu être envoyé.");
+      }
+
+      setSent(true);
+    } catch (error) {
+      setSubmitError(error.message || "Votre message n'a pas pu être envoyé.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -27,7 +57,7 @@ export default function Contact() {
           {sent ? (
             <div className="empty-state">
               <Check size={28} strokeWidth={1.4} />
-              <p>Votre logiciel de messagerie a été ouvert avec votre demande préparée. Envoyez le message pour contacter notre équipe.</p>
+              <p>Votre message a bien été envoyé. Notre équipe vous répondra dans les meilleurs délais.</p>
             </div>
           ) : (
             <>
@@ -43,7 +73,8 @@ export default function Contact() {
                 <span>Message</span>
                 <textarea required rows={4} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
               </label>
-              <button className="btn btn-primary btn-block" type="submit">Envoyer le message <ArrowRight size={16} /></button>
+              {submitError && <div className="order-form-error" role="alert">{submitError}</div>}
+              <button className="btn btn-primary btn-block" type="submit" disabled={isSubmitting}>{isSubmitting ? "Envoi..." : "Envoyer le message"} <ArrowRight size={16} /></button>
             </>
           )}
         </form>

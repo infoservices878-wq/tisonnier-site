@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Ossau Bois - Commandes API
  * Description: Crée les commandes WooCommerce envoyées depuis le formulaire Ossau Bois.
- * Version: 1.1.0
+ * Version: 1.2.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,6 +11,12 @@ add_action( 'rest_api_init', function () {
 	register_rest_route( 'ossau/v1', '/command', array(
 		'methods'             => WP_REST_Server::CREATABLE,
 		'callback'            => 'ossau_create_order',
+		'permission_callback' => 'ossau_order_api_permission',
+	) );
+
+	register_rest_route( 'ossau/v1', '/contact', array(
+		'methods'             => WP_REST_Server::CREATABLE,
+		'callback'            => 'ossau_send_contact_message',
 		'permission_callback' => 'ossau_order_api_permission',
 	) );
 } );
@@ -46,6 +52,113 @@ function ossau_next_order_reference() {
 	);
 
 	return max( 30000, (int) $wpdb->get_var( 'SELECT LAST_INSERT_ID()' ) - 1 );
+}
+
+function ossau_order_email_headers() {
+	return array(
+		'Content-Type: text/html; charset=UTF-8',
+		'From: Ossau Bois <info@ossau-bois.com>',
+		'Reply-To: info@ossau-bois.com',
+	);
+}
+
+function ossau_send_contact_message( WP_REST_Request $request ) {
+	$data = $request->get_json_params();
+	$name = sanitize_text_field( $data['name'] ?? '' );
+	$email = sanitize_email( $data['email'] ?? '' );
+	$message = sanitize_textarea_field( $data['message'] ?? '' );
+
+	if ( ! $name || ! is_email( $email ) || ! $message ) {
+		return new WP_Error( 'invalid_contact_message', 'Veuillez renseigner votre nom, une adresse e-mail valide et votre message.', array( 'status' => 422 ) );
+	}
+
+	$recipient = defined( 'OSSAU_CONTACT_EMAIL' ) && is_email( OSSAU_CONTACT_EMAIL )
+		? OSSAU_CONTACT_EMAIL
+		: 'info@ossau-bois.com';
+	$subject = sprintf( '[Ossau Bois] Nouveau message de %s', $name );
+	$email_html = sprintf(
+		'<!doctype html><html><body style="margin:0;padding:0;background:#f4f1ea;font-family:Arial,sans-serif;color:#24241f;"><div style="max-width:640px;margin:0 auto;padding:28px 16px;"><div style="background:#2e3b26;padding:28px 32px;color:#fff;"><div style="font-size:12px;letter-spacing:1.6px;color:#d4a84b;font-weight:700;">OSSAU BOIS</div><h1 style="font-size:25px;line-height:1.25;margin:12px 0 0;color:#fff;">Nouveau message de contact</h1></div><div style="background:#fff;padding:30px 32px;"><p style="font-size:16px;line-height:1.6;margin:0 0 24px;">Un visiteur a envoyé un message depuis le formulaire du site.</p><div style="padding:16px;background:#f7f4ee;border-left:4px solid #b8451f;margin-bottom:24px;line-height:1.7;"><strong>Nom :</strong> %s<br><strong>E-mail :</strong> <a style="color:#2e3b26;" href="mailto:%s">%s</a></div><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Message</div><div style="padding:18px;background:#f9f8f5;border:1px solid #e6e1d8;white-space:pre-wrap;font-size:15px;line-height:1.6;">%s</div></div><div style="padding:18px 32px;color:#6f6a60;font-size:12px;line-height:1.5;">Repondez directement a cet e-mail pour contacter le client.</div></div></div></body></html>',
+		esc_html( $name ),
+		esc_attr( $email ),
+		esc_html( $email ),
+		esc_html( $message )
+	);
+	$headers = array(
+		'Content-Type: text/html; charset=UTF-8',
+		'From: Ossau Bois <info@ossau-bois.com>',
+		'Reply-To: ' . $email,
+	);
+
+	if ( ! wp_mail( $recipient, $subject, $email_html, $headers ) ) {
+		return new WP_Error( 'contact_email_failed', 'Le message n a pas pu etre envoye. Veuillez reessayer.', array( 'status' => 500 ) );
+	}
+
+	return new WP_REST_Response( array(
+		'success' => true,
+		'message' => 'Votre message a bien ete envoye.',
+	), 201 );
+}
+
+function ossau_order_email( WC_Order $order, $reference, $recipient, $is_internal = false ) {
+	if ( ! is_email( $recipient ) ) {
+		return false;
+	}
+
+	$customer_name = trim( $order->get_formatted_billing_full_name() ) ?: 'Client Ossau Bois';
+	$delivery_mode = 'pickup' === $order->get_meta( '_ossau_delivery_mode' ) ? 'Retrait a Phalsbourg' : 'Livraison a domicile';
+	$item_rows = '';
+
+	foreach ( $order->get_items( 'line_item' ) as $item ) {
+		$item_rows .= sprintf(
+			'<tr><td style="padding:12px 0;border-bottom:1px solid #e6e1d8;color:#24241f;">%s <span style="color:#6f6a60;">x %d</span></td><td style="padding:12px 0;border-bottom:1px solid #e6e1d8;text-align:right;color:#24241f;font-weight:700;">%s</td></tr>',
+			esc_html( $item->get_name() ),
+			(int) $item->get_quantity(),
+			wp_kses_post( $order->get_formatted_line_subtotal( $item ) )
+		);
+	}
+
+	$heading = $is_internal ? 'Nouvelle commande a preparer' : 'Votre commande est enregistree';
+	$intro = $is_internal
+		? sprintf( 'Une nouvelle commande vient d etre enregistree au nom de <strong>%s</strong>.', esc_html( $customer_name ) )
+		: sprintf( 'Bonjour %s,<br>Merci pour votre commande. Nous la verifierons et vous contacterons rapidement pour la suite.', esc_html( $customer_name ) );
+	$contact = sprintf(
+		'%s<br>%s<br>%s',
+		esc_html( $order->get_billing_email() ),
+		esc_html( $order->get_billing_phone() ),
+		nl2br( esc_html( $order->get_formatted_billing_address() ) )
+	);
+	$subject = $is_internal
+		? sprintf( '[Ossau Bois] Nouvelle commande %s', $reference )
+		: sprintf( '[Ossau Bois] Confirmation de votre commande %s', $reference );
+
+	$message = sprintf(
+		'<!doctype html><html><body style="margin:0;padding:0;background:#f4f1ea;font-family:Arial,sans-serif;color:#24241f;"><div style="max-width:640px;margin:0 auto;padding:28px 16px;"><div style="background:#2e3b26;padding:28px 32px;color:#fff;"><div style="font-size:12px;letter-spacing:1.6px;color:#d4a84b;font-weight:700;">OSSAU BOIS</div><h1 style="font-size:25px;line-height:1.25;margin:12px 0 0;color:#fff;">%s</h1></div><div style="background:#fff;padding:30px 32px;"><p style="font-size:16px;line-height:1.6;margin:0 0 24px;">%s</p><div style="padding:16px;background:#f7f4ee;border-left:4px solid #b8451f;margin-bottom:24px;"><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;letter-spacing:1px;">Reference de commande</div><strong style="display:block;font-size:21px;margin-top:5px;color:#24241f;">%s</strong></div><table style="width:100%%;border-collapse:collapse;font-size:14px;"><thead><tr><th style="text-align:left;padding-bottom:9px;color:#6f6a60;font-size:12px;text-transform:uppercase;letter-spacing:.8px;">Articles</th><th style="text-align:right;padding-bottom:9px;color:#6f6a60;font-size:12px;text-transform:uppercase;letter-spacing:.8px;">Montant</th></tr></thead><tbody>%s</tbody><tfoot><tr><td style="padding-top:16px;font-weight:700;font-size:16px;">Total TTC</td><td style="padding-top:16px;text-align:right;font-weight:700;font-size:18px;">%s</td></tr></tfoot></table><div style="margin-top:28px;padding-top:20px;border-top:1px solid #e6e1d8;font-size:14px;line-height:1.6;"><strong>Mode de reception :</strong> %s<br><strong>Coordonnees client :</strong><br>%s</div></div><div style="padding:18px 32px;color:#6f6a60;font-size:12px;line-height:1.5;">OSSAU BOIS · info@ossau-bois.com<br>Conservez la reference %s dans le libelle de votre virement.</div></div></div></body></html>',
+		esc_html( $heading ),
+		$intro,
+		esc_html( $reference ),
+		$item_rows,
+		wp_kses_post( $order->get_formatted_order_total() ),
+		esc_html( $delivery_mode ),
+		$contact,
+		esc_html( $reference )
+	);
+
+	return wp_mail( $recipient, $subject, $message, ossau_order_email_headers() );
+}
+
+function ossau_send_order_emails( WC_Order $order, $reference ) {
+	$admin_sent = (bool) $order->get_meta( '_ossau_admin_email_sent' );
+	$customer_sent = (bool) $order->get_meta( '_ossau_customer_email_sent' );
+
+	if ( ! $admin_sent && ossau_order_email( $order, $reference, 'info@ossau-bois.com', true ) ) {
+		$order->update_meta_data( '_ossau_admin_email_sent', gmdate( 'c' ) );
+	}
+
+	if ( ! $customer_sent && ossau_order_email( $order, $reference, $order->get_billing_email() ) ) {
+		$order->update_meta_data( '_ossau_customer_email_sent', gmdate( 'c' ) );
+	}
+
+	$order->save();
 }
 
 function ossau_create_order( WP_REST_Request $request ) {
@@ -96,10 +209,13 @@ function ossau_create_order( WP_REST_Request $request ) {
 	$order->calculate_totals();
 	$order->update_status( 'pending' );
 	$order->save();
+	ossau_send_order_emails( $order, $reference );
 
 	return new WP_REST_Response( array(
 		'success'  => true,
 		'order_id' => $order->get_id(),
 		'reference' => $reference,
+		'admin_email_sent' => (bool) $order->get_meta( '_ossau_admin_email_sent' ),
+		'customer_email_sent' => (bool) $order->get_meta( '_ossau_customer_email_sent' ),
 	), 201 );
 }
