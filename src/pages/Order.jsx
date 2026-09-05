@@ -20,11 +20,26 @@ const initialForm = {
 };
 const FORM_STORAGE_KEY = "ossau-bois-order-form";
 const SUBMITTED_STORAGE_KEY = "ossau-bois-order-submitted";
+const ORDER_REFERENCE_COUNTER_KEY = "ossau-bois-next-order-reference";
+const ORDER_REFERENCE_START = 30000;
 const WORDPRESS_API_URL = (import.meta.env.VITE_WORDPRESS_API_URL || "").replace(/\/+$/, "");
 const WORDPRESS_API_KEY = import.meta.env.VITE_WORDPRESS_API_KEY || "";
 
-function buildOrderPayload(form, lines, subtotal, shipping, total) {
+function buildOrderPayload(form, lines, subtotal, shipping, total, reference) {
+  const billing = {
+    first_name: form.firstName,
+    last_name: form.lastName,
+    company: form.company || "",
+    address_1: form.delivery === "home" ? form.address : "",
+    postcode: form.delivery === "home" ? form.postalCode : "",
+    city: form.delivery === "home" ? form.city : "",
+    country: "FR",
+    email: form.email,
+    phone: form.phone,
+  };
+
   return {
+    reference,
     customer: {
       firstName: form.firstName,
       lastName: form.lastName,
@@ -37,12 +52,27 @@ function buildOrderPayload(form, lines, subtotal, shipping, total) {
       deliveryMode: form.delivery,
       note: form.note || "",
     },
+    billing,
+    shipping: {
+      first_name: form.firstName,
+      last_name: form.lastName,
+      company: form.company || "",
+      address_1: form.delivery === "home" ? form.address : "",
+      postcode: form.delivery === "home" ? form.postalCode : "",
+      city: form.delivery === "home" ? form.city : "",
+      country: "FR",
+    },
     items: lines.map(({ product, qty }) => ({
       id: product.id,
       name: product.name,
       price: product.price,
       qty,
     })),
+    meta_data: [
+      { key: "_ossau_order_reference", value: reference },
+      { key: "_ossau_delivery_mode", value: form.delivery },
+      { key: "_ossau_customer_note", value: form.note || "" },
+    ],
     totals: {
       subtotal,
       shipping,
@@ -60,7 +90,19 @@ function readStoredValue(key, fallback) {
 }
 
 function createOrderReference() {
-  return `OB-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
+  const storedValue = Number.parseInt(localStorage.getItem(ORDER_REFERENCE_COUNTER_KEY), 10);
+  const number = Number.isInteger(storedValue) && storedValue >= ORDER_REFERENCE_START
+    ? storedValue
+    : ORDER_REFERENCE_START;
+
+  return `OB-${new Date().getFullYear()}-${number}`;
+}
+
+function saveNextOrderReference(reference) {
+  const match = String(reference).match(/^OB-\d{4}-(\d+)$/);
+  const number = match ? Number.parseInt(match[1], 10) : ORDER_REFERENCE_START;
+
+  localStorage.setItem(ORDER_REFERENCE_COUNTER_KEY, String(number + 1));
 }
 
 export default function Order() {
@@ -123,6 +165,7 @@ export default function Order() {
         throw new Error("La connexion WordPress n'est pas configurée.");
       }
 
+      const reference = createOrderReference();
       const response = await fetch(`${WORDPRESS_API_URL}/wp-json/ossau/v1/command`, {
         method: "POST",
         headers: {
@@ -130,7 +173,7 @@ export default function Order() {
           Accept: "application/json",
           Authorization: `Bearer ${WORDPRESS_API_KEY}`,
         },
-        body: JSON.stringify(buildOrderPayload(form, lines, subtotal, shipping, total)),
+        body: JSON.stringify(buildOrderPayload(form, lines, subtotal, shipping, total, reference)),
       });
 
       const text = await response.text();
@@ -146,9 +189,11 @@ export default function Order() {
       }
 
       localStorage.removeItem(FORM_STORAGE_KEY);
+      const savedReference = payload.reference || reference;
+      saveNextOrderReference(savedReference);
       setSubmitted({
         ...form,
-        reference: payload.reference || createOrderReference(),
+        reference: savedReference,
         orderId: payload.order_id || null,
       });
       clear();

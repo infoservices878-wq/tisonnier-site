@@ -9,6 +9,9 @@ export default function Contact() {
 
   const submit = (e) => {
     e.preventDefault();
+    const subject = `Demande de contact - ${form.name}`;
+    const body = `Nom : ${form.name}\nE-mail : ${form.email}\n\n${form.message}`;
+    window.location.href = `mailto:${COMPANY.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSent(true);
   };
 
@@ -24,7 +27,7 @@ export default function Contact() {
           {sent ? (
             <div className="empty-state">
               <Check size={28} strokeWidth={1.4} />
-              <p>Merci, votre message a bien été pris en compte. Notre équipe reviendra vers vous aux horaires indiqués.</p>
+              <p>Votre logiciel de messagerie a été ouvert avec votre demande préparée. Envoyez le message pour contacter notre équipe.</p>
             </div>
           ) : (
             <>
