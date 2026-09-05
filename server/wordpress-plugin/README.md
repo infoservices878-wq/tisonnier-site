@@ -17,7 +17,9 @@ La version 1.6.0 ajoute les coordonnees de virement dans l e-mail de confirmatio
 
 La version 1.7.0 corrige la limitation des tentatives d authentification : les requetes autorisees ne sont plus comptees, seuls les echecs de connexion ou de creation de compte declenchent la protection temporaire.
 
-La version 1.8.0 active la verification d adresse e-mail. Apres une inscription, aucun jeton de connexion n est remis au client. Un lien valable 48 heures est envoye a l adresse saisie et pointe vers `/verification-email` sur le site. Le compte reste bloque tant que le lien n a pas ete valide. Les comptes existants restent utilisables.
+La version 1.9.0 active la verification d adresse e-mail. Apres une inscription, aucun compte WordPress et aucun jeton de connexion ne sont crees avant confirmation. Les donnees d attente sont conservees temporairement et le mot de passe y est chiffre. Un lien valable 48 heures est envoye a l adresse saisie et pointe vers `/verification-email` sur le site. Le compte WordPress est cree uniquement apres validation du lien. Les comptes existants restent utilisables.
+
+La version 1.8.1 corrige l encodage du lien de verification et journalise les echecs `wp_mail`. Si le client ne recoit pas le message alors que l inscription indique une reussite, configurez un plugin SMTP WordPress avec `info@ossau-bois.com` comme adresse d expedition, puis testez l envoi vers une adresse externe. Verifiez aussi les dossiers spam et les enregistrements DNS SPF, DKIM et DMARC du domaine `ossau-bois.com`.
 
 Le plugin crée des commandes WooCommerce avec les coordonnées de facturation et de livraison renseignées. La référence retournée est `OB-année-30000`, puis `OB-année-30001`, etc. Elle est stockée dans la méta `_ossau_order_reference`.
 

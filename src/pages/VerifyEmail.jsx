@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRight, CheckCircle2, MailCheck, ShieldCheck } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useAccount } from "../context/AccountContext";
@@ -7,15 +7,18 @@ export default function VerifyEmail() {
   const { authError, isAuthenticating, verifyEmail } = useAccount();
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState("pending");
+  const hasVerified = useRef(false);
   const key = searchParams.get("key") || "";
   const email = searchParams.get("email") || "";
 
   useEffect(() => {
+    if (hasVerified.current) return;
     if (!key || !email) {
       setStatus("invalid");
       return;
     }
 
+    hasVerified.current = true;
     verifyEmail({ key, email }).then((success) => setStatus(success ? "verified" : "invalid"));
   }, [key, email]);
 

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Ossau Bois - Commandes API
  * Description: Crée les commandes WooCommerce envoyées depuis le formulaire Ossau Bois.
- * Version: 1.8.0
+ * Version: 1.9.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -166,13 +166,27 @@ function ossau_auth_success_response( WP_User $user ) {
 	), 200 );
 }
 
-function ossau_email_verification_key( $user_id ) {
-	return 'ossau_email_verification_' . absint( $user_id );
+function ossau_pending_registration_key( $key ) {
+	return 'ossau_pending_registration_' . hash( 'sha256', $key );
 }
 
-function ossau_send_verification_email( WP_User $user ) {
-	$key = wp_generate_password( 64, false, false );
-	set_transient( ossau_email_verification_key( $user->ID ), hash( 'sha256', $key ), 2 * DAY_IN_SECONDS );
+function ossau_encrypt_pending_password( $password ) {
+	$iv = random_bytes( openssl_cipher_iv_length( 'aes-256-cbc' ) );
+	$encrypted = openssl_encrypt( $password, 'aes-256-cbc', wp_salt( 'auth' ), OPENSSL_RAW_DATA, $iv );
+	return base64_encode( $iv . $encrypted );
+}
+
+function ossau_decrypt_pending_password( $encrypted ) {
+	$encoded = base64_decode( $encrypted, true );
+	$iv_length = openssl_cipher_iv_length( 'aes-256-cbc' );
+	if ( false === $encoded || strlen( $encoded ) <= $iv_length ) {
+		return false;
+	}
+
+	return openssl_decrypt( substr( $encoded, $iv_length ), 'aes-256-cbc', wp_salt( 'auth' ), OPENSSL_RAW_DATA, substr( $encoded, 0, $iv_length ) );
+}
+
+function ossau_send_verification_email( $email, $name, $key ) {
 	$frontend_url = defined( 'OSSAU_FRONTEND_URL' ) ? untrailingslashit( OSSAU_FRONTEND_URL ) : '';
 
 	if ( ! $frontend_url ) {
@@ -180,16 +194,21 @@ function ossau_send_verification_email( WP_User $user ) {
 	}
 
 	$verify_url = add_query_arg(
-		array( 'key' => $key, 'email' => rawurlencode( $user->user_email ) ),
+		array( 'key' => $key, 'email' => $email ),
 		$frontend_url . '/verification-email'
 	);
 	$message = sprintf(
 		'<p>Bonjour %s,</p><p>Merci pour la creation de votre espace client Ossau Bois. Confirmez votre adresse e-mail pour activer votre compte et acceder a votre tableau de bord.</p><p><a href="%s">Confirmer mon adresse e-mail</a></p><p>Ce lien est valable pendant 48 heures. Si vous n etes pas a l origine de cette inscription, vous pouvez ignorer cet e-mail.</p>',
-		esc_html( ossau_customer_name( $user ) ),
+		esc_html( $name ),
 		esc_url( $verify_url )
 	);
 
-	return wp_mail( $user->user_email, 'Confirmez votre adresse e-mail - Ossau Bois', $message, ossau_order_email_headers() );
+	$sent = wp_mail( $email, 'Confirmez votre adresse e-mail - Ossau Bois', $message, ossau_order_email_headers() );
+	if ( ! $sent ) {
+		error_log( sprintf( '[Ossau Bois] Echec de l envoi de verification vers %s.', $email ) );
+	}
+
+	return $sent;
 }
 
 function ossau_customer_username( $email ) {
@@ -222,29 +241,15 @@ function ossau_register_customer( WP_REST_Request $request ) {
 		return new WP_Error( 'email_exists', 'Cette adresse e-mail est deja enregistree. Connectez-vous.', array( 'status' => 409 ) );
 	}
 
-	$username = ossau_customer_username( $email );
-	$user_id = function_exists( 'wc_create_new_customer' )
-		? wc_create_new_customer( $email, $username, $password )
-		: wp_create_user( $username, $password, $email );
+	$key = wp_generate_password( 64, false, false );
+	set_transient( ossau_pending_registration_key( $key ), array(
+		'name'     => $name,
+		'email'    => $email,
+		'password' => ossau_encrypt_pending_password( $password ),
+	), 2 * DAY_IN_SECONDS );
 
-	if ( is_wp_error( $user_id ) ) {
-		ossau_record_auth_failure();
-		return new WP_Error( 'registration_failed', $user_id->get_error_message(), array( 'status' => 422 ) );
-	}
-
-	$name_parts = preg_split( '/\s+/', $name, 2 );
-	wp_update_user( array(
-		'ID'           => $user_id,
-		'display_name' => $name,
-		'nickname'     => $name,
-		'first_name'   => $name_parts[0],
-		'last_name'    => $name_parts[1] ?? '',
-	) );
-	update_user_meta( $user_id, 'ossau_email_verified', '0' );
-	$user = get_user_by( 'id', $user_id );
-
-	if ( ! ossau_send_verification_email( $user ) ) {
-		wp_delete_user( $user_id );
+	if ( ! ossau_send_verification_email( $email, $name, $key ) ) {
+		delete_transient( ossau_pending_registration_key( $key ) );
 		return new WP_Error( 'verification_email_failed', 'Votre compte n a pas pu etre finalise. Veuillez reessayer.', array( 'status' => 500 ) );
 	}
 
@@ -277,15 +282,40 @@ function ossau_verify_email( WP_REST_Request $request ) {
 	$data = $request->get_json_params();
 	$key = sanitize_text_field( $data['key'] ?? '' );
 	$email = sanitize_email( $data['email'] ?? '' );
-	$user = $email ? get_user_by( 'email', $email ) : false;
-	$stored_key = $user ? get_transient( ossau_email_verification_key( $user->ID ) ) : false;
+	$registration = get_transient( ossau_pending_registration_key( $key ) );
 
-	if ( ! $user || ! $stored_key || ! hash_equals( $stored_key, hash( 'sha256', $key ) ) ) {
+	if ( ! is_array( $registration ) || empty( $registration['email'] ) || ! hash_equals( strtolower( $registration['email'] ), strtolower( $email ) ) ) {
 		return new WP_Error( 'invalid_verification_key', 'Ce lien de confirmation est invalide ou expire.', array( 'status' => 400 ) );
 	}
 
-	update_user_meta( $user->ID, 'ossau_email_verified', '1' );
-	delete_transient( ossau_email_verification_key( $user->ID ) );
+	if ( email_exists( $registration['email'] ) ) {
+		delete_transient( ossau_pending_registration_key( $key ) );
+		return new WP_Error( 'email_exists', 'Cette adresse e-mail est deja enregistree. Connectez-vous.', array( 'status' => 409 ) );
+	}
+
+	$password = ossau_decrypt_pending_password( $registration['password'] ?? '' );
+	if ( false === $password ) {
+		return new WP_Error( 'invalid_registration', 'Les donnees de creation du compte sont invalides. Veuillez recommencer.', array( 'status' => 400 ) );
+	}
+
+	$username = ossau_customer_username( $registration['email'] );
+	$user_id = function_exists( 'wc_create_new_customer' )
+		? wc_create_new_customer( $registration['email'], $username, $password )
+		: wp_create_user( $username, $password, $registration['email'] );
+	if ( is_wp_error( $user_id ) ) {
+		return new WP_Error( 'registration_failed', $user_id->get_error_message(), array( 'status' => 422 ) );
+	}
+
+	$name_parts = preg_split( '/\s+/', $registration['name'], 2 );
+	wp_update_user( array(
+		'ID'           => $user_id,
+		'display_name' => $registration['name'],
+		'nickname'     => $registration['name'],
+		'first_name'   => $name_parts[0],
+		'last_name'    => $name_parts[1] ?? '',
+	) );
+	update_user_meta( $user_id, 'ossau_email_verified', '1' );
+	delete_transient( ossau_pending_registration_key( $key ) );
 
 	return new WP_REST_Response( array(
 		'success' => true,
