@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Ossau Bois - Commandes API
  * Description: Crée les commandes WooCommerce envoyées depuis le formulaire Ossau Bois.
- * Version: 1.3.0
+ * Version: 1.4.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -35,6 +35,12 @@ add_action( 'rest_api_init', function () {
 	register_rest_route( 'ossau/v1', '/auth/forgot-password', array(
 		'methods'             => WP_REST_Server::CREATABLE,
 		'callback'            => 'ossau_forgot_password',
+		'permission_callback' => 'ossau_public_auth_permission',
+	) );
+
+	register_rest_route( 'ossau/v1', '/auth/reset-password', array(
+		'methods'             => WP_REST_Server::CREATABLE,
+		'callback'            => 'ossau_reset_password',
 		'permission_callback' => 'ossau_public_auth_permission',
 	) );
 
@@ -212,13 +218,52 @@ function ossau_forgot_password( WP_REST_Request $request ) {
 	$email = sanitize_email( $data['email'] ?? '' );
 
 	if ( is_email( $email ) ) {
-		// WordPress sends the reset link and keeps the account existence private.
-		retrieve_password( $email );
+		$user = get_user_by( 'email', $email );
+		if ( $user ) {
+			$key = get_password_reset_key( $user );
+			$frontend_url = defined( 'OSSAU_FRONTEND_URL' ) ? untrailingslashit( OSSAU_FRONTEND_URL ) : '';
+			if ( ! is_wp_error( $key ) && $frontend_url ) {
+				$reset_url = add_query_arg(
+					array( 'key' => $key, 'login' => $user->user_login ),
+					$frontend_url . '/reinitialisation'
+				);
+				$subject = 'Reinitialisez votre mot de passe Ossau Bois';
+				$message = sprintf(
+					'<p>Bonjour,</p><p>Une demande de reinitialisation de votre mot de passe a ete faite pour votre compte Ossau Bois.</p><p><a href="%s">Choisir un nouveau mot de passe</a></p><p>Ce lien est valable pendant une duree limitee. Si vous n etes pas a l origine de cette demande, vous pouvez ignorer cet e-mail.</p>',
+					esc_url( $reset_url )
+				);
+				wp_mail( $user->user_email, $subject, $message, ossau_order_email_headers() );
+			}
+		}
 	}
 
 	return new WP_REST_Response( array(
 		'success' => true,
 		'message' => 'Si un compte correspond a cette adresse, un e-mail de reinitialisation vient d etre envoye.',
+	), 200 );
+}
+
+function ossau_reset_password( WP_REST_Request $request ) {
+	$data = $request->get_json_params();
+	$key = sanitize_text_field( $data['key'] ?? '' );
+	$login = sanitize_text_field( $data['login'] ?? '' );
+	$password = (string) ( $data['password'] ?? '' );
+
+	if ( strlen( $password ) < 8 ) {
+		return new WP_Error( 'invalid_password', 'Le mot de passe doit contenir au moins 8 caracteres.', array( 'status' => 422 ) );
+	}
+
+	$user = check_password_reset_key( $key, $login );
+	if ( is_wp_error( $user ) ) {
+		return new WP_Error( 'invalid_reset_key', 'Ce lien de reinitialisation est invalide ou expire.', array( 'status' => 400 ) );
+	}
+
+	wp_set_password( $password, $user->ID );
+	delete_user_meta( $user->ID, 'user_activation_key' );
+
+	return new WP_REST_Response( array(
+		'success' => true,
+		'message' => 'Votre mot de passe a ete modifie. Vous pouvez maintenant vous connecter.',
 	), 200 );
 }
 

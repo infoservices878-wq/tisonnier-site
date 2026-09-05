@@ -6,7 +6,10 @@
 
 ```php
 define( 'OSSAU_ORDER_API_TOKEN', 'la-meme-valeur-que-VITE_WORDPRESS_API_KEY' );
+define( 'OSSAU_FRONTEND_URL', 'https://www.ossau-bois.com' );
 ```
+
+`OSSAU_FRONTEND_URL` doit correspondre a l URL publique du site React. Les e-mails de mot de passe oublie contiennent un lien vers `/reinitialisation` sur ce domaine, jamais vers l interface WordPress. Cette page transmet ensuite la demande a l API WordPress pour modifier le mot de passe du compte.
 
 Le plugin crée des commandes WooCommerce avec les coordonnées de facturation et de livraison renseignées. La référence retournée est `OB-année-30000`, puis `OB-année-30001`, etc. Elle est stockée dans la méta `_ossau_order_reference`.
 

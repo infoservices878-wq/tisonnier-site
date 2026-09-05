@@ -118,6 +118,23 @@ export function AccountProvider({ children }) {
     }
   };
 
+  const resetPassword = async (details) => {
+    setAuthError("");
+    setIsAuthenticating(true);
+    try {
+      await authRequest("reset-password", {
+        method: "POST",
+        body: JSON.stringify(details),
+      });
+      return true;
+    } catch (error) {
+      setAuthError(error.message || "Impossible de modifier le mot de passe.");
+      return false;
+    } finally {
+      setIsAuthenticating(false);
+    }
+  };
+
   const logout = () => {
     const token = account?.token;
     localStorage.removeItem(STORAGE_KEY);
@@ -130,7 +147,7 @@ export function AccountProvider({ children }) {
     }
   };
 
-  return <AccountContext.Provider value={{ account, authError, isAuthenticating, register, login, forgotPassword, logout }}>{children}</AccountContext.Provider>;
+  return <AccountContext.Provider value={{ account, authError, isAuthenticating, register, login, forgotPassword, resetPassword, logout }}>{children}</AccountContext.Provider>;
 }
 
 export function useAccount() {

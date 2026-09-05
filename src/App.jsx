@@ -16,6 +16,7 @@ import FAQ from "./pages/FAQ";
 import LegalPage from "./pages/LegalPage";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
 import Favorites from "./pages/Favorites";
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/panier" element={<Cart />} />
           <Route path="/commande" element={<Order />} />
           <Route path="/connexion" element={<Login />} />
+          <Route path="/reinitialisation" element={<ResetPassword />} />
           <Route path="/favoris" element={<Favorites />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/entreprise" element={<About />} />
