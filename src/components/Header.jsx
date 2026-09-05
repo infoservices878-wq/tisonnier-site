@@ -95,7 +95,7 @@ export default function Header() {
               <X size={15} strokeWidth={2} />
             </button>
           )}
-          <button type="submit" className="search-submit">Rechercher</button>
+          <button type="submit" className="search-submit"><Search size={17} strokeWidth={1.8} className="search-submit-icon" /><span>Rechercher</span></button>
           {showSuggestions && suggestions.length > 0 && (
             <div className="search-suggestions" role="listbox" aria-label="Suggestions de recherche">
               {suggestions.map((suggestion) => (
