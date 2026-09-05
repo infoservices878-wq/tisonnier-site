@@ -17,6 +17,8 @@ La version 1.6.0 ajoute les coordonnees de virement dans l e-mail de confirmatio
 
 La version 1.7.0 corrige la limitation des tentatives d authentification : les requetes autorisees ne sont plus comptees, seuls les echecs de connexion ou de creation de compte declenchent la protection temporaire.
 
+La version 1.8.0 active la verification d adresse e-mail. Apres une inscription, aucun jeton de connexion n est remis au client. Un lien valable 48 heures est envoye a l adresse saisie et pointe vers `/verification-email` sur le site. Le compte reste bloque tant que le lien n a pas ete valide. Les comptes existants restent utilisables.
+
 Le plugin crée des commandes WooCommerce avec les coordonnées de facturation et de livraison renseignées. La référence retournée est `OB-année-30000`, puis `OB-année-30001`, etc. Elle est stockée dans la méta `_ossau_order_reference`.
 
 À chaque création de commande, deux e-mails HTML sont envoyés automatiquement :

@@ -29,7 +29,9 @@ async function authRequest(path, options = {}) {
   const payload = await response.json().catch(() => ({}));
 
   if (!response.ok || payload.success === false) {
-    throw new Error(payload.message || "Une erreur est survenue. Veuillez réessayer.");
+    const error = new Error(payload.message || "Une erreur est survenue. Veuillez réessayer.");
+    error.code = payload.code || "";
+    throw error;
   }
 
   return payload;
@@ -92,8 +94,7 @@ export function AccountProvider({ children }) {
           password: details.password,
         }),
       });
-      saveAccount(payload.user);
-      return true;
+      return payload;
     } catch (error) {
       setAuthError(error.message || "Impossible de créer le compte.");
       return false;
@@ -157,6 +158,23 @@ export function AccountProvider({ children }) {
     }
   };
 
+  const verifyEmail = async (details) => {
+    setAuthError("");
+    setIsAuthenticating(true);
+    try {
+      await authRequest("verify-email", {
+        method: "POST",
+        body: JSON.stringify(details),
+      });
+      return true;
+    } catch (error) {
+      setAuthError(error.message || "Impossible de confirmer cette adresse e-mail.");
+      return false;
+    } finally {
+      setIsAuthenticating(false);
+    }
+  };
+
   const logout = () => {
     const token = account?.token;
     localStorage.removeItem(STORAGE_KEY);
@@ -169,7 +187,7 @@ export function AccountProvider({ children }) {
     }
   };
 
-  return <AccountContext.Provider value={{ account, authError, isAuthenticating, orders, isLoadingOrders, loadOrders, register, login, forgotPassword, resetPassword, logout }}>{children}</AccountContext.Provider>;
+  return <AccountContext.Provider value={{ account, authError, isAuthenticating, orders, isLoadingOrders, loadOrders, register, login, forgotPassword, resetPassword, verifyEmail, logout }}>{children}</AccountContext.Provider>;
 }
 
 export function useAccount() {

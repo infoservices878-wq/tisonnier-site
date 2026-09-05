@@ -17,6 +17,7 @@ import LegalPage from "./pages/LegalPage";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
+import VerifyEmail from "./pages/VerifyEmail";
 import Favorites from "./pages/Favorites";
 
 export default function App() {
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="/commande" element={<Order />} />
           <Route path="/connexion" element={<Login />} />
           <Route path="/reinitialisation" element={<ResetPassword />} />
+          <Route path="/verification-email" element={<VerifyEmail />} />
           <Route path="/favoris" element={<Favorites />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/entreprise" element={<About />} />

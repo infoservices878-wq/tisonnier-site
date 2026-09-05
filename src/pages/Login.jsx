@@ -24,11 +24,13 @@ export default function Login() {
   const [mode, setMode] = useState("login");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [resetSent, setResetSent] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
 
   const submit = async (event) => {
     event.preventDefault();
     if (mode === "register") {
-      await register(form);
+      const payload = await register(form);
+      setVerificationSent(Boolean(payload?.verification_required));
     } else if (mode === "forgot-password") {
       setResetSent(await forgotPassword(form.email));
     } else {
@@ -71,6 +73,7 @@ export default function Login() {
         <form className="account-form" onSubmit={submit}>
           <div className="form-heading"><span className="section-kicker">{mode === "login" ? "Connexion" : mode === "register" ? "Nouveau compte" : "Réinitialisation"}</span><h2>{mode === "login" ? "Bienvenue dans votre espace" : mode === "register" ? "Créez votre espace client" : "Mot de passe oublié ?"}</h2><p>{mode === "login" ? "Utilisez l’adresse e-mail associée à votre compte client." : mode === "register" ? "Enregistrez vos coordonnées pour retrouver vos favoris et simplifier vos prochaines visites." : "Saisissez votre adresse e-mail pour recevoir un lien de réinitialisation."}</p></div>
           {resetSent && <p className="account-form-success" role="status">Si un compte correspond à cette adresse, un e-mail de réinitialisation vient d’être envoyé.</p>}
+          {verificationSent && <p className="account-form-success" role="status">Votre compte est presque prêt. Consultez votre boîte e-mail et cliquez sur le lien de confirmation avant de vous connecter.</p>}
           {mode === "register" && <label className="field"><span>Nom complet</span><input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></label>}
           <label className="field"><span>Adresse e-mail</span><input type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} placeholder="vous@exemple.fr" required /></label>
           {mode !== "forgot-password" && <PasswordField label="Mot de passe" value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} placeholder="Votre mot de passe" />}
