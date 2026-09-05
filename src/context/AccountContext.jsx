@@ -94,7 +94,7 @@ export function AccountProvider({ children }) {
       });
       saveAccount(payload.user);
       return true;
-    return <AccountContext.Provider value={{ account, authError, isAuthenticating, orders, isLoadingOrders, loadOrders, register, login, forgotPassword, resetPassword, logout }}>{children}</AccountContext.Provider>;
+    } catch (error) {
       setAuthError(error.message || "Impossible de créer le compte.");
       return false;
     } finally {
@@ -169,7 +169,7 @@ export function AccountProvider({ children }) {
     }
   };
 
-  return <AccountContext.Provider value={{ account, authError, isAuthenticating, register, login, forgotPassword, resetPassword, logout }}>{children}</AccountContext.Provider>;
+  return <AccountContext.Provider value={{ account, authError, isAuthenticating, orders, isLoadingOrders, loadOrders, register, login, forgotPassword, resetPassword, logout }}>{children}</AccountContext.Provider>;
 }
 
 export function useAccount() {
