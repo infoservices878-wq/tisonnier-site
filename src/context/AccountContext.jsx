@@ -39,10 +39,27 @@ export function AccountProvider({ children }) {
   const [account, setAccount] = useState(readStoredAccount);
   const [authError, setAuthError] = useState("");
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(false);
 
   const saveAccount = (nextAccount) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(nextAccount));
     setAccount(nextAccount);
+  };
+
+  const loadOrders = async (token = account?.token) => {
+    if (!token) return;
+    setIsLoadingOrders(true);
+    try {
+      const payload = await authRequest("orders", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setOrders(payload.orders || []);
+    } catch {
+      setOrders([]);
+    } finally {
+      setIsLoadingOrders(false);
+    }
   };
 
   useEffect(() => {
@@ -58,6 +75,11 @@ export function AccountProvider({ children }) {
       });
   }, []);
 
+  useEffect(() => {
+    if (account?.token) loadOrders(account.token);
+    else setOrders([]);
+  }, [account?.token]);
+
   const register = async (details) => {
     setAuthError("");
     setIsAuthenticating(true);
@@ -72,7 +94,7 @@ export function AccountProvider({ children }) {
       });
       saveAccount(payload.user);
       return true;
-    } catch (error) {
+    return <AccountContext.Provider value={{ account, authError, isAuthenticating, orders, isLoadingOrders, loadOrders, register, login, forgotPassword, resetPassword, logout }}>{children}</AccountContext.Provider>;
       setAuthError(error.message || "Impossible de créer le compte.");
       return false;
     } finally {

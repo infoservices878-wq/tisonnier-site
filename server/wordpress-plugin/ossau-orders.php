@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Ossau Bois - Commandes API
  * Description: Crée les commandes WooCommerce envoyées depuis le formulaire Ossau Bois.
- * Version: 1.4.0
+ * Version: 1.5.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -53,6 +53,12 @@ add_action( 'rest_api_init', function () {
 	register_rest_route( 'ossau/v1', '/auth/logout', array(
 		'methods'             => WP_REST_Server::CREATABLE,
 		'callback'            => 'ossau_logout_customer',
+		'permission_callback' => 'ossau_auth_session_permission',
+	) );
+
+	register_rest_route( 'ossau/v1', '/auth/orders', array(
+		'methods'             => WP_REST_Server::READABLE,
+		'callback'            => 'ossau_get_customer_orders',
 		'permission_callback' => 'ossau_auth_session_permission',
 	) );
 } );
@@ -280,6 +286,50 @@ function ossau_logout_customer( WP_REST_Request $request ) {
 	delete_transient( ossau_auth_session_key( $token ) );
 
 	return new WP_REST_Response( array( 'success' => true ), 200 );
+}
+
+function ossau_get_customer_orders( WP_REST_Request $request ) {
+	$user = ossau_get_authenticated_customer( $request );
+	if ( is_wp_error( $user ) ) {
+		return $user;
+	}
+
+	if ( ! function_exists( 'wc_get_orders' ) ) {
+		return new WP_Error( 'woocommerce_missing', 'WooCommerce doit être activé.', array( 'status' => 500 ) );
+	}
+
+	$orders = wc_get_orders( array(
+		'billing_email' => $user->user_email,
+		'limit'         => 50,
+		'orderby'       => 'date',
+		'order'         => 'DESC',
+		'return'        => 'objects',
+	) );
+
+	$payload = array_map( function ( $order ) {
+		$items = array();
+		foreach ( $order->get_items( 'line_item' ) as $item ) {
+			$items[] = array(
+				'name'     => $item->get_name(),
+				'quantity' => (int) $item->get_quantity(),
+			);
+		}
+
+		return array(
+			'id'       => $order->get_id(),
+			'reference' => $order->get_meta( '_ossau_order_reference' ) ?: $order->get_order_number(),
+			'status'   => $order->get_status(),
+			'total'    => $order->get_total(),
+			'currency' => $order->get_currency(),
+			'date'     => $order->get_date_created() ? $order->get_date_created()->date( 'c' ) : '',
+			'items'    => $items,
+		);
+	}, $orders );
+
+	return new WP_REST_Response( array(
+		'success' => true,
+		'orders'  => $payload,
+	), 200 );
 }
 
 function ossau_next_order_reference() {
