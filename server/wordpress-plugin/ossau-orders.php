@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Ossau Bois - Commandes API
  * Description: Crée les commandes WooCommerce envoyées depuis le formulaire Ossau Bois.
- * Version: 1.0.0
+ * Version: 1.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
