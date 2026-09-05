@@ -42,7 +42,7 @@ export default function ProductCard({ product }) {
         <span className="product-packaging">{product.packaging}</span>
         <div className="product-card-footer">
           <span className="product-price">{formatPrice(product.price)}</span>
-          <button type="button" className="btn add-cart-button" onClick={() => add(product.id)}>
+          <button type="button" className="btn btn-primary add-cart-button checkout-action-button" onClick={() => add(product.id)}>
             <ShoppingCart size={16} strokeWidth={1.8} />
             Ajouter
           </button>

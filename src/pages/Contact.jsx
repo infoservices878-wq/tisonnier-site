@@ -74,7 +74,7 @@ export default function Contact() {
                 <textarea required rows={4} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
               </label>
               {submitError && <div className="order-form-error" role="alert">{submitError}</div>}
-              <button className="btn btn-primary btn-block" type="submit" disabled={isSubmitting}>{isSubmitting ? "Envoi..." : "Envoyer le message"} <ArrowRight size={16} /></button>
+              <button className="btn btn-primary btn-block checkout-action-button" type="submit" disabled={isSubmitting}>{isSubmitting ? "Envoi..." : "Envoyer le message"} <ArrowRight size={16} /></button>
             </>
           )}
         </form>

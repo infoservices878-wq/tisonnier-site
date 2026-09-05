@@ -1,70 +1,136 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AccountContext = createContext(null);
 const STORAGE_KEY = "ossau-bois-account";
-const CREDENTIALS_STORAGE_KEY = "ossau-bois-account-credentials";
+const WORDPRESS_API_URL = (import.meta.env.VITE_WORDPRESS_API_URL || "").replace(/\/+$/, "");
 
-function readStoredCredentials() {
+function readStoredAccount() {
   try {
-    const credentials = JSON.parse(localStorage.getItem(CREDENTIALS_STORAGE_KEY));
-    return credentials && typeof credentials === "object" ? credentials : {};
+    const account = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return account?.token && account?.email ? account : null;
   } catch {
-    return {};
+    return null;
   }
 }
 
-async function hashPassword(password) {
-  const data = new TextEncoder().encode(password);
-  const digest = await globalThis.crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+async function authRequest(path, options = {}) {
+  if (!WORDPRESS_API_URL) {
+    throw new Error("La connexion client n'est pas configurée.");
+  }
+
+  const response = await fetch(`${WORDPRESS_API_URL}/wp-json/ossau/v1/auth/${path}`, {
+    ...options,
+    headers: {
+      Accept: "application/json",
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
+      ...options.headers,
+    },
+  });
+  const payload = await response.json().catch(() => ({}));
+
+  if (!response.ok || payload.success === false) {
+    throw new Error(payload.message || "Une erreur est survenue. Veuillez réessayer.");
+  }
+
+  return payload;
 }
 
 export function AccountProvider({ children }) {
-  const [account, setAccount] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null;
-    } catch {
-      return null;
-    }
-  });
+  const [account, setAccount] = useState(readStoredAccount);
   const [authError, setAuthError] = useState("");
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+
+  const saveAccount = (nextAccount) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextAccount));
+    setAccount(nextAccount);
+  };
+
+  useEffect(() => {
+    if (!account?.token) return;
+
+    authRequest("me", {
+      headers: { Authorization: `Bearer ${account.token}` },
+    })
+      .then((payload) => saveAccount({ ...payload.user, token: account.token }))
+      .catch(() => {
+        localStorage.removeItem(STORAGE_KEY);
+        setAccount(null);
+      });
+  }, []);
 
   const register = async (details) => {
     setAuthError("");
-    const email = details.email.trim().toLowerCase();
-    const credentials = readStoredCredentials();
-    if (credentials[email]) {
-      setAuthError("Cette adresse e-mail est déjà enregistrée. Connectez-vous.");
+    setIsAuthenticating(true);
+    try {
+      const payload = await authRequest("register", {
+        method: "POST",
+        body: JSON.stringify({
+          name: details.name.trim(),
+          email: details.email.trim().toLowerCase(),
+          password: details.password,
+        }),
+      });
+      saveAccount(payload.user);
+      return true;
+    } catch (error) {
+      setAuthError(error.message || "Impossible de créer le compte.");
       return false;
+    } finally {
+      setIsAuthenticating(false);
     }
-    const nextAccount = { name: details.name.trim(), email };
-    credentials[email] = await hashPassword(details.password);
-    localStorage.setItem(CREDENTIALS_STORAGE_KEY, JSON.stringify(credentials));
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextAccount));
-    setAccount(nextAccount);
-    return true;
   };
 
   const login = async (details) => {
     setAuthError("");
-    const email = details.email.trim().toLowerCase();
-    const credentials = readStoredCredentials();
-    if (!credentials[email] || credentials[email] !== await hashPassword(details.password)) {
-      setAuthError("E-mail ou mot de passe incorrect.");
+    setIsAuthenticating(true);
+    try {
+      const payload = await authRequest("login", {
+        method: "POST",
+        body: JSON.stringify({
+          email: details.email.trim().toLowerCase(),
+          password: details.password,
+        }),
+      });
+      saveAccount(payload.user);
+      return true;
+    } catch (error) {
+      setAuthError(error.message || "E-mail ou mot de passe incorrect.");
       return false;
+    } finally {
+      setIsAuthenticating(false);
     }
-    const nextAccount = { name: email.split("@")[0], email };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextAccount));
-    setAccount(nextAccount);
-    return true;
+  };
+
+  const forgotPassword = async (email) => {
+    setAuthError("");
+    setIsAuthenticating(true);
+    try {
+      await authRequest("forgot-password", {
+        method: "POST",
+        body: JSON.stringify({ email: email.trim().toLowerCase() }),
+      });
+      return true;
+    } catch (error) {
+      setAuthError(error.message || "Impossible d'envoyer l'e-mail de réinitialisation.");
+      return false;
+    } finally {
+      setIsAuthenticating(false);
+    }
   };
 
   const logout = () => {
+    const token = account?.token;
     localStorage.removeItem(STORAGE_KEY);
     setAccount(null);
+    if (token) {
+      authRequest("logout", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      }).catch(() => {});
+    }
   };
 
-  return <AccountContext.Provider value={{ account, authError, register, login, logout }}>{children}</AccountContext.Provider>;
+  return <AccountContext.Provider value={{ account, authError, isAuthenticating, register, login, forgotPassword, logout }}>{children}</AccountContext.Provider>;
 }
 
 export function useAccount() {

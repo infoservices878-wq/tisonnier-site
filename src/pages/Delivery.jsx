@@ -14,7 +14,7 @@ export default function Delivery() {
         <article className="service-card"><MapPin size={24} /><span className="service-card-label">À l&apos;entrepôt</span><h2>Retrait à Phalsbourg</h2><p>Réservez votre créneau avant de venir et prévoyez un véhicule adapté au poids de la palette.</p><ul><li><Check size={16} /> {COMPANY.warehouse.address}</li><li><Check size={16} /> Paiement possible sur place</li><li><Check size={16} /> Retrait après confirmation uniquement</li></ul></article>
       </div>
       <div className="delivery-timeline"><div><span>01</span><div><strong>Choisissez votre référence</strong><p>Comparez les formats et conditionnements dans le catalogue.</p></div></div><div><span>02</span><div><strong>Indiquez votre mode de réception</strong><p>Livraison ou retrait : nous vérifions les modalités avec vous.</p></div></div><div><span>03</span><div><strong>Recevez la confirmation</strong><p>Le créneau et les informations pratiques vous sont envoyés par écrit.</p></div></div></div>
-      <div className="delivery-return"><div><Clock3 size={22} /><div><h2>Un incident à la réception ?</h2><p>Notez les réserves sur le bon de livraison et contactez-nous sous 48 heures avec des photos.</p></div></div><Link to="/contact" className="btn btn-primary">Nous contacter <ArrowRight size={16} /></Link></div>
+      <div className="delivery-return"><div><Clock3 size={22} /><div><h2>Un incident à la réception ?</h2><p>Notez les réserves sur le bon de livraison et contactez-nous sous 48 heures avec des photos.</p></div></div><Link to="/contact" className="btn btn-primary checkout-action-button">Nous contacter <ArrowRight size={16} /></Link></div>
     </section>
   );
 }

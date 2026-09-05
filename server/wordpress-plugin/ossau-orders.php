@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Ossau Bois - Commandes API
  * Description: Crée les commandes WooCommerce envoyées depuis le formulaire Ossau Bois.
- * Version: 1.2.0
+ * Version: 1.3.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -19,6 +19,36 @@ add_action( 'rest_api_init', function () {
 		'callback'            => 'ossau_send_contact_message',
 		'permission_callback' => 'ossau_order_api_permission',
 	) );
+
+	register_rest_route( 'ossau/v1', '/auth/register', array(
+		'methods'             => WP_REST_Server::CREATABLE,
+		'callback'            => 'ossau_register_customer',
+		'permission_callback' => 'ossau_public_auth_permission',
+	) );
+
+	register_rest_route( 'ossau/v1', '/auth/login', array(
+		'methods'             => WP_REST_Server::CREATABLE,
+		'callback'            => 'ossau_login_customer',
+		'permission_callback' => 'ossau_public_auth_permission',
+	) );
+
+	register_rest_route( 'ossau/v1', '/auth/forgot-password', array(
+		'methods'             => WP_REST_Server::CREATABLE,
+		'callback'            => 'ossau_forgot_password',
+		'permission_callback' => 'ossau_public_auth_permission',
+	) );
+
+	register_rest_route( 'ossau/v1', '/auth/me', array(
+		'methods'             => WP_REST_Server::READABLE,
+		'callback'            => 'ossau_get_current_customer',
+		'permission_callback' => 'ossau_auth_session_permission',
+	) );
+
+	register_rest_route( 'ossau/v1', '/auth/logout', array(
+		'methods'             => WP_REST_Server::CREATABLE,
+		'callback'            => 'ossau_logout_customer',
+		'permission_callback' => 'ossau_auth_session_permission',
+	) );
 } );
 
 function ossau_order_api_permission( WP_REST_Request $request ) {
@@ -30,6 +60,181 @@ function ossau_order_api_permission( WP_REST_Request $request ) {
 	$token = preg_replace( '/^Bearer\\s+/i', '', (string) $authorization );
 
 	return hash_equals( OSSAU_ORDER_API_TOKEN, $token );
+}
+
+function ossau_auth_rate_limit_key() {
+	$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown';
+	return 'ossau_auth_attempts_' . md5( $ip );
+}
+
+function ossau_public_auth_permission() {
+	$key = ossau_auth_rate_limit_key();
+	$attempts = (int) get_transient( $key );
+
+	if ( $attempts >= 10 ) {
+		return new WP_Error( 'auth_rate_limited', 'Trop de tentatives. Veuillez reessayer dans quelques minutes.', array( 'status' => 429 ) );
+	}
+
+	set_transient( $key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+	return true;
+}
+
+function ossau_auth_token_from_request( WP_REST_Request $request ) {
+	$authorization = $request->get_header( 'authorization' );
+	return preg_replace( '/^Bearer\s+/i', '', (string) $authorization );
+}
+
+function ossau_auth_session_key( $token ) {
+	return 'ossau_session_' . hash( 'sha256', $token );
+}
+
+function ossau_get_authenticated_customer( WP_REST_Request $request ) {
+	$token = ossau_auth_token_from_request( $request );
+	if ( ! $token ) {
+		return new WP_Error( 'auth_required', 'Connexion requise.', array( 'status' => 401 ) );
+	}
+
+	$user_id = (int) get_transient( ossau_auth_session_key( $token ) );
+	$user = $user_id ? get_user_by( 'id', $user_id ) : false;
+	if ( ! $user ) {
+		return new WP_Error( 'invalid_session', 'Votre session a expire. Veuillez vous reconnecter.', array( 'status' => 401 ) );
+	}
+
+	return $user;
+}
+
+function ossau_auth_session_permission( WP_REST_Request $request ) {
+	$user = ossau_get_authenticated_customer( $request );
+	return is_wp_error( $user ) ? $user : true;
+}
+
+function ossau_customer_name( WP_User $user ) {
+	$name = trim( $user->first_name . ' ' . $user->last_name );
+	return $name ?: $user->display_name;
+}
+
+function ossau_customer_payload( WP_User $user, $token = null ) {
+	$payload = array(
+		'id'    => $user->ID,
+		'name'  => ossau_customer_name( $user ),
+		'email' => $user->user_email,
+	);
+
+	if ( $token ) {
+		$payload['token'] = $token;
+	}
+
+	return $payload;
+}
+
+function ossau_issue_customer_session( WP_User $user ) {
+	$token = wp_generate_password( 64, false, false );
+	set_transient( ossau_auth_session_key( $token ), $user->ID, 14 * DAY_IN_SECONDS );
+	return $token;
+}
+
+function ossau_auth_success_response( WP_User $user ) {
+	$token = ossau_issue_customer_session( $user );
+	delete_transient( ossau_auth_rate_limit_key() );
+
+	return new WP_REST_Response( array(
+		'success' => true,
+		'user'    => ossau_customer_payload( $user, $token ),
+	), 200 );
+}
+
+function ossau_customer_username( $email ) {
+	$base = sanitize_user( strstr( $email, '@', true ), true );
+	$base = $base ?: 'client';
+	$username = $base;
+	$suffix = 2;
+
+	while ( username_exists( $username ) ) {
+		$username = $base . $suffix;
+		$suffix++;
+	}
+
+	return $username;
+}
+
+function ossau_register_customer( WP_REST_Request $request ) {
+	$data = $request->get_json_params();
+	$name = trim( sanitize_text_field( $data['name'] ?? '' ) );
+	$email = sanitize_email( $data['email'] ?? '' );
+	$password = (string) ( $data['password'] ?? '' );
+
+	if ( ! $name || ! is_email( $email ) || strlen( $password ) < 8 ) {
+		return new WP_Error( 'invalid_registration', 'Renseignez votre nom, une adresse e-mail valide et un mot de passe de 8 caracteres minimum.', array( 'status' => 422 ) );
+	}
+
+	if ( email_exists( $email ) ) {
+		return new WP_Error( 'email_exists', 'Cette adresse e-mail est deja enregistree. Connectez-vous.', array( 'status' => 409 ) );
+	}
+
+	$username = ossau_customer_username( $email );
+	$user_id = function_exists( 'wc_create_new_customer' )
+		? wc_create_new_customer( $email, $username, $password )
+		: wp_create_user( $username, $password, $email );
+
+	if ( is_wp_error( $user_id ) ) {
+		return new WP_Error( 'registration_failed', $user_id->get_error_message(), array( 'status' => 422 ) );
+	}
+
+	$name_parts = preg_split( '/\s+/', $name, 2 );
+	wp_update_user( array(
+		'ID'           => $user_id,
+		'display_name' => $name,
+		'nickname'     => $name,
+		'first_name'   => $name_parts[0],
+		'last_name'    => $name_parts[1] ?? '',
+	) );
+	$user = get_user_by( 'id', $user_id );
+
+	return ossau_auth_success_response( $user );
+}
+
+function ossau_login_customer( WP_REST_Request $request ) {
+	$data = $request->get_json_params();
+	$email = sanitize_email( $data['email'] ?? '' );
+	$password = (string) ( $data['password'] ?? '' );
+	$user = $email ? get_user_by( 'email', $email ) : false;
+	$authenticated_user = $user ? wp_authenticate( $user->user_login, $password ) : new WP_Error( 'invalid_login' );
+
+	if ( is_wp_error( $authenticated_user ) ) {
+		return new WP_Error( 'invalid_login', 'E-mail ou mot de passe incorrect.', array( 'status' => 401 ) );
+	}
+
+	return ossau_auth_success_response( $authenticated_user );
+}
+
+function ossau_forgot_password( WP_REST_Request $request ) {
+	$data = $request->get_json_params();
+	$email = sanitize_email( $data['email'] ?? '' );
+
+	if ( is_email( $email ) ) {
+		// WordPress sends the reset link and keeps the account existence private.
+		retrieve_password( $email );
+	}
+
+	return new WP_REST_Response( array(
+		'success' => true,
+		'message' => 'Si un compte correspond a cette adresse, un e-mail de reinitialisation vient d etre envoye.',
+	), 200 );
+}
+
+function ossau_get_current_customer( WP_REST_Request $request ) {
+	$user = ossau_get_authenticated_customer( $request );
+	return new WP_REST_Response( array(
+		'success' => true,
+		'user'    => ossau_customer_payload( $user ),
+	), 200 );
+}
+
+function ossau_logout_customer( WP_REST_Request $request ) {
+	$token = ossau_auth_token_from_request( $request );
+	delete_transient( ossau_auth_session_key( $token ) );
+
+	return new WP_REST_Response( array( 'success' => true ), 200 );
 }
 
 function ossau_next_order_reference() {

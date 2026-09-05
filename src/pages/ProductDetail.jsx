@@ -92,7 +92,7 @@ export default function ProductDetail() {
                 <span>{quantity}</span>
                 <button type="button" onClick={() => setQuantity((value) => value + 1)} aria-label="Augmenter la quantité"><Plus size={16} /></button>
               </div>
-              <button type="button" className="btn add-cart-button product-add-button" onClick={addToCart}>
+              <button type="button" className="btn btn-primary add-cart-button product-add-button checkout-action-button" onClick={addToCart}>
                 {added ? <><Check size={17} /> Ajouté au panier</> : <><ShoppingCart size={17} /> Ajouter au panier</>}
               </button>
             </div>
