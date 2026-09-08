@@ -67,7 +67,7 @@ npm run dev
 | `/panier` | Panier |
 | `/contact` | Contact |
 | `/entreprise` | À propos |
-| `/livraison` | Livraison / retrait |
+| `/livraison` | Livraison sur palette |
 | `/faq` | FAQ |
 | `/mentions-legales` | Mentions légales |
 | `/politique-de-confidentialite` | Confidentialité |

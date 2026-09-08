@@ -17,12 +17,6 @@ export const COMPANY = {
   phone: "+33 1 23 45 67 89",
   phoneHref: "tel:+33123456789",
   hours: "Lundi–vendredi, 08:00–16:00",
-  warehouse: {
-    address: "ZA, Rue de l'Europe",
-    city: "57370 Phalsbourg",
-    country: "France",
-    note: "Retrait et paiement sur place uniquement après réservation et confirmation préalables.",
-  },
 };
 
 export const MENTIONS_SECTIONS = [
@@ -121,9 +115,8 @@ export const CGV_SECTIONS = [
   },
   {
     title: "Article 3 — Commande",
-    html: `La commande est ferme après validation et paiement (ou confirmation
-      écrite pour un retrait sur place). Un e-mail de confirmation récapitule
-      le contenu, le montant et les modalités de livraison ou de retrait.`,
+    html: `La commande est ferme après validation et paiement. Un e-mail de
+      confirmation récapitule le contenu, le montant et les modalités de livraison.`,
   },
   {
     title: "Article 4 — Livraison",
@@ -133,12 +126,7 @@ export const CGV_SECTIONS = [
       en cas d'anomalie.`,
   },
   {
-    title: "Article 5 — Retrait sur place",
-    html: `Possible uniquement sur rendez-vous confirmé, avec véhicule adapté.
-      Paiement sur place accepté le jour du retrait.`,
-  },
-  {
-    title: "Article 6 — Droit de rétractation",
+    title: "Article 5 — Droit de rétractation",
     html: `Conformément au Code de la consommation, le client particulier dispose
       d'un délai de 14 jours pour se rétracter, sauf exceptions légales
       (produits susceptibles de se détériorer rapidement, etc.). Les frais

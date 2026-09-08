@@ -55,16 +55,16 @@ function getAssistantReply(question) {
     return "En cas d’anomalie, notez vos réserves sur le bon de livraison, prenez des photos et contactez-nous sous 48 heures. Nous examinerons la situation avec vous et proposerons la solution adaptée selon le dossier.";
   }
   if (/^(bonjour|bonsoir|salut|hello|coucou|merci)/.test(query)) {
-    return "Bonjour et bienvenue chez OSSAU BOIS. Je peux vous renseigner sur nos combustibles, les caractéristiques produit, la livraison, le retrait ou le stockage.";
+    return "Bonjour et bienvenue chez OSSAU BOIS. Je peux vous renseigner sur nos combustibles, les caractéristiques produit, l’expédition ou le stockage.";
   }
   if (hasKeyword(query, ["livraison", "livrer", "expedition", "expédier", "delai", "délai", "transport", "chauffeur", "arrive quand", "réception"])) {
     return "La livraison se fait sur palette, au bord de votre accès carrossable, avec hayon selon les conditions d’accès. Le délai indicatif est de 6 à 8 jours ouvrés et un créneau vous est communiqué avant le passage du transporteur.";
   }
   if (hasKeyword(query, ["retrait", "retirer", "enlevement", "enlèvement", "entrepot", "entrepôt", "phalsbourg", "venir chercher"])) {
-    return `Le retrait est possible uniquement sur rendez-vous confirmé à ${COMPANY.warehouse.address}, ${COMPANY.warehouse.city}. Prévoyez un véhicule adapté au poids de la palette ; le paiement sur place est accepté.`;
+    return "Toutes les commandes sont expédiées sur palette à l’adresse indiquée. Nous ne proposons pas de collecte sur place.";
   }
   if (hasKeyword(query, ["paiement", "payer", "reglement", "règlement", "carte", "cb"])) {
-    return "Le paiement en ligne est prévu par carte bancaire. Pour un retrait sur place, le règlement peut être effectué le jour du rendez-vous après confirmation de la réservation.";
+    return "Le règlement s’effectue par virement bancaire. Les coordonnées et le montant exact sont transmis par e-mail après validation de votre demande.";
   }
   if (hasKeyword(query, ["stockage", "stocker", "conserver", "ranger", "humide", "humidité"])) {
     return "Conservez les sacs et paquets dans un local sec et ventilé, à l’abri de l’humidité. Surélevez la palette et gardez les emballages intacts pour protéger le combustible.";
@@ -80,7 +80,7 @@ function getAssistantReply(question) {
   }
   if (faq) return faq.a;
 
-  return "Je peux vous aider pour un produit, une catégorie, la livraison, le retrait, le paiement ou le stockage. Pour une demande particulière, notre équipe vous répond via la page Contact.";
+  return "Je peux vous aider pour un produit, une catégorie, l’expédition, le règlement ou le stockage. Pour une demande particulière, notre équipe vous répond via la page Contact.";
 }
 
 export default function VirtualAssistant() {
@@ -90,7 +90,7 @@ export default function VirtualAssistant() {
     { id: 1, role: "assistant", text: "Bonjour, je suis l’assistant OSSAU BOIS. Que souhaitez-vous savoir ?" },
   ]);
   const messagesEndRef = useRef(null);
-  const quickQuestions = useMemo(() => ["Quel est le délai de livraison ?", "Comment fonctionne le retrait ?", "Comment stocker les granulés ?"], []);
+  const quickQuestions = useMemo(() => ["Quel est le délai de livraison ?", "Comment suivre ma commande ?", "Comment stocker les granulés ?"], []);
 
   const ask = (value = question) => {
     const text = value.trim();

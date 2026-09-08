@@ -47,11 +47,11 @@ export default function Contact() {
 
   return (
     <section className="section">
-      <div className="page-hero page-hero-dark"><div><span className="section-kicker">NOUS SOMMES À VOTRE ÉCOUTE</span><h1 className="page-title">Parlons de votre prochain approvisionnement.</h1><p>Une question sur un produit, une livraison ou un retrait ? Donnez-nous les informations utiles, nous vous répondrons clairement.</p></div><Mail size={58} strokeWidth={1.1} /></div>
+      <div className="page-hero page-hero-dark"><div><span className="section-kicker">NOUS SOMMES À VOTRE ÉCOUTE</span><h1 className="page-title">Parlons de votre prochain approvisionnement.</h1><p>Une question sur un produit ou une livraison ? Donnez-nous les informations utiles, nous vous répondrons clairement.</p></div><Mail size={58} strokeWidth={1.1} /></div>
       <div className="contact-grid">
         <div className="contact-info">
-          <div className="contact-panel"><span className="section-kicker">Coordonnées directes</span><div className="contact-line"><Mail size={18} strokeWidth={1.6} /><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></div><div className="contact-line"><Phone size={18} strokeWidth={1.6} /><a href={COMPANY.phoneHref}>{COMPANY.phone}</a></div><div className="contact-line"><MapPin size={18} strokeWidth={1.6} /><span>Point de retrait sur rendez-vous uniquement</span></div><div className="contact-line"><Clock3 size={18} strokeWidth={1.6} /><span>{COMPANY.hours}</span></div></div>
-          <div className="contact-next"><strong>Pour une réponse rapide</strong><p>Indiquez le produit concerné, votre commune et le mode de réception envisagé.</p><Link to="/livraison">Voir les modalités <ArrowRight size={15} /></Link></div>
+          <div className="contact-panel"><span className="section-kicker">Coordonnées directes</span><div className="contact-line"><Mail size={18} strokeWidth={1.6} /><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></div><div className="contact-line"><Phone size={18} strokeWidth={1.6} /><a href={COMPANY.phoneHref}>{COMPANY.phone}</a></div><div className="contact-line"><MapPin size={18} strokeWidth={1.6} /><span>Expédition partout en France métropolitaine</span></div><div className="contact-line"><Clock3 size={18} strokeWidth={1.6} /><span>{COMPANY.hours}</span></div></div>
+          <div className="contact-next"><strong>Pour une réponse rapide</strong><p>Indiquez le produit concerné, votre commune et les conditions d’accès pour la livraison.</p><Link to="/livraison">Voir les modalités <ArrowRight size={15} /></Link></div>
         </div>
         <form className="contact-form" onSubmit={submit}>
           {sent ? (

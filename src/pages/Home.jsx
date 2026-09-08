@@ -9,7 +9,7 @@ function ValueStrip() {
   const items = [
     { icon: Truck, title: "Livraison palette", text: "Hayon, bord de voie carrossable" },
     { icon: Award, title: "Fiches précises", text: "Certifications et specs lisibles" },
-    { icon: Package, title: "Retrait possible", text: "Sur rendez-vous confirmé" },
+    { icon: Package, title: "Réception maîtrisée", text: "Confirmation avant livraison" },
   ];
   return (
     <div className="value-strip">
@@ -102,11 +102,11 @@ export default function Home() {
           <img src="/optimized/delivery-truck.webp" alt="Camion Ossau Bois en livraison" loading="lazy" decoding="async" />
         </div>
         <div className="fulfillment-content">
-          <p className="fulfillment-kicker">Livraison ou retrait</p>
+          <p className="fulfillment-kicker">Expédition sur palette</p>
           <h2 className="fulfillment-title">Votre combustible arrive dans les meilleures conditions</h2>
           <p className="fulfillment-lede">
             Nous organisons chaque commande pour que la réception soit aussi claire que le choix du produit.
-            À domicile ou à l&apos;entrepôt, vous connaissez les modalités avant de valider.
+            À l’adresse indiquée, vous connaissez les modalités de livraison avant de valider.
           </p>
           <div className="fulfillment-details">
             <div>
@@ -114,8 +114,8 @@ export default function Home() {
               <span>Au bord de voie carrossable, avec hayon selon les conditions d&apos;accès.</span>
             </div>
             <div>
-              <strong>Retrait à Phalsbourg</strong>
-              <span>Sur rendez-vous confirmé, avec un véhicule adapté au poids de la palette.</span>
+              <strong>Commande suivie</strong>
+              <span>Confirmation écrite et créneau communiqué avant le passage du transporteur.</span>
             </div>
           </div>
           <Link to="/contact" className="btn btn-primary">Nous contacter</Link>
@@ -128,14 +128,14 @@ export default function Home() {
           <div className="steps-intro">
             <h2 className="section-title">Trois étapes claires pour préparer votre livraison</h2>
             <p className="steps-lede">
-              Comparez les combustibles, choisissez le mode de réception qui vous convient,
+              Comparez les combustibles, renseignez votre adresse de livraison,
               puis recevez une confirmation précise avant le départ de votre commande.
             </p>
           </div>
           <div className="steps">
           {[
             { n: "01", title: "Choisir le bon combustible", text: "Comparez le format, le conditionnement et les informations utiles à votre appareil." },
-            { n: "02", title: "Organiser la réception", text: "Sélectionnez la livraison sur palette ou un retrait sur rendez-vous à notre entrepôt." },
+            { n: "02", title: "Organiser la livraison", text: "Indiquez votre adresse et les informations utiles au transporteur." },
             { n: "03", title: "Valider sereinement", text: "Recevez le récapitulatif de votre commande et les indications pratiques par écrit." },
           ].map((s) => (
             <div className="step" key={s.n}>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Clipboard, CreditCard, Mail, MapPin, ShieldCheck, Truck, Warehouse } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Clipboard, CreditCard, Mail, ShieldCheck, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { formatPrice } from "../lib/format";
@@ -30,9 +30,9 @@ function buildOrderPayload(form, lines, subtotal, shipping, total, reference) {
     first_name: form.firstName,
     last_name: form.lastName,
     company: form.company || "",
-    address_1: form.delivery === "home" ? form.address : "",
-    postcode: form.delivery === "home" ? form.postalCode : "",
-    city: form.delivery === "home" ? form.city : "",
+    address_1: form.address,
+    postcode: form.postalCode,
+    city: form.city,
     country: "FR",
     email: form.email,
     phone: form.phone,
@@ -57,9 +57,9 @@ function buildOrderPayload(form, lines, subtotal, shipping, total, reference) {
       first_name: form.firstName,
       last_name: form.lastName,
       company: form.company || "",
-      address_1: form.delivery === "home" ? form.address : "",
-      postcode: form.delivery === "home" ? form.postalCode : "",
-      city: form.delivery === "home" ? form.city : "",
+      address_1: form.address,
+      postcode: form.postalCode,
+      city: form.city,
       country: "FR",
     },
     items: lines.map(({ product, qty }) => ({
@@ -107,7 +107,7 @@ function saveNextOrderReference(reference) {
 
 export default function Order() {
   const { lines, subtotal, shipping, total, count, clear } = useCart();
-  const [form, setForm] = useState(() => ({ ...initialForm, ...readStoredValue(FORM_STORAGE_KEY, {}) }));
+  const [form, setForm] = useState(() => ({ ...initialForm, ...readStoredValue(FORM_STORAGE_KEY, {}), delivery: "home" }));
   const [submitted, setSubmitted] = useState(() => readStoredValue(SUBMITTED_STORAGE_KEY, null));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -207,7 +207,7 @@ export default function Order() {
   return (
     <section className="section order-page">
       <div className="order-breadcrumbs"><Link to="/">Accueil</Link><span aria-hidden="true">›</span><Link to="/panier">Panier</Link><span aria-hidden="true">›</span><strong>Commande</strong></div>
-      <div className="order-heading"><div><span className="section-kicker">FINALISER VOTRE DEMANDE</span><h1 className="page-title">Vos coordonnées pour le virement</h1><p>Renseignez les informations nécessaires à la préparation de votre commande et à la livraison de votre combustible.</p></div><ShieldCheck size={48} strokeWidth={1.1} /></div>
+      <div className="order-heading"><div><span className="section-kicker">FINALISER VOTRE DEMANDE</span><h1 className="page-title">Vos coordonnées pour la livraison</h1><p>Renseignez les informations nécessaires à la préparation de votre commande et à l’expédition de votre combustible.</p></div><ShieldCheck size={48} strokeWidth={1.1} /></div>
       <form className="order-layout" onSubmit={submit}>
         <div className="order-form-column">
           <section className="order-form-section">
@@ -222,13 +222,11 @@ export default function Order() {
           </section>
 
           <section className="order-form-section">
-            <div className="order-section-heading"><span>02</span><div><h2>Réception de la commande</h2><p>Choisissez le mode de réception souhaité. Nous confirmerons les modalités avec vous.</p></div></div>
+            <div className="order-section-heading"><span>02</span><div><h2>Adresse de livraison</h2><p>Votre commande est expédiée sur palette à l’adresse indiquée. Nous confirmerons les modalités avec vous.</p></div></div>
             <div className="order-delivery-options">
-              <label className={`order-delivery-option${form.delivery === "home" ? " active" : ""}`}><input type="radio" name="delivery" value="home" checked={form.delivery === "home"} onChange={(event) => update("delivery", event.target.value)} /><Truck size={21} /><span><strong>Livraison sur palette</strong><small>À l’adresse indiquée · 6 à 8 jours ouvrés</small></span></label>
-              <label className={`order-delivery-option${form.delivery === "pickup" ? " active" : ""}`}><input type="radio" name="delivery" value="pickup" checked={form.delivery === "pickup"} onChange={(event) => update("delivery", event.target.value)} /><Warehouse size={21} /><span><strong>Retrait à Phalsbourg</strong><small>Sur rendez-vous · véhicule adapté requis</small></span></label>
+              <div className="order-delivery-option active"><Truck size={21} /><span><strong>Livraison sur palette</strong><small>À l’adresse indiquée · 6 à 8 jours ouvrés</small></span></div>
             </div>
-            {form.delivery === "home" && <div className="order-form-grid order-address-grid"><label className="field order-field-full"><span>Adresse *</span><input required value={form.address} onChange={(event) => update("address", event.target.value)} autoComplete="street-address" placeholder="Numéro et rue" /></label><label className="field"><span>Code postal *</span><input required value={form.postalCode} onChange={(event) => update("postalCode", event.target.value)} autoComplete="postal-code" /></label><label className="field"><span>Ville *</span><input required value={form.city} onChange={(event) => update("city", event.target.value)} autoComplete="address-level2" /></label></div>}
-            {form.delivery === "pickup" && <div className="order-pickup-note"><MapPin size={18} /><span><strong>Point de retrait</strong>{COMPANY.warehouse.address}, {COMPANY.warehouse.city}. Un rendez-vous sera confirmé avant votre déplacement.</span></div>}
+            <div className="order-form-grid order-address-grid"><label className="field order-field-full"><span>Adresse *</span><input required value={form.address} onChange={(event) => update("address", event.target.value)} autoComplete="street-address" placeholder="Numéro et rue" /></label><label className="field"><span>Code postal *</span><input required value={form.postalCode} onChange={(event) => update("postalCode", event.target.value)} autoComplete="postal-code" /></label><label className="field"><span>Ville *</span><input required value={form.city} onChange={(event) => update("city", event.target.value)} autoComplete="address-level2" /></label></div>
             <label className="field order-note-field"><span>Information utile <small>facultatif</small></span><textarea rows="3" value={form.note} onChange={(event) => update("note", event.target.value)} placeholder="Accès, présence sur place, précision pour le transporteur..." /></label>
           </section>
 

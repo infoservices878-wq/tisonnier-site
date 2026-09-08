@@ -8,8 +8,8 @@ export const FAQ_ITEMS = [
     a: "Comptez en moyenne 6 à 8 jours ouvrés entre la validation de la commande et la livraison, selon la région et la disponibilité du produit choisi. Un créneau indicatif vous est communiqué par e-mail avant passage du transporteur.",
   },
   {
-    q: "Puis-je retirer ma commande moi-même ?",
-    a: "Oui, un retrait sur rendez-vous est possible à notre point de stockage. Contactez-nous avant de vous déplacer : le retrait n'est possible qu'après confirmation écrite et avec un véhicule adapté au poids de la palette.",
+    q: "Comment ma commande est-elle expédiée ?",
+    a: "Toutes les commandes sont expédiées sur palette à l'adresse indiquée lors de la commande. Un e-mail de confirmation et un créneau indicatif vous sont transmis avant le passage du transporteur.",
   },
   {
     q: "Que faire si un produit arrive endommagé ?",
@@ -21,6 +21,6 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Quels moyens de paiement acceptez-vous ?",
-    a: "Le paiement en ligne s'effectue par carte bancaire au moment de la commande. Pour un retrait sur place, le règlement peut aussi se faire sur place le jour du rendez-vous.",
+    a: "Le règlement s'effectue par virement bancaire. Après validation de votre demande, nous vous envoyons les coordonnées bancaires et le montant exact à régler par e-mail.",
   },
 ];

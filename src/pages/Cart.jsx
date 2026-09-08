@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Check, Minus, Plus, ShieldCheck, ShoppingBag, Trash2, Truck, Warehouse } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Minus, Plus, ShieldCheck, ShoppingBag, Trash2, Truck } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { formatPrice } from "../lib/format";
 import { CATEGORIES } from "../data/categories";
@@ -20,7 +20,7 @@ export default function Cart() {
           <p>Choisissez vos combustibles et composez une commande adaptée à votre saison de chauffe.</p>
           <Link to="/catalogue" className="btn btn-primary">Découvrir le catalogue <ArrowRight size={16} /></Link>
         </div>
-        <div className="cart-assurances"><span><Truck size={18} /> Livraison sur palette</span><span><ShieldCheck size={18} /> Commande accompagnée</span><span><Warehouse size={18} /> Retrait possible à Phalsbourg</span></div>
+        <div className="cart-assurances"><span><Truck size={18} /> Expédition sur palette</span><span><ShieldCheck size={18} /> Commande accompagnée</span><span><Check size={18} /> Confirmation écrite</span></div>
       </section>
     );
   }
@@ -28,7 +28,7 @@ export default function Cart() {
   return (
     <section className="section cart-page">
       <div className="cart-breadcrumbs"><Link to="/">Accueil</Link><span aria-hidden="true">›</span><strong>Panier</strong></div>
-      <div className="cart-heading"><div><span className="section-kicker">VOTRE SÉLECTION</span><h1 className="page-title">Panier <span>({count} article{count > 1 ? "s" : ""})</span></h1><p>Vérifiez vos références et choisissez ensuite le mode de réception adapté.</p></div><div className="cart-heading-mark"><ShieldCheck size={38} strokeWidth={1.2} /><span>Paiement sécurisé<br />et commande suivie</span></div></div>
+      <div className="cart-heading"><div><span className="section-kicker">VOTRE SÉLECTION</span><h1 className="page-title">Panier <span>({count} article{count > 1 ? "s" : ""})</span></h1><p>Vérifiez vos références et préparez votre adresse de livraison.</p></div><div className="cart-heading-mark"><ShieldCheck size={38} strokeWidth={1.2} /><span>Paiement sécurisé<br />et commande suivie</span></div></div>
       <div className="cart-shipping-progress">
         <div className="cart-shipping-copy"><span><Truck size={17} /> Livraison sur palette</span><strong>{shipping === 0 ? "La livraison est offerte pour cette commande" : `Plus que ${formatPrice(remainingForFreeShipping)} pour la livraison offerte`}</strong></div>
         <div className="cart-progress-track"><span style={{ width: `${shippingProgress}%` }} /></div>
@@ -63,7 +63,7 @@ export default function Cart() {
           <Link to="/commande" className="btn btn-primary btn-block cart-checkout-button">Passer la commande <ArrowRight size={17} /></Link>
           <div className="cart-summary-note"><ShieldCheck size={17} /><span>Vos données sont traitées de manière sécurisée.</span></div>
           <p className="summary-hint">Le paiement en ligne sera bientôt disponible. Nous vous confirmerons ensuite le créneau de livraison.</p>
-          <div className="cart-summary-services"><span><Truck size={15} /> Livraison 6 à 8 jours</span><span><Warehouse size={15} /> Retrait à Phalsbourg</span></div>
+          <div className="cart-summary-services"><span><Truck size={15} /> Livraison 6 à 8 jours</span><span><Check size={15} /> Réception suivie</span></div>
         </aside>
       </div>
     </section>

@@ -58,7 +58,7 @@ export default function Header() {
     <header className="site-header">
       <div className="topbar">
         <span className="topbar-item topbar-shipping">
-          Livraison offerte dès {formatPrice(FREE_SHIPPING_THRESHOLD)} · sinon {formatPrice(SHIPPING_FEE)} · délai de 6 à 8 jours
+          Anticipez l'hiver : tarifs promotionnels sur tous nos combustibles · expédition sur palette
         </span>
         <span className="topbar-item topbar-legal">OSSAU BOIS SARL · Vente de combustibles solides</span>
         <div className="topbar-item topbar-country" aria-label="Pays de livraison sélectionné">

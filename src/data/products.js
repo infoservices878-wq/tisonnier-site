@@ -1080,14 +1080,14 @@ export const PRODUCTS = [
         "Charbon anthracite dur à forte énergie de combustion",
         "Peu de cendres et très peu de poussière",
         "Granulométrie adaptée aux appareils à trémie",
-        "Livraison à domicile ou retrait en magasin selon disponibilité",
+        "Expédition sur palette à l’adresse indiquée",
       ],
       preparation:
         "Le charbon est calibré en granulométrie 12–22 mm puis conditionné en sacs de 25 kg regroupés sur palette.",
       usage:
         "Utiliser uniquement dans un poêle à charbon, brûleur ou appareil compatible avec l’anthracite 12–22 mm. Respecter les instructions du fabricant.",
       storage: "Conserver les sacs au sec, dans un endroit ventilé et à l’abri de l’humidité.",
-      delivery: "Livraison à domicile ou retrait en magasin selon les conditions du fournisseur.",
+      delivery: "Expédition sur palette à l’adresse indiquée, selon les conditions du fournisseur.",
       specs: [
         ["Type", "Anthracite 100 %"],
         ["Granulométrie", "12–22 mm"],
@@ -1124,7 +1124,7 @@ export const PRODUCTS = [
       usage:
         "Utiliser dans des poêles, cheminées et inserts compatibles avec des bûches de 30 cm.",
       storage: "Stocker au sec dans un endroit ventilé ou sous abri, à l’écart de l’humidité du sol.",
-      delivery: "Livraison à domicile ou retrait en magasin selon les conditions du fournisseur.",
+      delivery: "Expédition sur palette à l’adresse indiquée, selon les conditions du fournisseur.",
       specs: [
         ["Longueur des bûches", "30 cm"],
         ["Essence", "100 % hêtre"],
@@ -1200,7 +1200,7 @@ export const PRODUCTS = [
       usage:
         "Utiliser dans des poêles, cheminées et inserts compatibles avec des bûches de 25 cm.",
       storage: "Stocker au sec dans un endroit ventilé ou sous abri, à l’écart de l’humidité du sol.",
-      delivery: "Livraison à domicile ou retrait en magasin selon les conditions du fournisseur.",
+      delivery: "Expédition sur palette à l’adresse indiquée, selon les conditions du fournisseur.",
       specs: [
         ["Longueur des bûches", "25 cm"],
         ["Essence", "100 % hêtre"],
@@ -1236,7 +1236,7 @@ export const PRODUCTS = [
       usage:
         "Utiliser dans des poêles, cheminées et inserts compatibles avec des bûches de 30 cm.",
       storage: "Stocker le sac dans un endroit ventilé ou sous abri, protégé de l’humidité du sol.",
-      delivery: "Livraison à domicile ou retrait en magasin selon les conditions du fournisseur.",
+      delivery: "Expédition sur palette à l’adresse indiquée, selon les conditions du fournisseur.",
       specs: [
         ["Longueur des bûches", "30 cm"],
         ["Essence", "Hêtre"],

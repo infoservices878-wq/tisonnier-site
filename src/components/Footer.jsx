@@ -79,13 +79,9 @@ export default function Footer() {
           </div>
 
           <div className="footer-col footer-col-last">
-            <h3 className="footer-heading">ENTREPÔT DE RETRAIT</h3>
-            <p className="footer-address">
-              {COMPANY.warehouse.address}<br />
-              {COMPANY.warehouse.city}<br />
-              {COMPANY.warehouse.country}
-            </p>
-            <p className="footer-note">{COMPANY.warehouse.note}</p>
+            <h3 className="footer-heading">ENGAGEMENT EXPÉDITION</h3>
+            <p className="footer-address">Expédition de vos combustibles sur palette, à l’adresse indiquée lors de la commande.</p>
+            <p className="footer-note">Confirmation écrite, créneau communiqué avant livraison et équipe joignable pour vous accompagner.</p>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Check, Heart, Minus, Plus, ShieldCheck, ShoppingCart, Truck, Warehouse } from "lucide-react";
+import { ArrowLeft, Check, Heart, Minus, Plus, ShieldCheck, ShoppingCart, Truck } from "lucide-react";
 import { getProductById } from "../data/products";
 import { CATEGORIES } from "../data/categories";
 import { formatPrice } from "../lib/format";
@@ -100,7 +100,7 @@ export default function ProductDetail() {
           </div>
           <div className="product-service-list">
             <div><Truck size={20} /><span><strong>Livraison sur palette</strong><small>Offerte dès {formatPrice(FREE_SHIPPING_THRESHOLD)}, sinon {formatPrice(SHIPPING_FEE)}</small></span></div>
-            <div><Warehouse size={20} /><span><strong>Retrait sur rendez-vous</strong><small>Point de retrait à Phalsbourg, véhicule adapté requis</small></span></div>
+            <div><ShieldCheck size={20} /><span><strong>Commande suivie</strong><small>Confirmation écrite et créneau de livraison communiqué</small></span></div>
             <div><ShieldCheck size={20} /><span><strong>Commande accompagnée</strong><small>Confirmation écrite et créneau de livraison communiqué</small></span></div>
           </div>
         </div>
