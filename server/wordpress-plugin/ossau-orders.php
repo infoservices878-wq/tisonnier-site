@@ -509,7 +509,7 @@ function ossau_order_email( WC_Order $order, $reference, $recipient, $is_interna
 	}
 
 	$customer_name = trim( $order->get_formatted_billing_full_name() ) ?: 'Client Ossau Bois';
-	$delivery_mode = 'pickup' === $order->get_meta( '_ossau_delivery_mode' ) ? 'Retrait a Phalsbourg' : 'Livraison a domicile';
+	$delivery_mode = 'Livraison sur palette a l adresse indiquee';
 	$item_rows = '';
 
 	foreach ( $order->get_items( 'line_item' ) as $item ) {
