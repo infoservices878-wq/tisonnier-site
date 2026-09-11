@@ -14,7 +14,7 @@ export const COMPANY = {
   manager: "Marie Bourdieu",
   inpiExtractUrl: "https://data.inpi.fr/export/companies?format=pdf&ids=[%22101289247%22]",
   email: "info@ossau-bois.com",
-  phone: "+33 1 23 45 67 89",
+  phone: "+33 7 74 07 78 36",
   phoneHref: "tel:+33123456789",
   hours: "Lundi–vendredi, 08:00–16:00",
 };

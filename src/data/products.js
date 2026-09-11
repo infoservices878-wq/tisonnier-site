@@ -1,4 +1,6 @@
 /** Catalogue produits réels importés depuis les fiches fournisseurs. */
+const PRODUCT_DISCOUNT_RATE = 0.3;
+
 export const PRODUCTS = [
   {
     id: "briquettes-chene-pini-kay-palette-960-kg",
@@ -1393,7 +1395,14 @@ export const PRODUCTS = [
         ["Référence fournisseur", "BCG10822"],
       ],
     },
-];
+].map((product) => ({
+  ...product,
+  price: Number((product.price * (1 - PRODUCT_DISCOUNT_RATE)).toFixed(2)),
+  promoPrice:
+    product.promoPrice === null
+      ? null
+      : Number((product.promoPrice * (1 - PRODUCT_DISCOUNT_RATE)).toFixed(2)),
+}));
 
 export const FREE_SHIPPING_THRESHOLD = 229;
 export const SHIPPING_FEE = 24.9;
