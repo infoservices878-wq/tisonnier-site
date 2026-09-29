@@ -11,7 +11,7 @@ function PasswordField({ label, value, onChange }) {
       <span>{label}</span>
       <span className="password-field">
         <input type={isVisible ? "text" : "password"} value={value} onChange={onChange} minLength={8} required autoComplete="new-password" />
-        <button type="button" className="password-toggle" onClick={() => setIsVisible((visible) => !visible)} aria-label={isVisible ? "Masquer le mot de passe" : "Afficher le mot de passe"} title={isVisible ? "Masquer le mot de passe" : "Afficher le mot de passe"}>
+        <button type="button" className="password-toggle" onClick={() => setIsVisible((visible) => !visible)} aria-label={isVisible ? "Passwort ausblenden" : "Passwort anzeigen"} title={isVisible ? "Passwort ausblenden" : "Passwort anzeigen"}>
           {isVisible ? <EyeOff size={18} /> : <Eye size={18} />}
         </button>
       </span>
@@ -35,11 +35,11 @@ export default function ResetPassword() {
     setError("");
 
     if (password.length < 8) {
-      setError("Le mot de passe doit contenir au moins 8 caractères.");
+      setError("Das Passwort muss mindestens 8 Zeichen enthalten.");
       return;
     }
     if (password !== confirmation) {
-      setError("Les deux mots de passe ne correspondent pas.");
+      setError("Die beiden Passwörter stimmen nicht überein.");
       return;
     }
 
@@ -51,9 +51,9 @@ export default function ResetPassword() {
     <section className="section account-page">
       <div className="account-hero">
         <div>
-          <span className="section-kicker">ESPACE CLIENT OSSAU BOIS</span>
-          <h1 className="page-title">Choisissez un nouveau mot de passe.</h1>
-          <p>Votre demande est traitée de manière sécurisée. Vous resterez sur le site Ossau Bois.</p>
+          <span className="section-kicker">KUNDENBEREICH AM HOLZBRENNSTOFFE UG</span>
+          <h1 className="page-title">Wählen Sie ein neues Passwort.</h1>
+          <p>Ihre Anfrage wird sicher auf der Website von AM Holzbrennstoffe UG verarbeitet.</p>
         </div>
         <LockKeyhole size={58} strokeWidth={1.1} />
       </div>
@@ -61,29 +61,29 @@ export default function ResetPassword() {
         <form className="account-form" onSubmit={submit}>
           {submitted ? (
             <div className="form-heading">
-              <span className="section-kicker">Mot de passe modifié</span>
-              <h2>Vous pouvez vous reconnecter.</h2>
-              <p>Votre nouveau mot de passe est actif sur votre compte client.</p>
-              <Link to="/connexion" className="btn btn-primary btn-block">Se connecter <ArrowRight size={16} /></Link>
+              <span className="section-kicker">PASSWORT GEÄNDERT</span>
+              <h2>Sie können sich jetzt wieder anmelden.</h2>
+              <p>Ihr neues Passwort ist für Ihr Kundenkonto aktiv.</p>
+              <Link to="/connexion" className="btn btn-primary btn-block">Anmelden <ArrowRight size={16} /></Link>
             </div>
           ) : !hasResetLink ? (
             <div className="form-heading">
-              <span className="section-kicker">Lien invalide</span>
-              <h2>Ce lien ne peut pas être utilisé.</h2>
-              <p>Demandez un nouveau lien de réinitialisation depuis la page de connexion.</p>
-              <Link to="/connexion" className="btn btn-primary btn-block">Retour à la connexion <ArrowRight size={16} /></Link>
+              <span className="section-kicker">UNGÜLTIGER LINK</span>
+              <h2>Dieser Link kann nicht verwendet werden.</h2>
+              <p>Fordern Sie auf der Anmeldeseite einen neuen Link zum Zurücksetzen an.</p>
+              <Link to="/connexion" className="btn btn-primary btn-block">Zur Anmeldung <ArrowRight size={16} /></Link>
             </div>
           ) : (
             <>
-              <div className="form-heading"><span className="section-kicker">Réinitialisation</span><h2>Définissez votre nouveau mot de passe</h2><p>Choisissez au moins 8 caractères, puis confirmez-les.</p></div>
-              <PasswordField label="Nouveau mot de passe" value={password} onChange={(event) => setPassword(event.target.value)} />
-              <PasswordField label="Confirmer le mot de passe" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} />
+              <div className="form-heading"><span className="section-kicker">PASSWORT ZURÜCKSETZEN</span><h2>Neues Passwort festlegen</h2><p>Wählen Sie mindestens 8 Zeichen und bestätigen Sie diese.</p></div>
+              <PasswordField label="Neues Passwort" value={password} onChange={(event) => setPassword(event.target.value)} />
+              <PasswordField label="Passwort bestätigen" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} />
               {(error || authError) && <p className="form-error" role="alert">{error || authError}</p>}
-              <button type="submit" className="btn btn-primary btn-block" disabled={isAuthenticating}>{isAuthenticating ? "Validation..." : "Modifier mon mot de passe"} <ArrowRight size={16} /></button>
+              <button type="submit" className="btn btn-primary btn-block" disabled={isAuthenticating}>{isAuthenticating ? "Wird verarbeitet..." : "Passwort ändern"} <ArrowRight size={16} /></button>
             </>
           )}
         </form>
-        <aside className="account-aside"><ShieldCheck size={24} /><h2>Une réinitialisation confidentielle</h2><p>Le lien reçu par e-mail est personnel et temporaire. Votre nouveau mot de passe est enregistré directement sur votre compte client.</p></aside>
+        <aside className="account-aside"><ShieldCheck size={24} /><h2>Vertrauliches Zurücksetzen</h2><p>Der per E-Mail erhaltene Link ist persönlich und zeitlich begrenzt. Ihr neues Passwort wird direkt in Ihrem Kundenkonto gespeichert.</p></aside>
       </div>
     </section>
   );

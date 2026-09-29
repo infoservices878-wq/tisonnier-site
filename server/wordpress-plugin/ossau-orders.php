@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Ossau Bois - Commandes API
- * Description: Crée les commandes WooCommerce envoyées depuis le formulaire Ossau Bois.
+ * Plugin Name: AM Holzbrennstoffe UG - Commandes API
+ * Description: Crée les commandes WooCommerce envoyées depuis le formulaire AM Holzbrennstoffe UG.
  * Version: 1.9.0
  */
 
@@ -198,14 +198,14 @@ function ossau_send_verification_email( $email, $name, $key ) {
 		$frontend_url . '/verification-email'
 	);
 	$message = sprintf(
-		'<p>Bonjour %s,</p><p>Merci pour la creation de votre espace client Ossau Bois. Confirmez votre adresse e-mail pour activer votre compte et acceder a votre tableau de bord.</p><p><a href="%s">Confirmer mon adresse e-mail</a></p><p>Ce lien est valable pendant 48 heures. Si vous n etes pas a l origine de cette inscription, vous pouvez ignorer cet e-mail.</p>',
+		'<p>Bonjour %s,</p><p>Merci pour la creation de votre espace client AM Holzbrennstoffe UG. Confirmez votre adresse e-mail pour activer votre compte et acceder a votre tableau de bord.</p><p><a href="%s">Confirmer mon adresse e-mail</a></p><p>Ce lien est valable pendant 48 heures. Si vous n etes pas a l origine de cette inscription, vous pouvez ignorer cet e-mail.</p>',
 		esc_html( $name ),
 		esc_url( $verify_url )
 	);
 
-	$sent = wp_mail( $email, 'Confirmez votre adresse e-mail - Ossau Bois', $message, ossau_order_email_headers() );
+	$sent = wp_mail( $email, 'Confirmez votre adresse e-mail - AM Holzbrennstoffe UG', $message, ossau_order_email_headers() );
 	if ( ! $sent ) {
-		error_log( sprintf( '[Ossau Bois] Echec de l envoi de verification vers %s.', $email ) );
+		error_log( sprintf( '[AM Holzbrennstoffe UG] Echec de l envoi de verification vers %s.', $email ) );
 	}
 
 	return $sent;
@@ -337,9 +337,9 @@ function ossau_forgot_password( WP_REST_Request $request ) {
 					array( 'key' => $key, 'login' => $user->user_login ),
 					$frontend_url . '/reinitialisation'
 				);
-				$subject = 'Reinitialisez votre mot de passe Ossau Bois';
+				$subject = 'Reinitialisez votre mot de passe AM Holzbrennstoffe UG';
 				$message = sprintf(
-					'<p>Bonjour,</p><p>Une demande de reinitialisation de votre mot de passe a ete faite pour votre compte Ossau Bois.</p><p><a href="%s">Choisir un nouveau mot de passe</a></p><p>Ce lien est valable pendant une duree limitee. Si vous n etes pas a l origine de cette demande, vous pouvez ignorer cet e-mail.</p>',
+					'<p>Bonjour,</p><p>Une demande de reinitialisation de votre mot de passe a ete faite pour votre compte AM Holzbrennstoffe UG.</p><p><a href="%s">Choisir un nouveau mot de passe</a></p><p>Ce lien est valable pendant une duree limitee. Si vous n etes pas a l origine de cette demande, vous pouvez ignorer cet e-mail.</p>',
 					esc_url( $reset_url )
 				);
 				wp_mail( $user->user_email, $subject, $message, ossau_order_email_headers() );
@@ -461,8 +461,26 @@ function ossau_next_order_reference() {
 function ossau_order_email_headers() {
 	return array(
 		'Content-Type: text/html; charset=UTF-8',
-		'From: Ossau Bois <info@ossau-bois.com>',
-		'Reply-To: info@ossau-bois.com',
+		'From: AM Holzbrennstoffe UG <info@amholzbrennstoffeug.de>',
+		'Reply-To: info@amholzbrennstoffeug.de',
+	);
+}
+
+function ossau_order_transfer_details( $reference ) {
+	$holder = defined( 'OSSAU_BANK_ACCOUNT_HOLDER' ) ? trim( OSSAU_BANK_ACCOUNT_HOLDER ) : '';
+	$iban = defined( 'OSSAU_BANK_IBAN' ) ? trim( OSSAU_BANK_IBAN ) : '';
+	$bic = defined( 'OSSAU_BANK_BIC' ) ? trim( OSSAU_BANK_BIC ) : '';
+
+	if ( ! $holder || ! $iban || ! $bic ) {
+		return '<div style="margin-top:28px;padding:20px;background:#f7f4ee;border:1px solid #e6e1d8;border-left:4px solid #b8451f;"><p style="margin:0;font-size:14px;line-height:1.6;color:#24241f;">Nous vous communiquerons les coordonnées bancaires après vérification de votre commande.</p></div>';
+	}
+
+	return sprintf(
+		'<div style="margin-top:28px;padding:20px;background:#f7f4ee;border:1px solid #e6e1d8;border-left:4px solid #b8451f;"><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;margin-bottom:10px;">Informations pour votre virement</div><div style="font-size:14px;line-height:1.9;color:#24241f;"><strong>Titulaire du compte :</strong> %s<br><strong>IBAN :</strong> %s<br><strong>BIC :</strong> %s</div><p style="margin:14px 0 0;color:#6f6a60;font-size:12px;line-height:1.5;">Merci d indiquer la référence <strong>%s</strong> dans le libellé du virement.</p></div>',
+		esc_html( $holder ),
+		esc_html( $iban ),
+		esc_html( $bic ),
+		esc_html( $reference )
 	);
 }
 
@@ -478,10 +496,10 @@ function ossau_send_contact_message( WP_REST_Request $request ) {
 
 	$recipient = defined( 'OSSAU_CONTACT_EMAIL' ) && is_email( OSSAU_CONTACT_EMAIL )
 		? OSSAU_CONTACT_EMAIL
-		: 'info@ossau-bois.com';
-	$subject = sprintf( '[Ossau Bois] Nouveau message de %s', $name );
+		: 'info@amholzbrennstoffeug.de';
+	$subject = sprintf( '[AM Holzbrennstoffe UG] Nouveau message de %s', $name );
 	$email_html = sprintf(
-		'<!doctype html><html><body style="margin:0;padding:0;background:#f4f1ea;font-family:Arial,sans-serif;color:#24241f;"><div style="max-width:640px;margin:0 auto;padding:28px 16px;"><div style="background:#2e3b26;padding:28px 32px;color:#fff;"><div style="font-size:12px;letter-spacing:1.6px;color:#d4a84b;font-weight:700;">OSSAU BOIS</div><h1 style="font-size:25px;line-height:1.25;margin:12px 0 0;color:#fff;">Nouveau message de contact</h1></div><div style="background:#fff;padding:30px 32px;"><p style="font-size:16px;line-height:1.6;margin:0 0 24px;">Un visiteur a envoyé un message depuis le formulaire du site.</p><div style="padding:16px;background:#f7f4ee;border-left:4px solid #b8451f;margin-bottom:24px;line-height:1.7;"><strong>Nom :</strong> %s<br><strong>E-mail :</strong> <a style="color:#2e3b26;" href="mailto:%s">%s</a></div><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Message</div><div style="padding:18px;background:#f9f8f5;border:1px solid #e6e1d8;white-space:pre-wrap;font-size:15px;line-height:1.6;">%s</div></div><div style="padding:18px 32px;color:#6f6a60;font-size:12px;line-height:1.5;">Repondez directement a cet e-mail pour contacter le client.</div></div></div></body></html>',
+		'<!doctype html><html><body style="margin:0;padding:0;background:#f4f1ea;font-family:Arial,sans-serif;color:#24241f;"><div style="max-width:640px;margin:0 auto;padding:28px 16px;"><div style="background:#2e3b26;padding:28px 32px;color:#fff;"><div style="font-size:12px;letter-spacing:1.6px;color:#d4a84b;font-weight:700;">AM HOLZBRENNSTOFFE UG</div><h1 style="font-size:25px;line-height:1.25;margin:12px 0 0;color:#fff;">Nouveau message de contact</h1></div><div style="background:#fff;padding:30px 32px;"><p style="font-size:16px;line-height:1.6;margin:0 0 24px;">Un visiteur a envoyé un message depuis le formulaire du site.</p><div style="padding:16px;background:#f7f4ee;border-left:4px solid #b8451f;margin-bottom:24px;line-height:1.7;"><strong>Nom :</strong> %s<br><strong>E-mail :</strong> <a style="color:#2e3b26;" href="mailto:%s">%s</a></div><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Message</div><div style="padding:18px;background:#f9f8f5;border:1px solid #e6e1d8;white-space:pre-wrap;font-size:15px;line-height:1.6;">%s</div></div><div style="padding:18px 32px;color:#6f6a60;font-size:12px;line-height:1.5;">Repondez directement a cet e-mail pour contacter le client.</div></div></div></body></html>',
 		esc_html( $name ),
 		esc_attr( $email ),
 		esc_html( $email ),
@@ -489,7 +507,7 @@ function ossau_send_contact_message( WP_REST_Request $request ) {
 	);
 	$headers = array(
 		'Content-Type: text/html; charset=UTF-8',
-		'From: Ossau Bois <info@ossau-bois.com>',
+		'From: AM Holzbrennstoffe UG <info@amholzbrennstoffeug.de>',
 		'Reply-To: ' . $email,
 	);
 
@@ -508,7 +526,7 @@ function ossau_order_email( WC_Order $order, $reference, $recipient, $is_interna
 		return false;
 	}
 
-	$customer_name = trim( $order->get_formatted_billing_full_name() ) ?: 'Client Ossau Bois';
+	$customer_name = trim( $order->get_formatted_billing_full_name() ) ?: 'Client AM Holzbrennstoffe UG';
 	$delivery_mode = 'Livraison sur palette a l adresse indiquee';
 	$item_rows = '';
 
@@ -532,15 +550,12 @@ function ossau_order_email( WC_Order $order, $reference, $recipient, $is_interna
 		nl2br( esc_html( $order->get_formatted_billing_address() ) )
 	);
 	$subject = $is_internal
-		? sprintf( '[Ossau Bois] Nouvelle commande %s', $reference )
-		: sprintf( '[Ossau Bois] Confirmation de votre commande %s', $reference );
-	$transfer_details = $is_internal ? '' : sprintf(
-		'<div style="margin-top:28px;padding:20px;background:#f7f4ee;border:1px solid #e6e1d8;border-left:4px solid #b8451f;"><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Informations pour votre virement</div><p style="margin:0 0 14px;font-size:14px;line-height:1.6;color:#24241f;">Pour régler cette commande, veuillez effectuer le virement sur le compte utilisé pour les encaissements Ossau Bois. Le titulaire bancaire affiché est <strong>AURORA RIGGI</strong> : il s agit du titulaire du compte de règlement associé à l activité Ossau Bois, même si le nom commercial indiqué sur le site est différent.</p><div style="padding-top:14px;border-top:1px solid #e6e1d8;font-size:14px;line-height:1.9;color:#24241f;"><strong>Titulaire du compte :</strong> AURORA RIGGI<br><strong>IBAN :</strong> FR76 1723 8000 0100 4593 7703 827<br><strong>BIC :</strong> SCSYFRP2<br><strong>RIB :</strong> 17238 00001 00459377038 27</div><p style="margin:14px 0 0;color:#6f6a60;font-size:12px;line-height:1.5;">Merci d indiquer la référence <strong>%s</strong> dans le libellé du virement. En cas de doute, contactez-nous avant d effectuer le règlement.</p></div>',
-		esc_html( $reference )
-	);
+		? sprintf( '[AM Holzbrennstoffe UG] Nouvelle commande %s', $reference )
+		: sprintf( '[AM Holzbrennstoffe UG] Confirmation de votre commande %s', $reference );
+	$transfer_details = $is_internal ? '' : ossau_order_transfer_details( $reference );
 
 	$message = sprintf(
-		'<!doctype html><html><body style="margin:0;padding:0;background:#f4f1ea;font-family:Arial,sans-serif;color:#24241f;"><div style="max-width:640px;margin:0 auto;padding:28px 16px;"><div style="background:#2e3b26;padding:28px 32px;color:#fff;"><div style="font-size:12px;letter-spacing:1.6px;color:#d4a84b;font-weight:700;">OSSAU BOIS</div><h1 style="font-size:25px;line-height:1.25;margin:12px 0 0;color:#fff;">%s</h1></div><div style="background:#fff;padding:30px 32px;"><p style="font-size:16px;line-height:1.6;margin:0 0 24px;">%s</p><div style="padding:16px;background:#f7f4ee;border-left:4px solid #b8451f;margin-bottom:24px;"><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;letter-spacing:1px;">Reference de commande</div><strong style="display:block;font-size:21px;margin-top:5px;color:#24241f;">%s</strong></div><table style="width:100%%;border-collapse:collapse;font-size:14px;"><thead><tr><th style="text-align:left;padding-bottom:9px;color:#6f6a60;font-size:12px;text-transform:uppercase;letter-spacing:.8px;">Articles</th><th style="text-align:right;padding-bottom:9px;color:#6f6a60;font-size:12px;text-transform:uppercase;letter-spacing:.8px;">Montant</th></tr></thead><tbody>%s</tbody><tfoot><tr><td style="padding-top:16px;font-weight:700;font-size:16px;">Total TTC</td><td style="padding-top:16px;text-align:right;font-weight:700;font-size:18px;">%s</td></tr></tfoot></table>%s<div style="margin-top:28px;padding-top:20px;border-top:1px solid #e6e1d8;font-size:14px;line-height:1.6;"><strong>Mode de reception :</strong> %s<br><strong>Coordonnees client :</strong><br>%s</div></div><div style="padding:18px 32px;color:#6f6a60;font-size:12px;line-height:1.5;">OSSAU BOIS · info@ossau-bois.com<br>Conservez la reference %s dans le libelle de votre virement.</div></div></div></body></html>',
+		'<!doctype html><html><body style="margin:0;padding:0;background:#f4f1ea;font-family:Arial,sans-serif;color:#24241f;"><div style="max-width:640px;margin:0 auto;padding:28px 16px;"><div style="background:#2e3b26;padding:28px 32px;color:#fff;"><div style="font-size:12px;letter-spacing:1.6px;color:#d4a84b;font-weight:700;">AM HOLZBRENNSTOFFE UG</div><h1 style="font-size:25px;line-height:1.25;margin:12px 0 0;color:#fff;">%s</h1></div><div style="background:#fff;padding:30px 32px;"><p style="font-size:16px;line-height:1.6;margin:0 0 24px;">%s</p><div style="padding:16px;background:#f7f4ee;border-left:4px solid #b8451f;margin-bottom:24px;"><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;letter-spacing:1px;">Reference de commande</div><strong style="display:block;font-size:21px;margin-top:5px;color:#24241f;">%s</strong></div><table style="width:100%%;border-collapse:collapse;font-size:14px;"><thead><tr><th style="text-align:left;padding-bottom:9px;color:#6f6a60;font-size:12px;text-transform:uppercase;letter-spacing:.8px;">Articles</th><th style="text-align:right;padding-bottom:9px;color:#6f6a60;font-size:12px;text-transform:uppercase;letter-spacing:.8px;">Montant</th></tr></thead><tbody>%s</tbody><tfoot><tr><td style="padding-top:16px;font-weight:700;font-size:16px;">Total TTC</td><td style="padding-top:16px;text-align:right;font-weight:700;font-size:18px;">%s</td></tr></tfoot></table>%s<div style="margin-top:28px;padding-top:20px;border-top:1px solid #e6e1d8;font-size:14px;line-height:1.6;"><strong>Mode de reception :</strong> %s<br><strong>Coordonnees client :</strong><br>%s</div></div><div style="padding:18px 32px;color:#6f6a60;font-size:12px;line-height:1.5;">AM Holzbrennstoffe UG · info@amholzbrennstoffeug.de<br>Conservez la reference %s dans le libelle de votre virement.</div></div></div></body></html>',
 		esc_html( $heading ),
 		$intro,
 		esc_html( $reference ),
@@ -559,7 +574,7 @@ function ossau_send_order_emails( WC_Order $order, $reference ) {
 	$admin_sent = (bool) $order->get_meta( '_ossau_admin_email_sent' );
 	$customer_sent = (bool) $order->get_meta( '_ossau_customer_email_sent' );
 
-	if ( ! $admin_sent && ossau_order_email( $order, $reference, 'info@ossau-bois.com', true ) ) {
+	if ( ! $admin_sent && ossau_order_email( $order, $reference, 'info@amholzbrennstoffeug.de', true ) ) {
 		$order->update_meta_data( '_ossau_admin_email_sent', gmdate( 'c' ) );
 	}
 
@@ -603,7 +618,7 @@ function ossau_create_order( WP_REST_Request $request ) {
 		}
 
 		$order_item = new WC_Order_Item_Product();
-		$order_item->set_name( $name ?: 'Produit Ossau Bois' );
+		$order_item->set_name( $name ?: 'Produit AM Holzbrennstoffe UG' );
 		$order_item->set_quantity( $quantity );
 		$order_item->set_subtotal( $price * $quantity );
 		$order_item->set_total( $price * $quantity );

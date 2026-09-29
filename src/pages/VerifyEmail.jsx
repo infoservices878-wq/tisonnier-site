@@ -26,19 +26,19 @@ export default function VerifyEmail() {
     <section className="section account-page">
       <div className="account-hero">
         <div>
-          <span className="section-kicker">ESPACE CLIENT OSSAU BOIS</span>
-          <h1 className="page-title">Confirmation de votre adresse e-mail.</h1>
-          <p>Votre demande est traitée sur le site Ossau Bois.</p>
+          <span className="section-kicker">KUNDENBEREICH AM HOLZBRENNSTOFFE UG</span>
+          <h1 className="page-title">Bestätigung Ihrer E-Mail-Adresse.</h1>
+          <p>Ihre Anfrage wird auf der Website von AM Holzbrennstoffe UG verarbeitet.</p>
         </div>
         <MailCheck size={58} strokeWidth={1.1} />
       </div>
       <div className="account-layout">
         <div className="account-form">
-          {status === "pending" && <div className="form-heading"><span className="section-kicker">Vérification en cours</span><h2>Nous confirmons votre adresse.</h2><p>{isAuthenticating ? "Un instant..." : "Veuillez patienter."}</p></div>}
-          {status === "verified" && <div className="form-heading"><CheckCircle2 className="account-verification-icon" size={30} /><span className="section-kicker">Adresse confirmée</span><h2>Votre compte est activé.</h2><p>Vous pouvez maintenant vous connecter à votre espace client.</p><Link to="/connexion" className="btn btn-primary btn-block">Se connecter <ArrowRight size={16} /></Link></div>}
-          {status === "invalid" && <div className="form-heading"><span className="section-kicker">Lien invalide</span><h2>Cette confirmation n’est plus disponible.</h2><p>{authError || "Le lien est invalide ou a expiré. Vous pouvez créer un nouveau compte avec une adresse valide."}</p><Link to="/connexion" className="btn btn-primary btn-block">Retour à la connexion <ArrowRight size={16} /></Link></div>}
+          {status === "pending" && <div className="form-heading"><span className="section-kicker">BESTÄTIGUNG LÄUFT</span><h2>Wir bestätigen Ihre Adresse.</h2><p>{isAuthenticating ? "Einen Moment bitte ..." : "Bitte warten Sie."}</p></div>}
+          {status === "verified" && <div className="form-heading"><CheckCircle2 className="account-verification-icon" size={30} /><span className="section-kicker">ADRESSE BESTÄTIGT</span><h2>Ihr Konto ist aktiviert.</h2><p>Sie können sich jetzt in Ihrem Kundenbereich anmelden.</p><Link to="/connexion" className="btn btn-primary btn-block">Anmelden <ArrowRight size={16} /></Link></div>}
+          {status === "invalid" && <div className="form-heading"><span className="section-kicker">UNGÜLTIGER LINK</span><h2>Diese Bestätigung ist nicht mehr verfügbar.</h2><p>{authError || "Der Link ist ungültig oder abgelaufen. Sie können ein neues Konto mit einer gültigen Adresse erstellen."}</p><Link to="/connexion" className="btn btn-primary btn-block">Zur Anmeldung <ArrowRight size={16} /></Link></div>}
         </div>
-        <aside className="account-aside"><ShieldCheck size={24} /><h2>Une adresse vérifiée pour un espace fiable</h2><p>La confirmation de votre adresse protège votre compte et permet à Ossau Bois de vous transmettre les informations importantes liées à vos commandes.</p></aside>
+        <aside className="account-aside"><ShieldCheck size={24} /><h2>Bestätigte Adresse, sicheres Konto</h2><p>Die Bestätigung Ihrer Adresse schützt Ihr Konto und ermöglicht AM Holzbrennstoffe UG, Ihnen wichtige Informationen zu Ihren Bestellungen zu senden.</p></aside>
       </div>
     </section>
   );

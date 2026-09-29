@@ -18,17 +18,17 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <section className="section">
-        <h1 className="page-title">Produit introuvable</h1>
-        <Link to="/catalogue" className="btn btn-primary">Retour au catalogue</Link>
+        <h1 className="page-title">Produkt nicht gefunden</h1>
+        <Link to="/catalogue" className="btn btn-primary">Zurück zum Katalog</Link>
       </section>
     );
   }
 
   const cat = CATEGORIES.find((c) => c.id === product.category);
   const highlights = [
-    ["Marque", product.brand || "Ossau Bois"],
-    ["Référence", product.reference || product.id],
-    ["Conditionnement", product.packaging],
+    ["Marke", product.brand || "Holzbrennstoffe"],
+    ["Artikelnummer", product.reference || product.id],
+    ["Verpackung", product.packaging],
     ...(product.specs || []).slice(0, 3),
   ];
 
@@ -39,8 +39,8 @@ export default function ProductDetail() {
 
   return (
     <section className="section product-page">
-      <nav className="product-breadcrumbs" aria-label="Fil d’Ariane">
-        <Link to="/">Accueil</Link>
+      <nav className="product-breadcrumbs" aria-label="Brotkrümelnavigation">
+        <Link to="/">Startseite</Link>
         <span className="product-breadcrumb-separator" aria-hidden="true">›</span>
         <Link to={`/catalogue/${product.category}`}>{cat?.name}</Link>
         <span className="product-breadcrumb-separator" aria-hidden="true">›</span>
@@ -53,7 +53,7 @@ export default function ProductDetail() {
             {(product.image || cat?.image) && <img src={product.image || cat.image} alt={product.name} />}
             <span className="product-gallery-label">{cat?.name}</span>
           </div>
-          <div className="product-gallery-note"><Check size={16} /> Conditionnement professionnel sur palette</div>
+          <div className="product-gallery-note"><Check size={16} /> Professionelle Palettenverpackung</div>
         </div>
 
         <div className="product-detail-info">
@@ -64,12 +64,12 @@ export default function ProductDetail() {
               type="button"
               className={`favorite-button favorite-button-detail${isFavorite(product.id) ? " is-favorite" : ""}`}
               onClick={() => toggleFavorite(product.id)}
-              aria-label={isFavorite(product.id) ? "Retirer des favoris" : "Ajouter aux favoris"}
+              aria-label={isFavorite(product.id) ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
             >
               <Heart size={19} fill={isFavorite(product.id) ? "currentColor" : "none"} />
             </button>
           </div>
-          <p className="product-detail-reference">Référence : {product.reference || product.id}{product.brand && ` · Marque : ${product.brand}`}</p>
+          <p className="product-detail-reference">Artikelnummer: {product.reference || product.id}{product.brand && ` · Marke: ${product.brand}`}</p>
           <p className="product-detail-description">{product.description}</p>
           <div className="product-highlights">
             {highlights.map(([label, value]) => (
@@ -82,26 +82,26 @@ export default function ProductDetail() {
                 {formatPrice(product.promoPrice ?? product.price)}
                 {product.promoPrice && <del>{formatPrice(product.price)}</del>}
               </strong>
-              <span className="product-price-note">Prix TTC · par unité</span>
+              <span className="product-price-note">Preis inkl. MwSt. · pro Einheit</span>
             </div>
             <div className="product-stock-line"><Check size={16} /> {product.stock}</div>
             <p className="product-packaging product-packaging-highlight">{product.packaging}</p>
             <div className="product-buy-row">
-              <div className="quantity-control" aria-label="Quantité">
-                <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} aria-label="Diminuer la quantité"><Minus size={16} /></button>
+              <div className="quantity-control" aria-label="Menge">
+                <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} aria-label="Menge verringern"><Minus size={16} /></button>
                 <span>{quantity}</span>
-                <button type="button" onClick={() => setQuantity((value) => value + 1)} aria-label="Augmenter la quantité"><Plus size={16} /></button>
+                <button type="button" onClick={() => setQuantity((value) => value + 1)} aria-label="Menge erhöhen"><Plus size={16} /></button>
               </div>
               <button type="button" className="btn btn-primary add-cart-button product-add-button checkout-action-button" onClick={addToCart}>
-                {added ? <><Check size={17} /> Ajouté au panier</> : <><ShoppingCart size={17} /> Ajouter au panier</>}
+                {added ? <><Check size={17} /> Zum Warenkorb hinzugefügt</> : <><ShoppingCart size={17} /> In den Warenkorb</>}
               </button>
             </div>
-            {added && <Link to="/panier" className="product-cart-link">Voir mon panier →</Link>}
+            {added && <Link to="/panier" className="product-cart-link">Warenkorb anzeigen →</Link>}
           </div>
           <div className="product-service-list">
-            <div><Truck size={20} /><span><strong>Livraison sur palette</strong><small>Offerte dès {formatPrice(FREE_SHIPPING_THRESHOLD)}, sinon {formatPrice(SHIPPING_FEE)}</small></span></div>
-            <div><ShieldCheck size={20} /><span><strong>Commande suivie</strong><small>Confirmation écrite et créneau de livraison communiqué</small></span></div>
-            <div><ShieldCheck size={20} /><span><strong>Commande accompagnée</strong><small>Confirmation écrite et créneau de livraison communiqué</small></span></div>
+            <div><Truck size={20} /><span><strong>Palettenlieferung</strong><small>Kostenlos ab {formatPrice(FREE_SHIPPING_THRESHOLD)}, sonst {formatPrice(SHIPPING_FEE)}</small></span></div>
+            <div><ShieldCheck size={20} /><span><strong>Planbare Bestellung</strong><small>Schriftliche Bestätigung und Lieferinformation</small></span></div>
+            <div><ShieldCheck size={20} /><span><strong>Persönlicher Service</strong><small>Wichtige Informationen vor dem Versand</small></span></div>
           </div>
         </div>
       </div>
@@ -109,19 +109,19 @@ export default function ProductDetail() {
       {product.specs?.length > 0 && (
         <section className="product-specs-section">
           <div className="product-overview">
-            <span className="section-kicker">Fiche technique</span>
-            <h2 className="product-section-title">Produit et contenu de la palette</h2>
-            <p className="product-section-lede">Une sélection professionnelle, conditionnée pour simplifier le transport, le stockage et l’utilisation au quotidien.</p>
+            <span className="section-kicker">PRODUKTINFORMATIONEN</span>
+            <h2 className="product-section-title">Produkt und Paletteninhalt</h2>
+            <p className="product-section-lede">Professionell verpackt für einfachen Transport, trockene Lagerung und die tägliche Nutzung.</p>
             <div className="product-info-cards">
-              <article><h3>Principaux avantages</h3><ul>{(product.benefits || []).map((benefit) => <li key={benefit}>{benefit}</li>)}</ul></article>
-              <article><h3>Comment le produit est-il préparé ?</h3><p>{product.preparation || "Produit préparé et conditionné avec soin pour le transport."}</p></article>
-              <article><h3>Utilisation</h3><p>{product.usage || "Adapté aux appareils compatibles avec cette catégorie de combustible."}</p></article>
-              <article><h3>Stockage</h3><p>{product.storage || "Conserver dans un espace sec et protégé de l’humidité."}</p></article>
-              <article className="product-reception-card"><h3>Préparer la réception</h3><p>{product.delivery || "Prévoyez une zone accessible au véhicule de livraison et un moyen de déplacer la palette."}</p><div><span>Livraison offerte dès {formatPrice(FREE_SHIPPING_THRESHOLD)}</span><span>Délai indicatif : 7 jours</span></div></article>
+              <article><h3>Ihre Vorteile</h3><ul>{(product.benefits || []).map((benefit) => <li key={benefit}>{benefit}</li>)}</ul></article>
+              <article><h3>Produktaufbereitung</h3><p>{product.preparation || "Sorgfältig für den Transport vorbereitet und verpackt."}</p></article>
+              <article><h3>Anwendung</h3><p>{product.usage || "Für Geräte geeignet, die mit dieser Brennstoffkategorie betrieben werden können."}</p></article>
+              <article><h3>Lagerung</h3><p>{product.storage || "Trocken und vor Feuchtigkeit geschützt lagern."}</p></article>
+              <article className="product-reception-card"><h3>Warenannahme vorbereiten</h3><p>{product.delivery || "Bitte halten Sie eine für das Lieferfahrzeug zugängliche Fläche und eine Möglichkeit zum Bewegen der Palette bereit."}</p><div><span>Kostenlose Lieferung ab {formatPrice(FREE_SHIPPING_THRESHOLD)}</span><span>Richtwert: 7 Tage</span></div></article>
             </div>
           </div>
           <aside className="product-specs-panel">
-            <h2>Caractéristiques techniques</h2>
+            <h2>Technische Daten</h2>
             <table className="specs-table">
               <tbody>{product.specs.map(([key, value]) => <tr key={key}><th>{key}</th><td>{value}</td></tr>)}</tbody>
             </table>

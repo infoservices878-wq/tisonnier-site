@@ -15,7 +15,7 @@ function readStoredAccount() {
 
 async function authRequest(path, options = {}) {
   if (!WORDPRESS_API_URL) {
-    throw new Error("La connexion client n'est pas configurée.");
+    throw new Error("Die Kundenanmeldung ist nicht konfiguriert.");
   }
 
   const response = await fetch(`${WORDPRESS_API_URL}/wp-json/ossau/v1/auth/${path}`, {
@@ -29,7 +29,7 @@ async function authRequest(path, options = {}) {
   const payload = await response.json().catch(() => ({}));
 
   if (!response.ok || payload.success === false) {
-    const error = new Error(payload.message || "Une erreur est survenue. Veuillez réessayer.");
+    const error = new Error(payload.message || "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.");
     error.code = payload.code || "";
     throw error;
   }
@@ -96,7 +96,7 @@ export function AccountProvider({ children }) {
       });
       return payload;
     } catch (error) {
-      setAuthError(error.message || "Impossible de créer le compte.");
+      setAuthError(error.message || "Das Konto konnte nicht erstellt werden.");
       return false;
     } finally {
       setIsAuthenticating(false);
@@ -117,7 +117,7 @@ export function AccountProvider({ children }) {
       saveAccount(payload.user);
       return true;
     } catch (error) {
-      setAuthError(error.message || "E-mail ou mot de passe incorrect.");
+      setAuthError(error.message || "E-Mail-Adresse oder Passwort ist nicht korrekt.");
       return false;
     } finally {
       setIsAuthenticating(false);
@@ -134,7 +134,7 @@ export function AccountProvider({ children }) {
       });
       return true;
     } catch (error) {
-      setAuthError(error.message || "Impossible d'envoyer l'e-mail de réinitialisation.");
+      setAuthError(error.message || "Die E-Mail zum Zurücksetzen konnte nicht gesendet werden.");
       return false;
     } finally {
       setIsAuthenticating(false);
@@ -151,7 +151,7 @@ export function AccountProvider({ children }) {
       });
       return true;
     } catch (error) {
-      setAuthError(error.message || "Impossible de modifier le mot de passe.");
+      setAuthError(error.message || "Das Passwort konnte nicht geändert werden.");
       return false;
     } finally {
       setIsAuthenticating(false);
@@ -168,7 +168,7 @@ export function AccountProvider({ children }) {
       });
       return true;
     } catch (error) {
-      setAuthError(error.message || "Impossible de confirmer cette adresse e-mail.");
+      setAuthError(error.message || "Diese E-Mail-Adresse konnte nicht bestätigt werden.");
       return false;
     } finally {
       setIsAuthenticating(false);

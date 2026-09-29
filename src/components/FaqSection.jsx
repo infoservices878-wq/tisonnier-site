@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { FAQ_ITEMS } from "../data/faq";
 
-export default function FaqSection({ limit = null, showAllLink = false, title = "Questions fréquentes" }) {
+export default function FaqSection({ limit = null, showAllLink = false, title = "Häufige Fragen" }) {
   const items = limit ? FAQ_ITEMS.slice(0, limit) : FAQ_ITEMS;
 
   return (
@@ -11,7 +11,7 @@ export default function FaqSection({ limit = null, showAllLink = false, title = 
         <h2 className="section-title">{title}</h2>
         {showAllLink && (
           <Link to="/faq" className="link-btn">
-            Voir toutes les questions <ChevronRight size={16} strokeWidth={1.7} />
+            Alle Fragen ansehen <ChevronRight size={16} strokeWidth={1.7} />
           </Link>
         )}
       </div>

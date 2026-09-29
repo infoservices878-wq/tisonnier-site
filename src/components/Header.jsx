@@ -30,7 +30,7 @@ export default function Header() {
           .map((category) => ({
             key: `category-${category.id}`,
             label: category.name,
-            type: "Catégorie",
+            type: "Kategorie",
             to: `/catalogue?q=${encodeURIComponent(category.name)}`,
           })),
         ...PRODUCTS
@@ -38,7 +38,7 @@ export default function Header() {
           .map((product) => ({
             key: `product-${product.id}`,
             label: product.name,
-            type: "Produit",
+            type: "Produkt",
             to: `/catalogue?q=${encodeURIComponent(product.name)}`,
           })),
       ].slice(0, 5)
@@ -58,13 +58,13 @@ export default function Header() {
     <header className="site-header">
       <div className="topbar">
         <span className="topbar-item topbar-shipping">
-          Anticipez l'hiver : tarifs promotionnels sur tous nos combustibles · expédition sur palette
+          Jetzt vorsorgen: Aktionspreise auf feste Brennstoffe · Palettenversand
         </span>
-        <span className="topbar-item topbar-legal">OSSAU BOIS SARL · Vente de combustibles solides</span>
-        <div className="topbar-item topbar-country" aria-label="Pays de livraison sélectionné">
+        <span className="topbar-item topbar-legal">AM Holzbrennstoffe UG · Handel mit festen Brennstoffen</span>
+        <div className="topbar-item topbar-country" aria-label="Ausgewähltes Lieferland">
           <Globe size={14} strokeWidth={1.8} />
-          <span>Livraison en</span>
-          <strong>FR · Français</strong>
+          <span>Lieferung nach</span>
+          <strong>DE · Deutsch</strong>
           <ChevronDown size={13} strokeWidth={1.8} />
         </div>
       </div>
@@ -75,14 +75,14 @@ export default function Header() {
           <Search size={17} strokeWidth={1.8} className="search-icon" />
           <input
             type="text"
-            placeholder="Rechercher un combustible ou un produit"
+            placeholder="Brennstoff oder Produkt suchen"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
               setShowSuggestions(true);
             }}
             onFocus={() => setShowSuggestions(true)}
-            aria-label="Rechercher un produit"
+            aria-label="Produkt suchen"
           />
           {search && (
             <button
@@ -92,14 +92,14 @@ export default function Header() {
                 setSearch("");
                 setShowSuggestions(false);
               }}
-              aria-label="Effacer la recherche"
+              aria-label="Suche löschen"
             >
               <X size={15} strokeWidth={2} />
             </button>
           )}
-          <button type="submit" className="search-submit"><Search size={17} strokeWidth={1.8} className="search-submit-icon" /><span>Rechercher</span></button>
+          <button type="submit" className="search-submit"><Search size={17} strokeWidth={1.8} className="search-submit-icon" /><span>Suchen</span></button>
           {showSuggestions && suggestions.length > 0 && (
-            <div className="search-suggestions" role="listbox" aria-label="Suggestions de recherche">
+            <div className="search-suggestions" role="listbox" aria-label="Suchvorschläge">
               {suggestions.map((suggestion) => (
                 <button
                   key={suggestion.key}
@@ -127,34 +127,34 @@ export default function Header() {
               setMenuOpen(false);
               setShowSuggestions(false);
             }}
-            aria-label={mobileSearchOpen ? "Fermer la recherche" : "Ouvrir la recherche"}
-            title={mobileSearchOpen ? "Fermer la recherche" : "Ouvrir la recherche"}
+            aria-label={mobileSearchOpen ? "Suche schließen" : "Suche öffnen"}
+            title={mobileSearchOpen ? "Suche schließen" : "Suche öffnen"}
           >
             {mobileSearchOpen ? <X size={21} /> : <Search size={20} strokeWidth={1.8} />}
           </button>
           <Link to="/connexion" className="action-btn">
             <UserRound size={20} strokeWidth={1.6} />
-            <span>{account ? account.name : "Connexion"}</span>
+            <span>{account ? account.name : "Anmelden"}</span>
           </Link>
           <Link to="/favoris" className="action-btn">
             <span className="action-btn-icon-wrap">
               <Heart size={20} strokeWidth={1.6} />
               {favoriteCount > 0 && <span className="cart-count">{favoriteCount}</span>}
             </span>
-            <span>Favoris</span>
+            <span>Favoriten</span>
           </Link>
-          <Link to="/panier" className="action-btn cart-btn" aria-label="Voir le panier">
+          <Link to="/panier" className="action-btn cart-btn" aria-label="Warenkorb anzeigen">
             <span className="action-btn-icon-wrap">
               <ShoppingCart size={20} strokeWidth={1.6} />
               {count > 0 && <span className="cart-count">{count}</span>}
             </span>
-            <span>Panier</span>
+            <span>Warenkorb</span>
           </Link>
           <button
             type="button"
             className="icon-btn menu-toggle"
             onClick={() => setMenuOpen((o) => !o)}
-            aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-label={menuOpen ? "Menü schließen" : "Menü öffnen"}
           >
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -167,24 +167,24 @@ export default function Header() {
             <Search size={17} strokeWidth={1.8} className="search-icon" />
             <input
               type="text"
-              placeholder="Rechercher un combustible ou un produit"
+              placeholder="Brennstoff oder Produkt suchen"
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
                 setShowSuggestions(true);
               }}
               onFocus={() => setShowSuggestions(true)}
-              aria-label="Rechercher un produit"
+              aria-label="Produkt suchen"
               autoFocus
             />
             {search && (
-              <button type="button" className="search-clear" onClick={() => setSearch("")} aria-label="Effacer la recherche">
+              <button type="button" className="search-clear" onClick={() => setSearch("")} aria-label="Suche löschen">
                 <X size={15} strokeWidth={2} />
               </button>
             )}
-            <button type="submit" className="search-submit">Rechercher</button>
+            <button type="submit" className="search-submit">Suchen</button>
             {showSuggestions && suggestions.length > 0 && (
-              <div className="search-suggestions" role="listbox" aria-label="Suggestions de recherche">
+              <div className="search-suggestions" role="listbox" aria-label="Suchvorschläge">
                 {suggestions.map((suggestion) => (
                   <button key={suggestion.key} type="button" className="search-suggestion" onClick={() => { setSearch(suggestion.label); navigate(suggestion.to); setShowSuggestions(false); setMobileSearchOpen(false); }}>
                     <span className="search-suggestion-label">{suggestion.label}</span>
@@ -197,10 +197,10 @@ export default function Header() {
         </div>
       )}
 
-      <nav className="category-nav" aria-label="Catalogue">
+      <nav className="category-nav" aria-label="Katalog">
           <NavLink end to="/catalogue" className={({ isActive }) => "category-nav-link category-nav-primary" + (isActive ? " active" : "") }>
           <span className="category-nav-swatch" />
-          Catalogue
+          Katalog
         </NavLink>
         {CATEGORIES.map((c) => (
           <NavLink
@@ -212,28 +212,28 @@ export default function Header() {
           </NavLink>
         ))}
         <span className="category-nav-spacer" />
-        <NavLink to="/livraison" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>Livraison</NavLink>
-        <NavLink to="/entreprise" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>Entreprise</NavLink>
+        <NavLink to="/livraison" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>Lieferung</NavLink>
+        <NavLink to="/entreprise" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>Über uns</NavLink>
         <NavLink to="/faq" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>FAQ</NavLink>
         <NavLink to="/contact" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>Contact</NavLink>
       </nav>
 
       {menuOpen && (
         <div className="nav-drawer">
-          <Link to="/" className="nav-drawer-link" onClick={close}>Accueil</Link>
-          <Link to="/catalogue" className="nav-drawer-link" onClick={close}>Catalogue</Link>
+          <Link to="/" className="nav-drawer-link" onClick={close}>Startseite</Link>
+          <Link to="/catalogue" className="nav-drawer-link" onClick={close}>Katalog</Link>
           {CATEGORIES.map((c) => (
             <Link key={c.id} to={`/catalogue/${c.id}`} className="nav-drawer-link nav-drawer-sub" onClick={close}>
               {c.name}
             </Link>
           ))}
-          <Link to="/livraison" className="nav-drawer-link" onClick={close}>Livraison</Link>
-          <Link to="/entreprise" className="nav-drawer-link" onClick={close}>Entreprise</Link>
+          <Link to="/livraison" className="nav-drawer-link" onClick={close}>Lieferung</Link>
+          <Link to="/entreprise" className="nav-drawer-link" onClick={close}>Über uns</Link>
           <Link to="/faq" className="nav-drawer-link" onClick={close}>FAQ</Link>
           <Link to="/contact" className="nav-drawer-link" onClick={close}>Contact</Link>
-          <Link to="/connexion" className="nav-drawer-link" onClick={close}>Connexion</Link>
-          <Link to="/favoris" className="nav-drawer-link" onClick={close}>Favoris</Link>
-          <Link to="/panier" className="nav-drawer-link" onClick={close}>Panier ({count})</Link>
+          <Link to="/connexion" className="nav-drawer-link" onClick={close}>Anmelden</Link>
+          <Link to="/favoris" className="nav-drawer-link" onClick={close}>Favoriten</Link>
+          <Link to="/panier" className="nav-drawer-link" onClick={close}>Warenkorb ({count})</Link>
         </div>
       )}
     </header>

@@ -1,152 +1,91 @@
-/** Informations d’identification publiques vérifiées le 03/09/2026. */
+/** Unternehmensdaten, abgeglichen mit öffentlich zugänglichen Registerangaben. */
 
 export const COMPANY = {
-  name: "OSSAU BOIS",
-  legalForm: "SARL, société à responsabilité limitée",
-  capital: "10 000 €",
-  siren: "101 289 247",
-  address: "6 chemin de l'Oasis",
-  city: "64260 Gère-Bélesten",
-  country: "France",
-  rcs: "101 289 247 R.C.S. Pau",
-  siret: "101 289 247 00013",
-  tva: "FR24101289247",
-  manager: "Marie Bourdieu",
-  inpiExtractUrl: "https://data.inpi.fr/export/companies?format=pdf&ids=[%22101289247%22]",
-  email: "info@ossau-bois.com",
-  phone: "+33 7 74 07 78 36",
-  phoneHref: "tel:+33123456789",
-  hours: "Lundi–vendredi, 08:00–16:00",
+  name: "AM Holzbrennstoffe UG (haftungsbeschränkt)",
+  legalForm: "Unternehmergesellschaft (haftungsbeschränkt)",
+  capital: "10.000,00 €",
+  address: "Dünnenriede 3",
+  city: "30853 Langenhagen",
+  country: "Deutschland",
+  registerCourt: "Amtsgericht Hannover",
+  registerNumber: "HRB 223515",
+  manager: "Andreas Müller",
+  purpose: "Herstellung und Handel von Brennholz und Zubehör",
+  registerUrl: "https://www.companyhouse.de/AM-Holzbrennstoffe-UG-Langenhagen",
+  email: "info@amholzbrennstoffeug.de",
+  phone: "",
+  phoneHref: "",
+  hours: "",
 };
 
 export const MENTIONS_SECTIONS = [
   {
-    title: "Éditeur du site",
-    html: `<strong>${COMPANY.name}</strong><br />
-      ${COMPANY.legalForm} au capital de ${COMPANY.capital}<br />
-      ${COMPANY.address}, ${COMPANY.city}, ${COMPANY.country}<br />
-      ${COMPANY.rcs}<br />
-      SIRET : ${COMPANY.siret}<br />
-      TVA intracommunautaire : ${COMPANY.tva}<br />
-      Gérant : ${COMPANY.manager}`,
+    title: "Angaben gemäß § 5 DDG",
+    html: `<strong>${COMPANY.name}</strong><br />${COMPANY.address}<br />${COMPANY.city}<br />${COMPANY.country}`,
   },
+  { title: "Vertreten durch", html: `Geschäftsführer: ${COMPANY.manager}` },
   {
-    title: "Contact",
-    html: `E-mail : <a href="mailto:${COMPANY.email}">${COMPANY.email}</a><br />
-      Téléphone : ${COMPANY.phone}<br />
-      Horaires : ${COMPANY.hours}`,
+    title: "Registereintrag",
+    html: `Registergericht: ${COMPANY.registerCourt}<br />Handelsregisternummer: ${COMPANY.registerNumber}<br />Stammkapital: ${COMPANY.capital}`,
   },
+  { title: "Unternehmensgegenstand", html: `${COMPANY.purpose}.` },
+  { title: "Kontakt", html: `E-Mail: <a href="mailto:${COMPANY.email}">${COMPANY.email}</a>` },
   {
-    title: "Hébergement",
-    html: `Les coordonnées de l'hébergeur et du responsable technique du site sont tenues à
-      disposition du client et peuvent être communiquées sur demande à l'adresse
-      <a href="mailto:${COMPANY.email}">${COMPANY.email}</a>.`,
-  },
-  {
-    title: "Propriété intellectuelle",
-    html: `L'ensemble des éléments du site (textes, visuels, structure, marques)
-      est protégé. Toute reproduction non autorisée est interdite.
-      Toute demande relative à l'utilisation d'un contenu doit être adressée à ${COMPANY.email}.`,
+    title: "Verbraucherstreitbeilegung",
+    html: "Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
   },
 ];
 
 export const PRIVACY_SECTIONS = [
   {
-    title: "1. Responsable du traitement",
-    html: `${COMPANY.name} — ${COMPANY.address}, ${COMPANY.city} —
-      <a href="mailto:${COMPANY.email}">${COMPANY.email}</a>`,
+    title: "1. Verantwortlicher",
+    html: `${COMPANY.name}<br />${COMPANY.address}<br />${COMPANY.city}<br />E-Mail: <a href="mailto:${COMPANY.email}">${COMPANY.email}</a>`,
   },
   {
-    title: "2. Données collectées",
-    html: `Via le formulaire de contact : nom, adresse e-mail, contenu du message.
-      Via la navigation : données techniques usuelles (adresse IP, type de navigateur)
-      si des outils d'audience sont activés.`,
+    title: "2. Verarbeitung personenbezogener Daten",
+    html: "Bei einer Kontaktanfrage verarbeiten wir Ihren Namen, Ihre E-Mail-Adresse und den Inhalt Ihrer Nachricht. Bei Bestellungen verarbeiten wir die Daten, die für Vertragsabwicklung, Lieferung und Kundenkommunikation erforderlich sind.",
   },
   {
-    title: "3. Finalités",
-    html: `<ul>
-      <li> - Répondre aux demandes de contact et de devis</li>
-      <li> - Traiter les commandes et la relation client</li>
-      <li> - Améliorer le site et la sécurité (logs techniques)</li>
-    </ul>`,
+    title: "3. Zwecke und Rechtsgrundlagen",
+    html: "Die Verarbeitung erfolgt zur Beantwortung von Anfragen, zur Vertragsanbahnung und -erfüllung sowie zur Erfüllung gesetzlicher Pflichten. Rechtsgrundlagen sind Art. 6 Abs. 1 lit. b, c und f DSGVO; bei einwilligungsbedürftigen Diensten Art. 6 Abs. 1 lit. a DSGVO.",
   },
   {
-    title: "4. Base légale",
-    html: `Exécution de mesures précontractuelles ou contractuelles, intérêt légitime
-      (sécurité, amélioration du service) et, le cas échéant, consentement (cookies non essentiels).`,
+    title: "4. Speicherdauer",
+    html: "Wir speichern personenbezogene Daten nur so lange, wie dies für den jeweiligen Zweck oder aufgrund gesetzlicher Aufbewahrungspflichten erforderlich ist.",
   },
   {
-    title: "5. Durée de conservation",
-    html: `Messages de contact : 3 ans après le dernier échange.
-      Données de commande : durée légale comptable et fiscale.`,
+    title: "5. Ihre Rechte",
+    html: `Sie haben nach Maßgabe der DSGVO das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Sie können sich außerdem bei einer Datenschutzaufsichtsbehörde beschweren. Für Anliegen schreiben Sie bitte an <a href="mailto:${COMPANY.email}">${COMPANY.email}</a>.`,
   },
   {
-    title: "6. Destinataires",
-    html: `Personnel habilité de OSSAU BOIS et prestataires techniques strictement
-      nécessaires (hébergeur, transporteur). Aucune vente de données.`,
-  },
-  {
-    title: "7. Vos droits",
-    html: `Vous disposez des droits d'accès, de rectification, d'effacement,
-      de limitation, d'opposition et de portabilité, dans les conditions prévues par le RGPD.
-      Pour les exercer : <a href="mailto:${COMPANY.email}">${COMPANY.email}</a>.
-      Vous pouvez également saisir la CNIL.`,
-  },
-  {
-    title: "8. Cookies",
-    html: `Le bandeau cookies permet d'accepter ou de refuser les traceurs non
-      essentiels. Les préférences peuvent être modifiées à tout moment.`,
+    title: "6. Cookies",
+    html: "Nicht erforderliche Cookies oder vergleichbare Technologien werden nur nach Ihrer Einwilligung eingesetzt. Ihre Auswahl können Sie jederzeit über die Datenschutzeinstellungen ändern.",
   },
 ];
 
 export const CGV_SECTIONS = [
   {
-    title: "Article 1 — Objet",
-    html: `Les présentes CGV régissent les ventes de produits (granulés, briquettes,
-      bois de chauffage, charbon, allume-feu) proposés par ${COMPANY.name} aux
-      clients particuliers et professionnels.`,
+    title: "1. Geltungsbereich",
+    html: `Diese Allgemeinen Geschäftsbedingungen gelten für den Verkauf von Brennholz, Pellets, Briketts, Anzündhilfen und weiteren festen Brennstoffen durch ${COMPANY.name}.`,
   },
   {
-    title: "Article 2 — Produits et prix",
-    html: `Les caractéristiques essentielles des produits figurent sur les fiches
-      catalogue. Les prix sont indiqués en euros TTC. OSSAU BOIS se réserve
-      le droit de modifier ses tarifs ; le prix applicable est celui affiché
-      au moment de la validation de la commande.`,
+    title: "2. Vertragsschluss und Preise",
+    html: "Die Produktdarstellung im Online-Shop stellt kein verbindliches Angebot dar. Ein Vertrag kommt erst mit unserer Auftragsbestätigung zustande. Preise, Lieferkosten und die jeweils geltende Umsatzsteuer werden vor Abschluss der Bestellung ausgewiesen.",
   },
   {
-    title: "Article 3 — Commande",
-    html: `La commande est ferme après validation et paiement. Un e-mail de
-      confirmation récapitule le contenu, le montant et les modalités de livraison.`,
+    title: "3. Lieferung",
+    html: "Die Lieferung erfolgt an die bei der Bestellung angegebene Adresse. Der Kunde stellt sicher, dass die Zufahrt für das vereinbarte Lieferfahrzeug geeignet ist. Erkennbare Transportschäden sind bei Lieferung zu dokumentieren und uns zeitnah mitzuteilen.",
   },
   {
-    title: "Article 4 — Livraison",
-    html: `Livraison sur palette au bord de voie carrossable. Délai indicatif :
-      6 à 8 jours ouvrés. Le client doit vérifier l'état de la marchandise
-      à réception et émettre des réserves motivées sur le bon de livraison
-      en cas d'anomalie.`,
+    title: "4. Widerrufsrecht",
+    html: "Verbrauchern steht grundsätzlich ein gesetzliches Widerrufsrecht zu. Einzelheiten, Fristen und Ausnahmen richten sich nach den gesetzlichen Vorschriften und werden im Bestellprozess beziehungsweise in der Auftragsbestätigung mitgeteilt.",
   },
   {
-    title: "Article 5 — Droit de rétractation",
-    html: `Conformément au Code de la consommation, le client particulier dispose
-      d'un délai de 14 jours pour se rétracter, sauf exceptions légales
-      (produits susceptibles de se détériorer rapidement, etc.). Les frais
-      de retour restent à la charge du client sauf accord contraire.`,
+    title: "5. Gewährleistung und Haftung",
+    html: "Es gelten die gesetzlichen Mängelhaftungsrechte. Schadensersatzansprüche sind – außer bei Vorsatz, grober Fahrlässigkeit, Verletzung von Leben, Körper oder Gesundheit sowie bei zwingender gesetzlicher Haftung – ausgeschlossen oder beschränkt.",
   },
   {
-    title: "Article 7 — Garantie et réclamations",
-    html: `Les produits bénéficient de la garantie légale de conformité et de la
-      garantie des vices cachés. Toute réclamation doit être adressée à
-      ${COMPANY.email} avec photos et n° de commande.`,
-  },
-  {
-    title: "Article 8 — Responsabilité",
-    html: `OSSAU BOIS ne saurait être tenu responsable des dommages indirects.
-      L'usage des combustibles doit respecter les consignes des appareils
-      de chauffage et la réglementation en vigueur.`,
-  },
-  {
-    title: "Article 9 — Droit applicable",
-    html: `Les présentes CGV sont soumises au droit français. En cas de litige,
-      une solution amiable sera recherchée avant toute action judiciaire.`,
+    title: "6. Anwendbares Recht",
+    html: "Es gilt deutsches Recht. Zwingende Verbraucherschutzvorschriften des Staates, in dem der Verbraucher seinen gewöhnlichen Aufenthalt hat, bleiben unberührt.",
   },
 ];

@@ -16,25 +16,25 @@ export default function Catalogue() {
     <section className="section">
       <div className="catalogue-intro-bar">
         <div>
-          <span className="section-kicker">OSSAU BOIS · SÉLECTION PROFESSIONNELLE</span>
-          <p>{activeCat ? `${filtered.length} référence(s) dans cette catégorie` : "Des combustibles choisis pour comparer simplement"}</p>
+          <span className="section-kicker">AM Holzbrennstoffe UG · FÜR PROFIS UND PRIVATKUNDEN</span>
+          <p>{activeCat ? `${filtered.length} Produkt(e) in dieser Kategorie` : "Brennstoffe einfach vergleichen und auswählen"}</p>
         </div>
-        <Link to="/contact" className="catalogue-help-link">Besoin d&apos;un conseil <ArrowRight size={15} /></Link>
+        <Link to="/contact" className="catalogue-help-link">Beratung gewünscht? <ArrowRight size={15} /></Link>
       </div>
       {!activeCat && (
         <>
-          <h1 className="page-title">Catalogue</h1>
+          <h1 className="page-title">Katalog</h1>
           <p className="page-lede">
             {search
-              ? `${filtered.length} résultat(s) pour « ${search} »`
-              : `${filtered.length} produits disponibles, livrés sur palette complète ou en petit conditionnement pour l'allumage.`}
+              ? `${filtered.length} Ergebnis(se) für „${search}“`
+              : `${filtered.length} Produkte verfügbar – als Palette oder in handlichen Verpackungen für das Anzünden.`}
           </p>
           <div className="filter-row">
             <Link
               to="/catalogue"
               className="filter-chip active"
             >
-              Tout
+              Alle
             </Link>
             {CATEGORIES.map((c) => (
               <Link
@@ -48,9 +48,9 @@ export default function Catalogue() {
           </div>
         </>
       )}
-      {activeCat && <div className="catalogue-active-note"><SlidersHorizontal size={16} /><span>Filtre actif : <strong>{activeCat.name}</strong></span><Link to="/catalogue">Voir tout</Link></div>}
+      {activeCat && <div className="catalogue-active-note"><SlidersHorizontal size={16} /><span>Aktiver Filter: <strong>{activeCat.name}</strong></span><Link to="/catalogue">Alle anzeigen</Link></div>}
       {filtered.length === 0 ? (
-        <div className="empty-state"><p>Aucun produit ne correspond à cette recherche.</p><Link to="/catalogue" className="btn btn-primary">Réinitialiser la recherche</Link></div>
+        <div className="empty-state"><p>Keine Produkte entsprechen Ihrer Suche.</p><Link to="/catalogue" className="btn btn-primary">Suche zurücksetzen</Link></div>
       ) : (
         <div className="product-grid">
           {filtered.map((p) => (

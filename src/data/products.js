@@ -1,12 +1,14 @@
 /** Catalogue produits réels importés depuis les fiches fournisseurs. */
 const PRODUCT_DISCOUNT_RATE = 0.3;
+let GERMAN_CATEGORY_COPY = {};
+let PRODUCT_TRANSLATIONS = {};
 
 export const PRODUCTS = [
   {
     id: "briquettes-chene-pini-kay-palette-960-kg",
     category: "briquettes",
     name: "Briquettes de chêne Pini Kay · palette complète 960 kg (96 × 10 kg)",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-PINI-OAK-960",
     image: "/briquette/pini.jpg",
     packaging: "Palette de 960 kg — 96 paquets de 10 kg",
@@ -45,7 +47,7 @@ export const PRODUCTS = [
     id: "briquettes-bois-ruf-palette-960-kg",
     category: "briquettes",
     name: "Briquettes de bois RUF · palette complète 960 kg (96 × 10 kg)",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-RUF-960",
     image: "/briquette/ruch.jpg",
     packaging: "Palette de 960 kg — 96 paquets de 10 kg",
@@ -84,7 +86,7 @@ export const PRODUCTS = [
     id: "briquettes-nestro-hetre-chene-palette-960-kg",
     category: "briquettes",
     name: "Briquettes Nestro hêtre-chêne · palette complète 960 kg (96 × 10 kg)",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-NESTRO-960",
     image: "/briquette/hetre.jpg",
     packaging: "Palette de 960 kg — 96 paquets de 10 kg",
@@ -124,7 +126,7 @@ export const PRODUCTS = [
     id: "briquettes-nuit-ecorce-palette-960-kg",
     category: "briquettes",
     name: "Briquettes de nuit en écorce · palette complète 960 kg (48 × 20 kg)",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-BARK-NIGHT-960",
     image: "/briquette/briquette.jpg",
     packaging: "Palette de 960 kg — 48 cartons de 20 kg",
@@ -163,7 +165,7 @@ export const PRODUCTS = [
     id: "granules-bois-enplus-a1-6-mm-palette-990-kg",
     category: "granules",
     name: "Granulés de bois ENplus A1 6 mm · palette complète 990 kg (66 × 15 kg)",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-PEL-A1-990",
     image: "/imgproducts/secondary-2.jpg",
     packaging: "Palette de 990 kg — 66 sacs de 15 kg",
@@ -203,7 +205,7 @@ export const PRODUCTS = [
     id: "granules-premium-resineux-6-mm-palette-990-kg",
     category: "granules",
     name: "Granulés premium de résineux 6 mm · palette complète 990 kg (66 × 15 kg)",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-PREMIUM-990",
     image: "/imgproducts/secondary-2%20(1).jpg",
     packaging: "Palette de 990 kg — 66 sacs de 15 kg",
@@ -242,7 +244,7 @@ export const PRODUCTS = [
     id: "granules-bois-economiques-6-mm-palette-990-kg",
     category: "granules",
     name: "Granulés de bois économiques 6 mm · palette complète 990 kg (66 × 15 kg)",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-ECO-990",
     image: "/imgproducts/final-20260902-v2-secondary.jpg",
     packaging: "Palette de 990 kg — 66 sacs de 15 kg",
@@ -475,7 +477,7 @@ export const PRODUCTS = [
     id: "houille-calibree-premium-5-25-mm-27-29-mj-1000-kg",
     category: "charbon",
     name: "Houille calibrée premium 5–25 mm, 27–29 MJ/kg – palette 1 000 kg (50 × 20 kg)",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-COAL-PREM-1000",
     image: "/charbon/charbon%20v2.jpg",
     packaging: "Palette de 1 000 kg — 50 sacs de 20 kg",
@@ -517,7 +519,7 @@ export const PRODUCTS = [
     id: "houille-calibree-standard-8-25-mm-25-27-mj-1000-kg",
     category: "charbon",
     name: "Houille calibrée standard 8–25 mm, 25–27 MJ/kg – palette 1 000 kg (50 × 20 kg)",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-COAL-STD-1000",
     image: "/charbon/charbon%20v4.jpg",
     packaging: "Palette de 1 000 kg — 50 sacs de 20 kg",
@@ -559,7 +561,7 @@ export const PRODUCTS = [
     id: "houille-calibre-noix-25-80-mm-26-28-mj-1000-kg",
     category: "charbon",
     name: "Houille calibrée, calibre noix 25–80 mm, 26–28 MJ/kg – palette 1 000 kg (50 × 20 kg)",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-COAL-NUT-1000",
     image: "/charbon/charbon%20v3.jpg",
     packaging: "Palette de 1 000 kg — 50 sacs de 20 kg",
@@ -601,7 +603,7 @@ export const PRODUCTS = [
     id: "bois-chauffage-hetre-sec-25-cm-palette",
     category: "bois-chauffage",
     name: "Bois de chauffage en hêtre sec 25 cm · palette complète de 1 stère empilé",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-BEECH-1RM",
     image: "/bois%20de%20chauffage/primary-1%20(2).jpg",
     packaging: "1 stère empilé, soit env. 1,4–1,6 m³ en vrac",
@@ -636,7 +638,7 @@ export const PRODUCTS = [
     id: "bois-chauffage-chene-sec-25-cm-palette",
     category: "bois-chauffage",
     name: "Bois de chauffage en chêne sec 25 cm · palette complète de 1 stère empilé",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-OAK-1RM",
     image: "/bois%20de%20chauffage/primary-1%20(3).jpg",
     packaging: "1 stère empilé, soit env. 1,4–1,6 m³ en vrac",
@@ -671,7 +673,7 @@ export const PRODUCTS = [
     id: "bois-chauffage-bouleau-sec-25-cm-palette",
     category: "bois-chauffage",
     name: "Bois de chauffage en bouleau sec 25 cm · palette complète de 1 stère empilé",
-    brand: "Ossaubois",
+    brand: "Holzbrennstoffe",
     reference: "OB-BIRCH-1RM",
     image: "/bois%20de%20chauffage/secondary-2%20(2).jpg",
     packaging: "1 stère empilé, soit env. 1,5 m³ en vrac",
@@ -1032,7 +1034,7 @@ export const PRODUCTS = [
       id: "bois-chauffage-4-palettes-33-cm-chene-hetre-charme",
       category: "bois-chauffage",
       name: "4 palettes de bois de chauffage 33 cm · chêne blanc, hêtre et charme",
-      brand: "Ossaubois",
+      brand: "Holzbrennstoffe",
       reference: "BCG10686",
       image: "/bois%20de%20chauffage/innovconsult-4-palettes-33cm.jpeg",
       packaging: "4 palettes · 1,5 stère par palette",
@@ -1069,7 +1071,7 @@ export const PRODUCTS = [
       id: "charbon-anthracite-100-a12-22mm-palette-1000-kg",
       category: "charbon",
       name: "Charbon 100 % anthracite A12–22 mm · palette de 40 sacs de 25 kg",
-      brand: "Ossaubois",
+      brand: "Holzbrennstoffe",
       reference: "BCG10768",
       image: "/charbon/innovconsult-anthracite-12-22mm.jpeg",
       packaging: "Palette de 40 sacs × 25 kg",
@@ -1106,7 +1108,7 @@ export const PRODUCTS = [
       id: "bois-chauffage-hetre-sec-30-cm-palette-3-steres",
       category: "bois-chauffage",
       name: "Bois de chauffage hêtre sec 30 cm · palette 3 stères",
-      brand: "Ossaubois",
+      brand: "Holzbrennstoffe",
       reference: "BCG10671",
       image: "/bois%20de%20chauffage/innovconsult-hetre-30cm-3-steres.png",
       packaging: "Palette perdue de 3 stères",
@@ -1182,7 +1184,7 @@ export const PRODUCTS = [
       id: "bois-chauffage-hetre-sec-25-cm-palette-17-stere",
       category: "bois-chauffage",
       name: "Bois de chauffage hêtre sec 25 cm · palette 1,7 stère",
-      brand: "Ossaubois",
+      brand: "Holzbrennstoffe",
       reference: "BCG10676",
       image: "/bois%20de%20chauffage/innovconsult-hetre-25cm-17-stere.png",
       packaging: "Palette perdue de 1,7 stère",
@@ -1218,7 +1220,7 @@ export const PRODUCTS = [
       id: "bois-chauffage-hetre-sec-30-cm-sac-19-stere",
       category: "bois-chauffage",
       name: "Bois de chauffage hêtre sec 30 cm · sac de 1,9 stère",
-      brand: "Ossaubois",
+      brand: "Holzbrennstoffe",
       reference: "BCG10675",
       image: "/bois%20de%20chauffage/innovconsult-hetre-30cm-sac-19-stere.png",
       packaging: "Sac en bois sur palette · env. 1,9 stère",
@@ -1290,7 +1292,7 @@ export const PRODUCTS = [
       id: "bois-densifie-feuillus-resineux-palette-960-kg",
       category: "briquettes",
       name: "Bois densifié feuillus et résineux · palette de 960 kg",
-      brand: "Ossaubois",
+      brand: "Holzbrennstoffe",
       reference: "BCG10478",
       image: "/briquette/innovconsult-bois-densifie-960kg.webp",
       packaging: "Palette de 960 kg",
@@ -1325,7 +1327,7 @@ export const PRODUCTS = [
       id: "bois-densifie-buches-nuit-demi-palette-480-kg",
       category: "briquettes",
       name: "Bois densifié bûches de nuit · demi-palette de 480 kg",
-      brand: "Ossaubois",
+      brand: "Holzbrennstoffe",
       reference: "BCG10474",
       image: "/briquette/innovconsult-buches-nuit-480kg.webp",
       packaging: "Demi-palette de 480 kg",
@@ -1361,7 +1363,7 @@ export const PRODUCTS = [
       id: "bois-densifie-compresse-hetre-palette-960-kg",
       category: "briquettes",
       name: "Bois densifié compressé 100 % hêtre · palette de 960 kg",
-      brand: "Ossaubois",
+      brand: "Holzbrennstoffe",
       reference: "BCG10822",
       image: "/briquette/innovconsult-bois-densifie-hetre-960kg.jpeg",
       packaging: "Palette de 960 kg · 96 lots de 4 bûches",
@@ -1397,12 +1399,107 @@ export const PRODUCTS = [
     },
 ].map((product) => ({
   ...product,
+  ...PRODUCT_TRANSLATIONS[product.id],
+  description: PRODUCT_TRANSLATIONS[product.id]?.description || product.description,
+  benefits: PRODUCT_TRANSLATIONS[product.id]?.benefits || product.benefits,
+  preparation: PRODUCT_TRANSLATIONS[product.id]?.preparation || product.preparation,
+  usage: PRODUCT_TRANSLATIONS[product.id]?.usage || product.usage,
+  storage: "Trocken, sauber und vor Feuchtigkeit geschützt lagern.",
+  delivery: "Palettenversand an die angegebene Lieferadresse. Bitte beachten Sie die Lieferinformationen vor der Zustellung.",
+  stock: "Auf Lager",
   price: Number((product.price * (1 - PRODUCT_DISCOUNT_RATE)).toFixed(2)),
   promoPrice:
     product.promoPrice === null
       ? null
       : Number((product.promoPrice * (1 - PRODUCT_DISCOUNT_RATE)).toFixed(2)),
 }));
+
+GERMAN_CATEGORY_COPY = {
+  granules: { description: "Hochwertiger fester Brennstoff für geeignete Pelletöfen und Heizungen. Die Lieferung erfolgt sicher verpackt auf Palette.", benefits: ["Praktische Palettenverpackung", "Für geeignete Pelletöfen und Heizungen", "Trocken und geschützt verpackt"], preparation: "Sorgfältig hergestellt und für den Palettenversand verpackt.", usage: "Nur in für Holzpellets geeigneten Geräten nach Herstellerangaben verwenden." },
+  briquettes: { description: "Dichter Holz-Brennstoff für geeignete Öfen, Kamine und Heizgeräte. Praktisch verpackt für Lagerung und Transport.", benefits: ["Hohe Brennstoffdichte", "Praktisch auf Palette verpackt", "Für geeignete Öfen und Kamine"], preparation: "Der Brennstoff wird verdichtet, verpackt und für den Transport auf Palette zusammengestellt.", usage: "In einem geeigneten Ofen oder Kamin gemäß den Herstellerangaben verwenden." },
+  "bois-chauffage": { description: "Brennholz für geeignete Öfen, Kamine und Feuerstellen. Lieferung in einer transportgerechten Palettenverpackung.", benefits: ["Geeignet für Öfen und Kamine", "Praktisch auf Palette geliefert", "Sicher für Lagerung und Transport verpackt"], preparation: "Das Holz wird zugeschnitten, sortiert und für den Palettenversand verpackt.", usage: "In geeigneten Holzfeuerstätten gemäß den Herstellerangaben verwenden." },
+  charbon: { description: "Fester Brennstoff für geeignete Kohleöfen und Heizgeräte. Lieferung auf Palette in transportgerechter Verpackung.", benefits: ["Gleichmäßige Wärmeabgabe", "Praktische Palettenverpackung", "Für geeignete Kohleheizungen"], preparation: "Der Brennstoff wird sortiert, verpackt und auf Palette für den Versand vorbereitet.", usage: "Nur in geeigneten Kohleöfen oder Heizgeräten nach Herstellerangaben verwenden." },
+  "allume-feu": { description: "Praktische Anzündhilfe für geeignete Feuerstellen, Kamine und Öfen.", benefits: ["Einfach zu dosieren", "Praktische Verpackung", "Für geeignete Feuerstellen"], preparation: "Für eine saubere und praktische Entnahme verpackt.", usage: "Nach den Sicherheits- und Herstellerhinweisen der Feuerstätte verwenden." },
+};
+
+PRODUCT_TRANSLATIONS = {
+  "briquettes-chene-pini-kay-palette-960-kg": { name: "Pini Kay Eichenholzbriketts · Palette 960 kg (96 × 10 kg)", packaging: "Palette 960 kg – 96 Pakete à 10 kg" },
+  "briquettes-bois-ruf-palette-960-kg": { name: "RUF Holzbriketts · Palette 960 kg (96 × 10 kg)", packaging: "Palette 960 kg – 96 Pakete à 10 kg" },
+  "briquettes-nestro-hetre-chene-palette-960-kg": { name: "Nestro Buchen-Eichenbriketts · Palette 960 kg (96 × 10 kg)", packaging: "Palette 960 kg – 96 Pakete à 10 kg" },
+  "briquettes-nuit-ecorce-palette-960-kg": { name: "Rindenbriketts für die Nacht · Palette 960 kg (48 × 20 kg)", packaging: "Palette 960 kg – 48 Kartons à 20 kg" },
+  "granules-bois-enplus-a1-6-mm-palette-990-kg": { name: "ENplus A1 Holzpellets 6 mm · Palette 990 kg (66 × 15 kg)", packaging: "Palette 990 kg – 66 Säcke à 15 kg" },
+  "granules-premium-resineux-6-mm-palette-990-kg": { name: "Premium-Nadelholzpellets 6 mm · Palette 990 kg (66 × 15 kg)", packaging: "Palette 990 kg – 66 Säcke à 15 kg" },
+  "granules-bois-economiques-6-mm-palette-990-kg": { name: "Holzpellets 6 mm · Palette 990 kg (66 × 15 kg)", packaging: "Palette 990 kg – 66 Säcke à 15 kg" },
+  "heizfuxx-red-enplus-a1-granules-bois-dur-6-mm-975-kg": { name: "Heizfuxx Red ENplus A1 Hartholzpellets 6 mm · Palette 975 kg", packaging: "Palette 975 kg – 65 Säcke à 15 kg" },
+  "heizfuxx-blue-enplus-a1-granules-bois-6-mm-975-kg": { name: "Heizfuxx Blue ENplus A1 Holzpellets 6 mm · Palette 975 kg", packaging: "Palette 975 kg – 65 Säcke à 15 kg" },
+  "granules-resineux-heizfuxx-gold-hd-enplus-a1-6-mm-975-kg": { name: "Heizfuxx Gold HD ENplus A1 Nadelholzpellets 6 mm · Palette 975 kg", packaging: "Palette 975 kg – 65 Säcke à 15 kg" },
+  "granules-bois-la-flamme-limousine-palette-1050-kg": { name: "La Flamme Limousine Holzpellets · Palette 1.050 kg", packaging: "Palette mit 70 Säcken à 15 kg" },
+  "briquettes-lignite-rekord-palette-900-kg": { name: "REKORD Braunkohlebriketts · Palette 900 kg (90 × 10 kg)", packaging: "Palette 900 kg – 90 Folienpakete à 10 kg" },
+  "houille-calibree-premium-5-25-mm-27-29-mj-1000-kg": { name: "Premium-Steinkohle 5–25 mm, 27–29 MJ/kg · Palette 1.000 kg", packaging: "Palette 1.000 kg – 50 Säcke à 20 kg" },
+  "houille-calibree-standard-8-25-mm-25-27-mj-1000-kg": { name: "Steinkohle Standard 8–25 mm, 25–27 MJ/kg · Palette 1.000 kg", packaging: "Palette 1.000 kg – 50 Säcke à 20 kg" },
+  "houille-calibre-noix-25-80-mm-26-28-mj-1000-kg": { name: "Steinkohle Nuss 25–80 mm, 26–28 MJ/kg · Palette 1.000 kg", packaging: "Palette 1.000 kg – 50 Säcke à 20 kg" },
+  "bois-chauffage-hetre-sec-25-cm-palette": { name: "Trockenes Buchen-Brennholz 25 cm · Palette", packaging: "1 Raummeter gestapelt, ca. 1,4–1,6 m³ lose" },
+  "bois-chauffage-chene-sec-25-cm-palette": { name: "Trockenes Eichen-Brennholz 25 cm · Palette", packaging: "1 Raummeter gestapelt, ca. 1,4–1,6 m³ lose" },
+  "bois-chauffage-bouleau-sec-25-cm-palette": { name: "Trockenes Birken-Brennholz 25 cm · Palette", packaging: "1 Raummeter gestapelt, ca. 1,5 m³ lose" },
+  "allume-feu-laine-bois-cire-100-pieces": { name: "Ökologische Anzündhilfe aus Holzwolle und Wachs · 100 Stück", packaging: "Karton mit 100 Stück" },
+  "cubes-allume-feu-papier-cire-1000-pieces": { name: "Natürliche Anzündwürfel aus Papier und Wachs · 1.000 Stück", packaging: "Karton mit 1.000 Würfeln" },
+  "petit-bois-resineux-seche-25-cm-100-kg": { name: "Getrocknetes Nadelholz-Anzündholz 25 cm · 100 kg", packaging: "10 Kartons × 10 kg" },
+  "bois-chauffage-molinario-sec-50-cm-palette-162-stere": { name: "Molinario Brennholz trocken 50 cm · Palette 2 m³", packaging: "Palette 2 m³ – 1,62 Raummeter" },
+  "bois-chauffage-molinario-sec-33-cm-palette-2-steres": { name: "Molinario Brennholz trocken 33 cm · Palette 2 m³", packaging: "Palette 2 m³ – 2 Raummeter" },
+  "bois-chauffage-molinario-25-cm-palette-24-steres": { name: "Molinario Brennholz 25 cm · Palette 2 m³", packaging: "Palette 2 m³ – 2,4 Raummeter" },
+  "bois-chauffage-etuve-25-cm-250-steres-feuillus-durs": { name: "Ofengetrocknetes Brennholz 25 cm · Palette 2,5 Raummeter", packaging: "Scheitholz in Holzkiste · Palette 2,5 Raummeter" },
+  "bois-chauffage-premium-etuve-40-cm-palette-12-stere": { name: "Premium Brennholz, ofengetrocknet 40 cm · Palette 1,2 Raummeter", packaging: "Folierte Palette · 1,2 Raummeter" },
+  "bois-cuisson-chauffage-etuve-50-cm-palette-2-steres": { name: "Ofengetrocknetes Holz für Heizung und Pizzaofen 50 cm · Palette", packaging: "Holzkiste auf Palette · 2 Raummeter" },
+  "bois-chauffage-4-palettes-33-cm-chene-hetre-charme": { name: "4 Paletten Brennholz 33 cm · Eiche, Buche und Hainbuche", packaging: "4 Paletten · 1,5 Raummeter pro Palette" },
+  "charbon-anthracite-100-a12-22mm-palette-1000-kg": { name: "Anthrazit 100 % A12–22 mm · Palette mit 1.000 kg", packaging: "Palette mit 40 Säcken × 25 kg" },
+  "bois-chauffage-hetre-sec-30-cm-palette-3-steres": { name: "Trockenes Buchen-Brennholz 30 cm · Palette 3 Raummeter", packaging: "Einwegpalette mit 3 Raummetern" },
+  "granules-pellini-enplus-a1-palette-990-kg": { name: "Pellini ENplus A1 Holzpellets · Palette 990 kg", packaging: "Einwegpalette mit 66 Säcken × 15 kg" },
+  "bois-chauffage-hetre-sec-25-cm-palette-17-stere": { name: "Trockenes Buchen-Brennholz 25 cm · Palette 1,7 Raummeter", packaging: "Einwegpalette mit 1,7 Raummetern" },
+  "bois-chauffage-hetre-sec-30-cm-sac-19-stere": { name: "Trockenes Buchen-Brennholz 30 cm · Holzsack 1,9 Raummeter", packaging: "Holzsack auf Palette · ca. 1,9 Raummeter" },
+  "bois-chauffage-wooday-50-cm-palette-2-m3": { name: "Wooday Brennholz 50 cm · Palette 2 m³", packaging: "Bündel auf Palette mit 2 m³" },
+  "bois-densifie-feuillus-resineux-palette-960-kg": { name: "Hartholz- und Nadelholzbriketts · Palette 960 kg", packaging: "Palette 960 kg" },
+  "bois-densifie-buches-nuit-demi-palette-480-kg": { name: "Nachtbriketts · Halbpalette 480 kg", packaging: "Halbpalette 480 kg" },
+  "bois-densifie-compresse-hetre-palette-960-kg": { name: "Buchenholzbriketts 100 % · Palette 960 kg", packaging: "Palette 960 kg · 96 Pakete mit je 4 Briketts" },
+};
+
+PRODUCTS.forEach((product) => {
+  const translation = PRODUCT_TRANSLATIONS[product.id] || {};
+  const categoryCopy = GERMAN_CATEGORY_COPY[product.category] || {};
+  Object.assign(product, translation, {
+    description: translation.description || categoryCopy.description || product.description,
+    benefits: translation.benefits || categoryCopy.benefits || product.benefits,
+    preparation: translation.preparation || categoryCopy.preparation || product.preparation,
+    usage: translation.usage || categoryCopy.usage || product.usage,
+    storage: "Trocken, sauber und vor Feuchtigkeit geschützt lagern.",
+    delivery: "Palettenversand an die angegebene Lieferadresse. Bitte beachten Sie die Lieferinformationen vor der Zustellung.",
+    stock: "Auf Lager",
+    specs: (product.specs || []).map(([label, value]) => [translateSpecLabel(label), translateSpecValue(value)]),
+  });
+});
+
+function translateSpecLabel(label) {
+  const labels = {
+    "Essence": "Holzart", "Essences": "Holzarten", "Longueur": "Länge", "Longueur des bûches": "Scheitlänge", "Diamètre": "Durchmesser", "Dimensions": "Abmessungen", "Dimensions de la palette": "Palettenmaße", "Section": "Scheitstärke", "Sections classiques": "Standard-Scheitstärke", "Sections fines": "Dünne Scheitstärke",
+    "Humidité": "Restfeuchte", "Humidité résiduelle": "Restfeuchte", "Séchage": "Trocknung", "Pouvoir calorifique": "Heizwert", "Taux de cendres": "Aschegehalt", "Cendres au repos": "Aschegehalt", "Taux de fines": "Feinanteil", "Masse volumique apparente": "Schüttdichte", "Résistance mécanique": "Mechanische Festigkeit",
+    "Conditionnement": "Verpackung", "Contenance par palette": "Inhalt je Palette", "Poids": "Gewicht", "Poids total": "Gesamtgewicht", "Poids par lot": "Gewicht je Paket", "Poids indicatif": "Richtgewicht", "Volume": "Volumen", "Volume total": "Gesamtvolumen", "Équivalent": "Entspricht", "Nombre de pièces": "Stückzahl", "Pièces par paquet": "Stück je Paket",
+    "Type": "Typ", "Type de bois": "Holztyp", "Matériau": "Material", "Forme": "Form", "Granulométrie": "Körnung", "Caractéristiques": "Eigenschaften", "Certification": "Zertifizierung", "Technologie": "Technologie", "Liants": "Bindemittel", "Présentation": "Ausführung", "Prêt à l’emploi": "Gebrauchsfertig", "Utilisation": "Anwendung", "Stockage": "Lagerung", "Appareils compatibles": "Geeignete Geräte", "Origine": "Herkunft", "Répartition": "Aufteilung", "Référence fournisseur": "Herstellerreferenz", "Référence catalogue": "Katalogreferenz", "Prix emporté indicatif": "Abholpreis (Richtwert)",
+    "Durée de combustion": "Brenndauer", "Durée des braises": "Glutdauer", "Odeur": "Geruch", "Soufre": "Schwefel", "Teneur en soufre": "Schwefelgehalt", "Matières volatiles": "Flüchtige Bestandteile", "Température de ramollissement des cendres": "Ascheerweichungstemperatur", "Composition complémentaire": "Ergänzende Zusammensetzung"
+  };
+  return labels[label] || label;
+}
+
+function translateSpecValue(value) {
+  return String(value)
+    .replaceAll("hêtre", "Buche").replaceAll("Hêtre", "Buche").replaceAll("chêne", "Eiche").replaceAll("Chêne", "Eiche").replaceAll("bouleau", "Birke").replaceAll("Bouleau", "Birke").replaceAll("charme", "Hainbuche").replaceAll("frêne", "Esche").replaceAll("châtaignier", "Kastanie")
+    .replaceAll("feuillus", "Laubhölzer").replaceAll("Feuillus", "Laubhölzer").replaceAll("résineux", "Nadelhölzer").replaceAll("Résineux", "Nadelhölzer")
+    .replaceAll("Bûches", "Scheite").replaceAll("Bûchettes", "Anzündholz").replaceAll("bûches", "Scheite").replaceAll("bûchettes", "Anzündholz")
+    .replaceAll("Palette de", "Palette mit").replaceAll("Palette perdue", "Einwegpalette").replaceAll("Demi-palette", "Halbpalette").replaceAll("sacs", "Säcke").replaceAll("paquets", "Pakete").replaceAll("cartons", "Kartons").replaceAll("pièces", "Stück").replaceAll("lots", "Pakete")
+    .replaceAll("stères", "Raummeter").replaceAll("stère", "Raummeter").replaceAll("en vrac", "lose").replaceAll("empilé", "gestapelt")
+    .replaceAll("Séchage au four", "Ofentrocknung").replaceAll("Séchage industriel en étuve", "Industrielle Kammertrocknung").replaceAll("Séché en séchoir", "Kammertrocknung").replaceAll("Pré-séché", "Vorgetrocknet").replaceAll("Bois sec", "Trockenes Holz").replaceAll("100 % naturel", "100 % natürlich").replaceAll("Extra-sec, 18 mois minimum", "Extra trocken, mindestens 18 Monate getrocknet").replaceAll("Séchage naturel selon la fiche fournisseur", "Natürliche Trocknung gemäß Herstellerangaben")
+    .replaceAll("env.", "ca.").replaceAll("Env.", "Ca.").replaceAll("à cœur", "im Kern").replaceAll("heures", "Stunden").replaceAll("minutes", "Minuten").replaceAll("selon l’appareil", "je nach Gerät")
+    .replaceAll("Aucun", "Keine").replaceAll("Oui", "Ja").replaceAll("France, forêts gérées durablement", "Frankreich, nachhaltig bewirtschaftete Wälder").replaceAll("France", "Frankreich").replaceAll("Allemagne", "Deutschland").replaceAll("Produit sélectionné pour le marché allemand", "Für den deutschen Markt ausgewähltes Produkt")
+    .replaceAll("Bois de pin", "Kiefernholz").replaceAll("Bois dur", "Hartholz").replaceAll("Laine de bois naturelle et cire", "Natürliche Holzwolle und Wachs").replaceAll("Papier recyclé et cire", "Recyclingpapier und Wachs").replaceAll("Lignite raffiné", "Veredelte Braunkohle");
+}
 
 export const FREE_SHIPPING_THRESHOLD = 229;
 export const SHIPPING_FEE = 24.9;

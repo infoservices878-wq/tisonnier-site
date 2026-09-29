@@ -5,33 +5,32 @@ export default function About() {
   return (
     <section className="section">
       <div className="page-hero page-hero-dark">
-        <div><span className="section-kicker">NOTRE MANIÈRE DE FAIRE</span><h1 className="page-title">Un combustible fiable commence par une information claire.</h1><p>OSSAU BOIS sélectionne des combustibles solides et met les informations essentielles au même endroit, pour décider avec confiance.</p></div>
+        <div><span className="section-kicker">UNSER ANSPRUCH</span><h1 className="page-title">Zuverlässige Wärme beginnt mit klaren Informationen.</h1><p>AM Holzbrennstoffe UG bündelt die wichtigsten Angaben zu festen Brennstoffen, damit Sie sicher vergleichen und auswählen können.</p></div>
         <TreePine size={58} strokeWidth={1.1} />
       </div>
-      <div className="about-story"><div><span className="section-kicker">Une sélection lisible</span><h2>Du produit à la réception, chaque détail compte.</h2></div><p>Nous pensons le catalogue autour des usages réels : comprendre le combustible, vérifier ses caractéristiques, choisir le bon conditionnement et anticiper la réception. Cette méthode donne une place égale à la qualité du produit et à la simplicité de la commande.</p></div>
+      <div className="about-story"><div><span className="section-kicker">Übersichtlich auswählen</span><h2>Vom Produkt bis zur Warenannahme zählt jedes Detail.</h2></div><p>Unser Katalog orientiert sich an der Praxis: Brennstoff verstehen, Eigenschaften prüfen, die passende Verpackung wählen und die Lieferung vorbereiten. Produktqualität und ein einfacher Bestellablauf gehören für uns zusammen.</p></div>
       <div className="about-grid">
         <div className="about-block">
           <Award size={22} strokeWidth={1.5} />
-          <h2 className="info-col-title">Transparence produit</h2>
-          <p>Chaque référence indique certification, humidité, pouvoir calorifique et conditionnement.</p>
+          <h2 className="info-col-title">Klare Produktangaben</h2>
+          <p>Jeder Artikel nennt verfügbare Zertifikate, Feuchtigkeit, Heizwert und Verpackung.</p>
         </div>
         <div className="about-block">
           <TreePine size={22} strokeWidth={1.5} />
-          <h2 className="info-col-title">Origine régionale</h2>
-          <p>Une partie de nos bûches et briquettes provient de résidus de scieries et de forêts gérées durablement.</p>
+          <h2 className="info-col-title">Verantwortungsvolle Auswahl</h2>
+          <p>Bei unseren Artikeln stehen Herkunft, Zusammensetzung und die jeweiligen Produktinformationen im Mittelpunkt.</p>
         </div>
         <div className="about-block">
           <Package size={22} strokeWidth={1.5} />
-          <h2 className="info-col-title">Logistique sur palette</h2>
-          <p>Le conditionnement sur palette housse limite la manutention et protège les sacs pendant le transport.</p>
+          <h2 className="info-col-title">Palettenlogistik</h2>
+          <p>Palettenverpackungen erleichtern die Handhabung und schützen die Ware während des Transports.</p>
         </div>
       </div>
-      <div className="about-promise"><div><span className="section-kicker">Nos engagements</span><h2>Une relation commerciale sans zones grises</h2></div><ul><li><Check size={17} /> Des caractéristiques présentées sans détour</li><li><Check size={17} /> Des modalités de livraison annoncées avant validation</li><li><Check size={17} /> Une équipe joignable pour les questions pratiques</li></ul><Link to="/contact" className="btn btn-primary">Parler à l&apos;équipe <ArrowRight size={16} /></Link></div>
+      <div className="about-promise"><div><span className="section-kicker">Unser Versprechen</span><h2>Transparent von Anfang an</h2></div><ul><li><Check size={17} /> Produktmerkmale klar dargestellt</li><li><Check size={17} /> Lieferbedingungen vor der Bestellung sichtbar</li><li><Check size={17} /> Direkter Kontakt bei praktischen Fragen</li></ul><Link to="/contact" className="btn btn-primary">Team kontaktieren <ArrowRight size={16} /></Link></div>
       <div className="callout">
         <p>
-          Les informations d’identification d’OSSAU BOIS sont issues de données publiques et
-          doivent être maintenues à jour. Consultez les Mentions légales et les justificatifs
-          officiels avant toute relation commerciale importante.
+          Die Unternehmensangaben der AM Holzbrennstoffe UG (haftungsbeschränkt) beruhen auf öffentlichen Registerdaten.
+          Bitte beachten Sie das Impressum und bei Bedarf die aktuellen amtlichen Registerunterlagen.
         </p>
       </div>
     </section>

@@ -13,7 +13,7 @@ export default function ProductCard({ product }) {
   return (
     <div className="product-card">
       <div className="product-card-visual">
-        <Link to={`/produit/${product.id}`} className="product-card-image-link" aria-label={`Voir ${product.name}`}>
+        <Link to={`/produit/${product.id}`} className="product-card-image-link" aria-label={`${product.name} ansehen`}>
           {(product.image || cat?.image) && (
             <img src={product.image || cat.image} alt={product.name} loading="lazy" />
           )}
@@ -29,7 +29,7 @@ export default function ProductCard({ product }) {
             event.stopPropagation();
             toggleFavorite(product.id);
           }}
-          aria-label={isFavorite(product.id) ? "Retirer des favoris" : "Ajouter aux favoris"}
+          aria-label={isFavorite(product.id) ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
         >
           <Heart size={17} fill={isFavorite(product.id) ? "currentColor" : "none"} />
         </button>
@@ -44,7 +44,7 @@ export default function ProductCard({ product }) {
           <span className="product-price">{formatPrice(product.price)}</span>
           <button type="button" className="btn btn-primary add-cart-button checkout-action-button" onClick={() => add(product.id)}>
             <ShoppingCart size={16} strokeWidth={1.8} />
-            Ajouter
+            Hinzufügen
           </button>
         </div>
       </div>

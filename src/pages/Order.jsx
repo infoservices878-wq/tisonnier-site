@@ -33,7 +33,7 @@ function buildOrderPayload(form, lines, subtotal, shipping, total, reference) {
     address_1: form.address,
     postcode: form.postalCode,
     city: form.city,
-    country: "FR",
+    country: "DE",
     email: form.email,
     phone: form.phone,
   };
@@ -60,7 +60,7 @@ function buildOrderPayload(form, lines, subtotal, shipping, total, reference) {
       address_1: form.address,
       postcode: form.postalCode,
       city: form.city,
-      country: "FR",
+      country: "DE",
     },
     items: lines.map(({ product, qty }) => ({
       id: product.id,
@@ -132,14 +132,14 @@ export default function Order() {
       <section className="section order-page">
         <div className="order-confirmation">
           <div className="order-confirmation-icon"><Check size={34} /></div>
-          <span className="section-kicker">DEMANDE ENREGISTRÉE</span>
-          <h1 className="page-title">Votre commande est en attente de virement</h1>
-          <p>Merci {submitted.firstName}. Votre demande a bien été enregistrée sous la référence <strong>{submitted.reference}</strong>. Un récapitulatif sera envoyé à {submitted.email}.</p>
+          <span className="section-kicker">ANFRAGE GESPEICHERT</span>
+          <h1 className="page-title">Ihre Bestellung wartet auf die Überweisung</h1>
+          <p>Vielen Dank, {submitted.firstName}. Ihre Anfrage wurde unter der Referenz <strong>{submitted.reference}</strong> gespeichert. Eine Zusammenfassung wird an {submitted.email} gesendet.</p>
           <div className="order-transfer-confirmation">
-            <div><CreditCard size={21} /><div><strong>Prochaine étape : effectuer le virement</strong><span>Indiquez la référence {submitted.reference} dans le libellé du virement.</span></div></div>
-            <p>Les coordonnées bancaires définitives et le montant à régler figurent dans l’e-mail de confirmation transmis par OSSAU BOIS.</p>
+            <div><CreditCard size={21} /><div><strong>Nächster Schritt: Überweisung ausführen</strong><span>Geben Sie die Referenz {submitted.reference} im Verwendungszweck an.</span></div></div>
+            <p>Die endgültigen Bankdaten und der zu zahlende Betrag stehen in der Bestätigungs-E-Mail von AM Holzbrennstoffe UG.</p>
           </div>
-          <div className="order-confirmation-actions"><Link to="/" className="btn btn-primary">Retour à l’accueil <ArrowRight size={16} /></Link><Link to="/contact" className="order-text-link">Une question ? Nous contacter</Link></div>
+          <div className="order-confirmation-actions"><Link to="/" className="btn btn-primary">Zur Startseite <ArrowRight size={16} /></Link><Link to="/contact" className="order-text-link">Fragen? Kontakt aufnehmen</Link></div>
         </div>
       </section>
     );
@@ -148,7 +148,7 @@ export default function Order() {
   if (count === 0) {
     return (
       <section className="section order-page">
-        <div className="order-empty"><ShoppingBagIcon /><h1 className="page-title">Votre panier est vide</h1><p>Ajoutez au moins une référence avant de renseigner votre commande.</p><Link to="/catalogue" className="btn btn-primary">Voir le catalogue <ArrowRight size={16} /></Link></div>
+        <div className="order-empty"><ShoppingBagIcon /><h1 className="page-title">Ihr Warenkorb ist leer</h1><p>Fügen Sie mindestens ein Produkt hinzu, bevor Sie Ihre Bestellung anfragen.</p><Link to="/catalogue" className="btn btn-primary">Katalog ansehen <ArrowRight size={16} /></Link></div>
       </section>
     );
   }
@@ -162,7 +162,7 @@ export default function Order() {
 
     try {
       if (!WORDPRESS_API_URL || !WORDPRESS_API_KEY) {
-        throw new Error("La connexion WordPress n'est pas configurée.");
+        throw new Error("Die WordPress-Verbindung ist nicht konfiguriert.");
       }
 
       const reference = createOrderReference();
@@ -181,11 +181,11 @@ export default function Order() {
       try {
         payload = text ? JSON.parse(text) : {};
       } catch {
-        payload = { message: text || "Erreur inconnue" };
+        payload = { message: text || "Unbekannter Fehler" };
       }
 
       if (!response.ok || payload.success === false) {
-        throw new Error(payload.message || `Erreur ${response.status}`);
+        throw new Error(payload.message || `Fehler ${response.status}`);
       }
 
       localStorage.removeItem(FORM_STORAGE_KEY);
@@ -198,7 +198,7 @@ export default function Order() {
       });
       clear();
     } catch (error) {
-      setSubmitError(error.message || "Impossible d’envoyer la commande.");
+      setSubmitError(error.message || "Die Bestellung konnte nicht gesendet werden.");
     } finally {
       setIsSubmitting(false);
     }
@@ -206,47 +206,47 @@ export default function Order() {
 
   return (
     <section className="section order-page">
-      <div className="order-breadcrumbs"><Link to="/">Accueil</Link><span aria-hidden="true">›</span><Link to="/panier">Panier</Link><span aria-hidden="true">›</span><strong>Commande</strong></div>
-      <div className="order-heading"><div><span className="section-kicker">FINALISER VOTRE DEMANDE</span><h1 className="page-title">Vos coordonnées pour la livraison</h1><p>Renseignez les informations nécessaires à la préparation de votre commande et à l’expédition de votre combustible.</p></div><ShieldCheck size={48} strokeWidth={1.1} /></div>
+      <div className="order-breadcrumbs"><Link to="/">Startseite</Link><span aria-hidden="true">›</span><Link to="/panier">Warenkorb</Link><span aria-hidden="true">›</span><strong>Bestellung</strong></div>
+      <div className="order-heading"><div><span className="section-kicker">ANFRAGE ABSCHLIESSEN</span><h1 className="page-title">Ihre Daten für die Lieferung</h1><p>Geben Sie die Informationen für die Vorbereitung und den Versand Ihrer Brennstoffe an.</p></div><ShieldCheck size={48} strokeWidth={1.1} /></div>
       <form className="order-layout" onSubmit={submit}>
         <div className="order-form-column">
           <section className="order-form-section">
-            <div className="order-section-heading"><span>01</span><div><h2>Vos coordonnées</h2><p>Ces informations serviront à vous envoyer la confirmation de commande.</p></div></div>
+            <div className="order-section-heading"><span>01</span><div><h2>Ihre Kontaktdaten</h2><p>Diese Angaben verwenden wir für die Auftragsbestätigung.</p></div></div>
             <div className="order-form-grid">
-              <label className="field"><span>Prénom *</span><input required value={form.firstName} onChange={(event) => update("firstName", event.target.value)} autoComplete="given-name" /></label>
-              <label className="field"><span>Nom *</span><input required value={form.lastName} onChange={(event) => update("lastName", event.target.value)} autoComplete="family-name" /></label>
-              <label className="field"><span>Adresse e-mail *</span><input required type="email" value={form.email} onChange={(event) => update("email", event.target.value)} autoComplete="email" /></label>
-              <label className="field"><span>Téléphone *</span><input required type="tel" value={form.phone} onChange={(event) => update("phone", event.target.value)} autoComplete="tel" /></label>
-              <label className="field order-field-full"><span>Entreprise <small>facultatif</small></span><input value={form.company} onChange={(event) => update("company", event.target.value)} autoComplete="organization" /></label>
+              <label className="field"><span>Vorname *</span><input required value={form.firstName} onChange={(event) => update("firstName", event.target.value)} autoComplete="given-name" /></label>
+              <label className="field"><span>Nachname *</span><input required value={form.lastName} onChange={(event) => update("lastName", event.target.value)} autoComplete="family-name" /></label>
+              <label className="field"><span>E-Mail-Adresse *</span><input required type="email" value={form.email} onChange={(event) => update("email", event.target.value)} autoComplete="email" /></label>
+              <label className="field"><span>Telefon *</span><input required type="tel" value={form.phone} onChange={(event) => update("phone", event.target.value)} autoComplete="tel" /></label>
+              <label className="field order-field-full"><span>Unternehmen <small>optional</small></span><input value={form.company} onChange={(event) => update("company", event.target.value)} autoComplete="organization" /></label>
             </div>
           </section>
 
           <section className="order-form-section">
-            <div className="order-section-heading"><span>02</span><div><h2>Adresse de livraison</h2><p>Votre commande est expédiée sur palette à l’adresse indiquée. Nous confirmerons les modalités avec vous.</p></div></div>
+            <div className="order-section-heading"><span>02</span><div><h2>Lieferadresse</h2><p>Ihre Bestellung wird auf Palette an die angegebene Adresse versendet. Die Lieferdetails erhalten Sie vorab.</p></div></div>
             <div className="order-delivery-options">
-              <div className="order-delivery-option active"><Truck size={21} /><span><strong>Livraison sur palette</strong><small>À l’adresse indiquée · 6 à 8 jours ouvrés</small></span></div>
+              <div className="order-delivery-option active"><Truck size={21} /><span><strong>Palettenlieferung</strong><small>An die angegebene Adresse · 6 bis 8 Werktage</small></span></div>
             </div>
-            <div className="order-form-grid order-address-grid"><label className="field order-field-full"><span>Adresse *</span><input required value={form.address} onChange={(event) => update("address", event.target.value)} autoComplete="street-address" placeholder="Numéro et rue" /></label><label className="field"><span>Code postal *</span><input required value={form.postalCode} onChange={(event) => update("postalCode", event.target.value)} autoComplete="postal-code" /></label><label className="field"><span>Ville *</span><input required value={form.city} onChange={(event) => update("city", event.target.value)} autoComplete="address-level2" /></label></div>
-            <label className="field order-note-field"><span>Information utile <small>facultatif</small></span><textarea rows="3" value={form.note} onChange={(event) => update("note", event.target.value)} placeholder="Accès, présence sur place, précision pour le transporteur..." /></label>
+            <div className="order-form-grid order-address-grid"><label className="field order-field-full"><span>Adresse *</span><input required value={form.address} onChange={(event) => update("address", event.target.value)} autoComplete="street-address" placeholder="Hausnummer und Straße" /></label><label className="field"><span>Postleitzahl *</span><input required value={form.postalCode} onChange={(event) => update("postalCode", event.target.value)} autoComplete="postal-code" /></label><label className="field"><span>Ort *</span><input required value={form.city} onChange={(event) => update("city", event.target.value)} autoComplete="address-level2" /></label></div>
+            <label className="field order-note-field"><span>Zusätzliche Hinweise <small>optional</small></span><textarea rows="3" value={form.note} onChange={(event) => update("note", event.target.value)} placeholder="Zufahrt, Anwesenheit vor Ort, Hinweise für die Spedition ..." /></label>
           </section>
 
           <section className="order-form-section order-payment-section">
-            <div className="order-section-heading"><span>03</span><div><h2>Paiement par virement bancaire</h2><p>Votre commande sera préparée après réception et vérification du virement.</p></div></div>
-            <div className="order-transfer-note"><CreditCard size={22} /><div><strong>Un paiement clair, sans saisie bancaire en ligne</strong><p>Après validation, nous vous envoyons les coordonnées bancaires et le montant exact à régler par e-mail.</p></div></div>
-            <label className="order-checkbox"><input type="checkbox" checked={form.terms} onChange={(event) => update("terms", event.target.checked)} required /><span>J’ai lu et j’accepte les <Link to="/conditions-generales-de-vente">conditions générales de vente</Link>. *</span></label>
+            <div className="order-section-heading"><span>03</span><div><h2>Zahlung per Banküberweisung</h2><p>Ihre Bestellung wird nach Eingang und Prüfung der Überweisung vorbereitet.</p></div></div>
+            <div className="order-transfer-note"><CreditCard size={22} /><div><strong>Klare Zahlung ohne Online-Bankeingabe</strong><p>Nach der Bestätigung erhalten Sie die Bankverbindung und den exakten Betrag per E-Mail.</p></div></div>
+            <label className="order-checkbox"><input type="checkbox" checked={form.terms} onChange={(event) => update("terms", event.target.checked)} required /><span>Ich habe die <Link to="/conditions-generales-de-vente">Allgemeinen Geschäftsbedingungen</Link> gelesen und akzeptiere sie. *</span></label>
           </section>
           {submitError && (
             <div className="order-form-error" role="alert">
               {submitError}
             </div>
           )}
-          <div className="order-form-actions"><Link to="/panier" className="order-back-link"><ArrowLeft size={16} /> Retour au panier</Link><button className="btn btn-primary" type="submit" disabled={isSubmitting}>{isSubmitting ? "Envoi..." : "Valider ma demande"} <ArrowRight size={17} /></button></div>
+          <div className="order-form-actions"><Link to="/panier" className="order-back-link"><ArrowLeft size={16} /> Zurück zum Warenkorb</Link><button className="btn btn-primary" type="submit" disabled={isSubmitting}>{isSubmitting ? "Wird gesendet..." : "Anfrage absenden"} <ArrowRight size={17} /></button></div>
         </div>
 
         <aside className="order-sidebar">
-          <div className="order-summary-box"><div className="order-summary-title"><h2>Votre commande</h2><span>{count} article{count > 1 ? "s" : ""}</span></div><div className="order-summary-lines">{lines.map(({ product, qty, lineTotal }) => <div className="order-summary-line" key={product.id}><span><strong>{qty} ×</strong> {product.name}</span><b>{formatPrice(lineTotal)}</b></div>)}</div><div className="summary-row"><span>Sous-total</span><strong>{formatPrice(subtotal)}</strong></div><div className="summary-row"><span>Livraison</span><strong>{shipping === 0 ? "Offerte" : formatPrice(shipping)}</strong></div><div className="summary-total"><span>Total TTC</span><strong>{formatPrice(total)}</strong></div></div>
-          <div className="order-bank-box"><span className="section-kicker">RÈGLEMENT</span><h2>Virement bancaire</h2><p>Les coordonnées bancaires sont communiquées après validation afin d’associer votre règlement à la bonne commande.</p><div className="order-bank-row"><Clipboard size={16} /><span>Référence à rappeler<br /><strong>Votre référence de commande</strong></span></div><div className="order-bank-row"><Mail size={16} /><span>Confirmation par e-mail<br /><strong>{COMPANY.email}</strong></span></div></div>
-          <div className="order-reassurance"><ShieldCheck size={18} /><span>Vos données sont utilisées uniquement pour traiter votre commande.</span></div>
+          <div className="order-summary-box"><div className="order-summary-title"><h2>Ihre Bestellung</h2><span>{count} Artikel</span></div><div className="order-summary-lines">{lines.map(({ product, qty, lineTotal }) => <div className="order-summary-line" key={product.id}><span><strong>{qty} ×</strong> {product.name}</span><b>{formatPrice(lineTotal)}</b></div>)}</div><div className="summary-row"><span>Zwischensumme</span><strong>{formatPrice(subtotal)}</strong></div><div className="summary-row"><span>Lieferung</span><strong>{shipping === 0 ? "Kostenlos" : formatPrice(shipping)}</strong></div><div className="summary-total"><span>Gesamt inkl. MwSt.</span><strong>{formatPrice(total)}</strong></div></div>
+          <div className="order-bank-box"><span className="section-kicker">ZAHLUNG</span><h2>Banküberweisung</h2><p>Die Bankverbindung erhalten Sie nach der Bestätigung, damit Ihre Zahlung eindeutig zugeordnet werden kann.</p><div className="order-bank-row"><Clipboard size={16} /><span>Verwendungszweck<br /><strong>Ihre Bestellreferenz</strong></span></div><div className="order-bank-row"><Mail size={16} /><span>Bestätigung per E-Mail<br /><strong>{COMPANY.email}</strong></span></div></div>
+          <div className="order-reassurance"><ShieldCheck size={18} /><span>Ihre Daten werden ausschließlich zur Bearbeitung Ihrer Bestellung verwendet.</span></div>
         </aside>
       </form>
     </section>

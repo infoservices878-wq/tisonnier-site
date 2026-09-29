@@ -5,33 +5,33 @@ export default function CookieConsent() {
   const [choice, setChoice] = useState(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("OSSAU BOIS-cookie");
+    const stored = localStorage.getItem("AM Holzbrennstoffe UG-cookie");
     if (stored) setChoice(stored);
 
     const openSettings = () => setChoice(null);
-    window.addEventListener("OSSAU BOIS:manage-cookies", openSettings);
-    return () => window.removeEventListener("OSSAU BOIS:manage-cookies", openSettings);
+    window.addEventListener("AM Holzbrennstoffe UG:manage-cookies", openSettings);
+    return () => window.removeEventListener("AM Holzbrennstoffe UG:manage-cookies", openSettings);
   }, []);
 
   if (choice !== null) return null;
 
   const save = (value) => {
-    localStorage.setItem("OSSAU BOIS-cookie", value);
+    localStorage.setItem("AM Holzbrennstoffe UG-cookie", value);
     setChoice(value);
   };
 
   return (
-    <div className="cookie-banner" role="dialog" aria-label="Consentement cookies">
+    <div className="cookie-banner" role="dialog" aria-label="Cookie-Einwilligung">
       <p>
-        Nous utilisons des cookies pour le fonctionnement du site et, avec votre accord,
-        pour mesurer l&apos;audience. Vous pouvez accepter ou refuser les cookies non essentiels. <Link to="/politique-de-confidentialite">En savoir plus</Link>
+        Wir verwenden Cookies für den Betrieb dieser Website und – mit Ihrer Einwilligung – zur Reichweitenmessung.
+        Nicht erforderliche Cookies können Sie akzeptieren oder ablehnen. <Link to="/politique-de-confidentialite">Mehr erfahren</Link>
       </p>
       <div className="cookie-actions">
         <button type="button" className="btn btn-ghost-light" onClick={() => save("rejected")}>
-          Refuser
+          Ablehnen
         </button>
         <button type="button" className="btn btn-primary" onClick={() => save("accepted")}>
-          Accepter
+          Akzeptieren
         </button>
       </div>
     </div>

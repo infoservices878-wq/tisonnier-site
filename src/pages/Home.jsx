@@ -7,148 +7,22 @@ import FaqSection from "../components/FaqSection";
 
 function ValueStrip() {
   const items = [
-    { icon: Truck, title: "Livraison palette", text: "Hayon, bord de voie carrossable" },
-    { icon: Award, title: "Fiches précises", text: "Certifications et specs lisibles" },
-    { icon: Package, title: "Réception maîtrisée", text: "Confirmation avant livraison" },
+    { icon: Truck, title: "Palettenlieferung", text: "Mit Ladebordwand bis zur Zufahrt" },
+    { icon: Award, title: "Klare Produktdaten", text: "Zertifikate und Daten auf einen Blick" },
+    { icon: Package, title: "Planbare Zustellung", text: "Bestätigung vor der Lieferung" },
   ];
-  return (
-    <div className="value-strip">
-      {items.map((it) => (
-        <div className="value-item" key={it.title}>
-          <it.icon size={22} strokeWidth={1.5} />
-          <div>
-            <strong>{it.title}</strong>
-            <span>{it.text}</span>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+  return <div className="value-strip">{items.map((it) => <div className="value-item" key={it.title}><it.icon size={22} strokeWidth={1.5} /><div><strong>{it.title}</strong><span>{it.text}</span></div></div>)}</div>;
 }
 
 export default function Home() {
   const featured = PRODUCTS.slice(0, 6);
-
-  return (
-    <>
-      <section className="hero">
-        <div className="hero-scene">
-          <img
-            src="/optimized/hero-production.webp"
-            alt="Atelier industriel de production et de transformation du bois"
-            fetchPriority="high"
-            decoding="async"
-          />
-          <div className="hero-scene-overlay" aria-hidden="true" />
-        </div>
-        <div className="hero-content">
-          <p className="hero-kicker">Combustibles pour particuliers et professionnels</p>
-          <h1 className="hero-title">Une chaleur sur laquelle vous pouvez compter.</h1>
-          <p className="hero-sub">
-            Granulés, briquettes, bois de chauffage et charbon, avec des fiches produit précises,
-            une logistique sur palette maîtrisée et une équipe joignable en semaine.
-          </p>
-          <div className="hero-actions">
-            <Link to="/catalogue" className="btn btn-primary">Voir le catalogue</Link>
-            <Link to="/entreprise" className="btn btn-ghost-light">Découvrir l&apos;entreprise</Link>
-          </div>
-        </div>
-      </section>
-
-      <ValueStrip />
-
-      <section className="section">
-        <h2 className="section-title">Trouvez le combustible adapté à votre appareil</h2>
-        <div className="cat-tiles cat-tiles-primary">
-          {CATEGORIES.slice(0, 2).map((c) => (
-            <Link key={c.id} to={`/catalogue/${c.id}`} className="cat-tile">
-              <img src={c.image} alt="" loading="lazy" />
-              <span className="cat-tile-overlay">
-                <strong>{c.name}</strong>
-                <span>Voir les produits <span aria-hidden="true">→</span></span>
-              </span>
-            </Link>
-          ))}
-        </div>
-        <div className="cat-tiles cat-tiles-secondary">
-          {CATEGORIES.slice(2).map((c) => (
-            <Link key={c.id} to={`/catalogue/${c.id}`} className="cat-tile">
-              <img src={c.image} alt="" loading="lazy" />
-              <span className="cat-tile-overlay">
-                <strong>{c.name}</strong>
-                <span>Voir les produits <span aria-hidden="true">→</span></span>
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="section-head-row">
-          <h2 className="section-title">Une sélection à comparer facilement</h2>
-          <Link to="/catalogue" className="link-btn">
-            Tout le catalogue <ChevronRight size={16} strokeWidth={1.7} />
-          </Link>
-        </div>
-        <div className="product-grid">
-          {featured.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-      </section>
-
-      <section className="section fulfillment-section">
-        <div className="fulfillment-image">
-          <img src="/optimized/delivery-truck.webp" alt="Camion Ossau Bois en livraison" loading="lazy" decoding="async" />
-        </div>
-        <div className="fulfillment-content">
-          <p className="fulfillment-kicker">Expédition sur palette</p>
-          <h2 className="fulfillment-title">Votre combustible arrive dans les meilleures conditions</h2>
-          <p className="fulfillment-lede">
-            Nous organisons chaque commande pour que la réception soit aussi claire que le choix du produit.
-            À l’adresse indiquée, vous connaissez les modalités de livraison avant de valider.
-          </p>
-          <div className="fulfillment-details">
-            <div>
-              <strong>Livraison sur palette</strong>
-              <span>Au bord de voie carrossable, avec hayon selon les conditions d&apos;accès.</span>
-            </div>
-            <div>
-              <strong>Commande suivie</strong>
-              <span>Confirmation écrite et créneau communiqué avant le passage du transporteur.</span>
-            </div>
-          </div>
-          <Link to="/contact" className="btn btn-primary">Nous contacter</Link>
-        </div>
-      </section>
-
-      <section className="section steps-section">
-        <div className="steps-section-inner">
-          <p className="steps-kicker">Commander simplement</p>
-          <div className="steps-intro">
-            <h2 className="section-title">Trois étapes claires pour préparer votre livraison</h2>
-            <p className="steps-lede">
-              Comparez les combustibles, renseignez votre adresse de livraison,
-              puis recevez une confirmation précise avant le départ de votre commande.
-            </p>
-          </div>
-          <div className="steps">
-          {[
-            { n: "01", title: "Choisir le bon combustible", text: "Comparez le format, le conditionnement et les informations utiles à votre appareil." },
-            { n: "02", title: "Organiser la livraison", text: "Indiquez votre adresse et les informations utiles au transporteur." },
-            { n: "03", title: "Valider sereinement", text: "Recevez le récapitulatif de votre commande et les indications pratiques par écrit." },
-          ].map((s) => (
-            <div className="step" key={s.n}>
-              <span className="step-n">{s.n}</span>
-              <h3 className="step-title">{s.title}</h3>
-              <p className="step-text">{s.text}</p>
-            </div>
-          ))}
-          </div>
-        </div>
-      </section>
-
-      <FaqSection limit={4} showAllLink title="Questions fréquentes" />
-    </>
-  );
+  return <>
+    <section className="hero"><div className="hero-scene"><img src="/optimized/hero-production.webp" alt="Industrielle Verarbeitung von Holz" fetchPriority="high" decoding="async" /><div className="hero-scene-overlay" aria-hidden="true" /></div><div className="hero-content"><p className="hero-kicker">Brennstoffe für Privat- und Gewerbekunden</p><h1 className="hero-title">Wärme, auf die Sie sich verlassen können.</h1><p className="hero-sub">Pellets, Briketts, Brennholz und Kohle mit klaren Produktinformationen, zuverlässiger Palettenlogistik und persönlichem Service.</p><div className="hero-actions"><Link to="/catalogue" className="btn btn-primary">Zum Katalog</Link><Link to="/entreprise" className="btn btn-ghost-light">Über uns</Link></div></div></section>
+    <ValueStrip />
+    <section className="section"><h2 className="section-title">Der passende Brennstoff für Ihr Heizsystem</h2><div className="cat-tiles cat-tiles-primary">{CATEGORIES.slice(0, 2).map((c) => <Link key={c.id} to={`/catalogue/${c.id}`} className="cat-tile"><img src={c.image} alt="" loading="lazy" /><span className="cat-tile-overlay"><strong>{c.name}</strong><span>Produkte ansehen <span aria-hidden="true">→</span></span></span></Link>)}</div><div className="cat-tiles cat-tiles-secondary">{CATEGORIES.slice(2).map((c) => <Link key={c.id} to={`/catalogue/${c.id}`} className="cat-tile"><img src={c.image} alt="" loading="lazy" /><span className="cat-tile-overlay"><strong>{c.name}</strong><span>Produkte ansehen <span aria-hidden="true">→</span></span></span></Link>)}</div></section>
+    <section className="section"><div className="section-head-row"><h2 className="section-title">Unser Sortiment im Überblick</h2><Link to="/catalogue" className="link-btn">Zum gesamten Katalog <ChevronRight size={16} strokeWidth={1.7} /></Link></div><div className="product-grid">{featured.map((p) => <ProductCard key={p.id} product={p} />)}</div></section>
+    <section className="section fulfillment-section"><div className="fulfillment-image"><img src="/optimized/delivery-truck.webp" alt="Lieferfahrzeug von AM Holzbrennstoffe UG" loading="lazy" decoding="async" /></div><div className="fulfillment-content"><p className="fulfillment-kicker">Palettenversand</p><h2 className="fulfillment-title">Ihr Brennstoff kommt sicher bei Ihnen an</h2><p className="fulfillment-lede">Wir organisieren jede Bestellung so, dass die Lieferung genauso transparent bleibt wie die Produktauswahl.</p><div className="fulfillment-details"><div><strong>Palettenlieferung</strong><span>Bis an den Rand einer befestigten Zufahrt, je nach Zugangsbedingungen mit Ladebordwand.</span></div><div><strong>Planbare Bestellung</strong><span>Sie erhalten vor der Zustellung eine schriftliche Bestätigung und Lieferinformation.</span></div></div><Link to="/contact" className="btn btn-primary">Kontakt aufnehmen</Link></div></section>
+    <section className="section steps-section"><div className="steps-section-inner"><p className="steps-kicker">Einfach bestellen</p><div className="steps-intro"><h2 className="section-title">In drei Schritten zur Lieferung</h2><p className="steps-lede">Vergleichen Sie Brennstoffe, geben Sie Ihre Lieferadresse an und erhalten Sie alle wichtigen Informationen vor dem Versand.</p></div><div className="steps">{[{ n: "01", title: "Brennstoff auswählen", text: "Vergleichen Sie Format, Verpackung und Produktdaten für Ihr Heizsystem." }, { n: "02", title: "Lieferung vorbereiten", text: "Geben Sie Ihre Adresse und wichtige Hinweise für die Spedition an." }, { n: "03", title: "Bestellung bestätigen", text: "Sie erhalten eine schriftliche Zusammenfassung und praktische Lieferhinweise." }].map((s) => <div className="step" key={s.n}><span className="step-n">{s.n}</span><h3 className="step-title">{s.title}</h3><p className="step-text">{s.text}</p></div>)}</div></div></section>
+    <FaqSection limit={4} showAllLink title="Häufige Fragen" />
+  </>;
 }

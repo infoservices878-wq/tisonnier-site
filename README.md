@@ -1,11 +1,11 @@
-# OSSAU BOIS — site e-commerce (React + Vite)
+# AM Holzbrennstoffe UG — site e-commerce (React + Vite)
 
 Architecture modulaire prête pour une connexion **WooCommerce**.
 
 ## Structure
 
 ```
-OSSAU BOIS-site/
+AM-Holzbrennstoffe-UG-site/
 ├── public/
 │   └── favicon.svg
 ├── src/
@@ -75,20 +75,31 @@ npm run dev
 
 ## Connexion WordPress et commandes
 
-Le formulaire de commande appelle directement l'endpoint WordPress :
-`https://boutique.ossau-bois.com/wp-json/ossau/v1/command`.
+Le plugin à installer dans WordPress se trouve dans `server/wordpress-plugin/`.
+L'URL de base doit être celle du site WordPress, sans `/wp-json` ni barre oblique finale. La valeur actuellement prévue est `https://boutique.amholzbrennstoffeug.de` ; vérifiez qu'elle correspond à l'adresse qui ouvre réellement WordPress.
 
-Dans `.env`, configure :
+Pour un déploiement Vite sur Hostinger, créez `.env.production` à partir de `.env.example`, renseignez `VITE_WORDPRESS_API_URL` et `VITE_WORDPRESS_API_KEY`, puis reconstruisez et redéployez le site. Vite intègre ces valeurs au moment de `npm run build` : changer une variable dans Hostinger après le build ne modifie pas le bundle déjà publié.
 
-```env
-VITE_WORDPRESS_API_URL=https://boutique.ossau-bois.com
-VITE_WORDPRESS_API_KEY=le-token-attendu-par-wordpress
+Dans `wp-config.php` du site WordPress, définissez le même jeton avant la ligne « That's all, stop editing » :
+
+```php
+define( 'OSSAU_ORDER_API_TOKEN', 'remplacer-par-un-jeton-long-et-aleatoire' );
+define( 'OSSAU_FRONTEND_URL', 'https://amholzbrennstoffeug.de' );
 ```
 
-La clé est intégrée au bundle du navigateur au moment du build.
-Le serveur WordPress doit donc autoriser l'origine du frontend avec CORS.
+Le nom de route historique est conservé pour compatibilité : les commandes sont envoyées à `/wp-json/ossau/v1/command`, les autres fonctions client à `/wp-json/ossau/v1/auth/...`.
 
-Le catalogue utilise encore les données locales de `src/data/products.js`.
+**Sécurité :** `VITE_WORDPRESS_API_KEY` est public une fois le site compilé et visible par tout visiteur. Il ne doit pas être considéré comme un secret ni comme une protection contre les commandes frauduleuses. Pour une protection réelle, les requêtes doivent passer par un backend privé (proxy/API) qui conserve le secret côté serveur et valide les prix. Ne mettez jamais de clés WooCommerce `consumer_secret` dans une variable `VITE_*`.
+
+Diagnostic rapide :
+
+- `ossau_api_not_configured` (500) : le plugin est actif, mais `OSSAU_ORDER_API_TOKEN` manque dans `wp-config.php`.
+- `rest_no_route` : vérifiez que le plugin est actif et que l'URL WordPress est correcte.
+- `woocommerce_missing` : WooCommerce n'est pas actif sur ce WordPress.
+- Erreur CORS dans la console du navigateur : autorisez l'origine exacte du site React sur WordPress et vérifiez que le serveur transmet l'en-tête `Authorization` aux requêtes REST.
+- Réponse `rest_cookie_invalid_nonce` : une extension de sécurité, un proxy ou une règle serveur modifie l'accès à l'API REST.
+
+Le plugin utilise WordPress pour les commandes, les formulaires de contact et les comptes clients. Le catalogue utilise encore les données locales de `src/data/products.js`.
 
 ## Build
 
