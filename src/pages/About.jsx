@@ -1,5 +1,6 @@
 import { Award, ArrowRight, Check, Package, TreePine } from "lucide-react";
 import { Link } from "react-router-dom";
+import { COMPANY } from "../data/legalContent";
 
 export default function About() {
   return (
@@ -27,6 +28,17 @@ export default function About() {
         </div>
       </div>
       <div className="about-promise"><div><span className="section-kicker">Unser Versprechen</span><h2>Transparent von Anfang an</h2></div><ul><li><Check size={17} /> Produktmerkmale klar dargestellt</li><li><Check size={17} /> Lieferbedingungen vor der Bestellung sichtbar</li><li><Check size={17} /> Direkter Kontakt bei praktischen Fragen</li></ul><Link to="/contact" className="btn btn-primary">Team kontaktieren <ArrowRight size={16} /></Link></div>
+      <section className="legal-links-section" aria-labelledby="company-facts-title">
+        <div>
+          <span className="section-kicker">UNTERNEHMENSDATEN</span>
+          <h2 id="company-facts-title">Ein eingetragenes Unternehmen mit Sitz in Deutschland</h2>
+          <p>{COMPANY.name} hat ihren Sitz in {COMPANY.city}. Die Angaben zu Geschäftsführung und Handelsregister finden Sie transparent im Impressum.</p>
+        </div>
+        <div className="legal-links-grid">
+          <Link to="/mentions-legales"><span>Impressum und Registerangaben</span><ArrowRight size={16} /></Link>
+          <a href={`mailto:${COMPANY.email}`}><span>{COMPANY.email}</span><ArrowRight size={16} /></a>
+        </div>
+      </section>
       <div className="callout">
         <p>
           Die Unternehmensangaben der AM Holzbrennstoffe UG (haftungsbeschränkt) beruhen auf öffentlichen Registerdaten.

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Euro } from "lucide-react";
 import Logo from "./Logo";
 import { CATEGORIES } from "../data/categories";
 import { COMPANY } from "../data/legalContent";
@@ -25,7 +26,7 @@ export default function Footer() {
             <a className="footer-contact-mail" href={`mailto:${COMPANY.email}`}>
               {COMPANY.email}
             </a>
-            {COMPANY.phone && <a className="footer-contact-phone" href={COMPANY.phoneHref}>{COMPANY.phone}</a>}
+            {COMPANY.phone && <><a className="footer-contact-phone" href={COMPANY.phoneHref}>{COMPANY.phone}</a><span className="footer-note">{COMPANY.phoneNotice}</span></>}
             {COMPANY.hours && <span className="footer-contact-hours">Erreichbarkeit: {COMPANY.hours}</span>}
           </div>
         </div>
@@ -46,10 +47,11 @@ export default function Footer() {
           <div className="footer-col">
             <h3 className="footer-heading">SERVICE</h3>
             <Link className="footer-link" to="/livraison">Lieferung und Warenannahme</Link>
-            <Link className="footer-link" to="/livraison">Informationen zu Rückgaben</Link>
+            <Link className="footer-link" to="/zahlung">Zahlungsablauf</Link>
+            <Link className="footer-link" to="/retouren">Widerruf und Rückgabe</Link>
             <Link className="footer-link" to="/contact">Bestellung anfragen</Link>
             <Link className="footer-link" to="/faq">Häufige Fragen</Link>
-            <Link className="footer-link" to="/contact">Contact</Link>
+            <Link className="footer-link" to="/contact">Kontakt</Link>
           </div>
 
           <div className="footer-col">
@@ -80,6 +82,21 @@ export default function Footer() {
             <p className="footer-address">Palettenversand an die bei der Bestellung angegebene Lieferadresse.</p>
             <p className="footer-note">Die Lieferdetails erhalten Sie mit Ihrer Auftragsbestätigung.</p>
           </div>
+        </div>
+      </div>
+
+      <div className="footer-payment-band">
+        <h2 className="footer-payment-heading">SICHERES BEZAHLEN</h2>
+        <div className="footer-payment-methods">
+          <Link className="footer-payment-option footer-payment-bank" to="/zahlung">
+            <span className="footer-payment-icon"><Euro size={19} strokeWidth={2.2} /></span>
+            <span className="footer-payment-copy"><strong>Banküberweisung</strong><small>Sicher &amp; gebührenfrei</small></span>
+          </Link>
+          <div className="footer-payment-option footer-payment-mark footer-payment-visa"><img src="/payment-methods/visa.svg" alt="Visa" decoding="async" /></div>
+          <div className="footer-payment-option footer-payment-mark footer-payment-mastercard"><img src="/payment-methods/mastercard.svg" alt="Mastercard" decoding="async" /></div>
+          <div className="footer-payment-option footer-payment-mark footer-payment-amex"><img src="/payment-methods/amex.svg" alt="American Express" decoding="async" /></div>
+          <div className="footer-payment-option footer-payment-mark footer-payment-paypal"><img src="/payment-methods/paypal.svg" alt="PayPal" decoding="async" /></div>
+          <div className="footer-payment-option footer-payment-mark footer-payment-apple"><img src="/payment-methods/applepay.svg" alt="Apple Pay" decoding="async" /></div>
         </div>
       </div>
 

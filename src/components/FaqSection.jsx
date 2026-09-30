@@ -17,9 +17,10 @@ export default function FaqSection({ limit = null, showAllLink = false, title = 
       </div>
       <div className="faq-list">
         {items.map((item, i) => (
-          <details key={i} className="faq-item" open={i === 0}>
+          <details key={item.q} className="faq-item" open={i === 0}>
             <summary className="faq-q">{item.q}</summary>
             <p className="faq-a">{item.a}</p>
+            {item.link && <p className="faq-a"><Link to={item.link.to}>{item.link.label}</Link></p>}
           </details>
         ))}
       </div>

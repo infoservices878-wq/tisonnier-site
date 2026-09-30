@@ -13,9 +13,10 @@ export const COMPANY = {
   purpose: "Herstellung und Handel von Brennholz und Zubehör",
   registerUrl: "https://www.companyhouse.de/AM-Holzbrennstoffe-UG-Langenhagen",
   email: "info@amholzbrennstoffeug.de",
-  phone: "",
-  phoneHref: "",
-  hours: "",
+  phone: "+41 265190382",
+  phoneHref: "tel:+41265190382",
+  hours: "Mo–Fr 08:00–12:00 und 13:30–17:00 Uhr",
+  responseTime: "Richtwert: Antwort innerhalb eines Werktages (vor Livegang bestätigen).",
 };
 
 export const MENTIONS_SECTIONS = [
@@ -70,7 +71,7 @@ export const CGV_SECTIONS = [
   },
   {
     title: "2. Vertragsschluss und Preise",
-    html: "Die Produktdarstellung im Online-Shop stellt kein verbindliches Angebot dar. Ein Vertrag kommt erst mit unserer Auftragsbestätigung zustande. Preise, Lieferkosten und die jeweils geltende Umsatzsteuer werden vor Abschluss der Bestellung ausgewiesen.",
+     html: `<p>Die Produktdarstellung im Online-Shop stellt kein verbindliches Angebot dar. Mit dem Klick auf die Schaltfläche „Zahlungspflichtig bestellen“ geben Sie eine verbindliche Bestellung ab. Der Kaufvertrag kommt zustande, sobald Ihre Bestellung erfolgreich bei uns eingegangen ist. Wir bestätigen den Eingang und den Vertragsschluss unverzüglich per E-Mail.</p><p>Der Gesamtpreis einschließlich Umsatzsteuer und Lieferkosten wird unmittelbar vor Abgabe der Bestellung angezeigt. Der vollständige Kaufpreis ist innerhalb von 7 Kalendertagen ab Zugang der Vertragsbestätigung per Banküberweisung zu zahlen. Maßgeblich ist der Eingang des Betrags auf unserem Konto. Bankverbindung und Zahlungsreferenz teilen wir in der Vertragsbestätigung mit. Die Vorbereitung und der Versand beginnen nach Zahlungseingang.</p><p>Geht die Zahlung nicht innerhalb dieser Frist ein, erinnern wir Sie an die Zahlung und setzen eine angemessene Nachfrist. Erst wenn diese erfolglos abläuft, können wir unter den gesetzlichen Voraussetzungen, insbesondere nach § 323 BGB, vom Vertrag zurücktreten. Die gesetzlichen Regeln zum Zahlungsverzug, insbesondere § 286 BGB, bleiben unberührt.</p><p>Bei Verbraucherverträgen im elektronischen Geschäftsverkehr gestalten wir die Bestellsituation nach § 312j BGB. Die Schaltfläche „Zahlungspflichtig bestellen“ weist ausdrücklich auf die Zahlungspflicht hin.</p>`,
   },
   {
     title: "3. Lieferung",
@@ -78,7 +79,7 @@ export const CGV_SECTIONS = [
   },
   {
     title: "4. Widerrufsrecht",
-    html: "Verbrauchern steht grundsätzlich ein gesetzliches Widerrufsrecht zu. Einzelheiten, Fristen und Ausnahmen richten sich nach den gesetzlichen Vorschriften und werden im Bestellprozess beziehungsweise in der Auftragsbestätigung mitgeteilt.",
+    html: `<p>Verbrauchern steht bei Fernabsatzverträgen grundsätzlich ein gesetzliches Widerrufsrecht zu. Sofern keine gesetzliche Ausnahme greift, können Sie den Vertrag innerhalb von 14 Tagen ohne Angabe von Gründen widerrufen. Die Frist beginnt an dem Tag, an dem Sie oder ein von Ihnen benannter Dritter, der nicht Beförderer ist, die Ware erhalten.</p><p>Um Ihr Widerrufsrecht auszuüben, informieren Sie uns mit einer eindeutigen Erklärung (zum Beispiel per E-Mail oder Brief) über Ihren Entschluss, den Vertrag zu widerrufen. Richten Sie die Erklärung an ${COMPANY.name}, ${COMPANY.address}, ${COMPANY.city}, E-Mail: <a href="mailto:${COMPANY.email}">${COMPANY.email}</a>. Zur Fristwahrung genügt es, die Erklärung vor Ablauf der Widerrufsfrist abzusenden.</p><p>Im Widerrufsfall erstatten wir erhaltene Zahlungen einschließlich der Kosten der günstigsten angebotenen Standardlieferung unverzüglich und spätestens binnen 14 Tagen ab Eingang Ihrer Widerrufserklärung. Wir verwenden dasselbe Zahlungsmittel wie bei der ursprünglichen Zahlung, sofern nichts anderes vereinbart wurde. Bei Waren können wir die Erstattung zurückhalten, bis wir die Ware zurückerhalten haben oder Sie den Nachweis der Rücksendung erbracht haben, je nachdem, welches der frühere Zeitpunkt ist.</p><p>Sie senden die Ware unverzüglich und spätestens binnen 14 Tagen ab Mitteilung des Widerrufs zurück. Die unmittelbaren Rücksendekosten tragen Sie nur, soweit wir Sie vor Vertragsschluss darüber informiert haben. Bei Speditionsware stimmen Sie den Rücktransport bitte vorab mit uns ab; maßgeblich sind die im Bestellprozess erteilten Informationen. Ihre gesetzlichen Gewährleistungsrechte bleiben unberührt.</p><p>Das Widerrufsrecht besteht nicht, soweit eine gesetzliche Ausnahme greift. Im Zweifel kontaktieren Sie uns vor der Rücksendung.</p><h3>Muster-Widerrufsformular</h3><p>Wenn Sie den Vertrag widerrufen wollen, können Sie dieses Formular ausfüllen und an uns senden:</p><p>An ${COMPANY.name}, ${COMPANY.address}, ${COMPANY.city}, E-Mail: <a href="mailto:${COMPANY.email}">${COMPANY.email}</a></p><p>Hiermit widerrufe ich den von mir abgeschlossenen Vertrag über den Kauf der folgenden Waren: ______________<br>Bestellt am / erhalten am: ______________<br>Name des Verbrauchers: ______________<br>Anschrift des Verbrauchers: ______________<br>Datum: ______________</p>`,
   },
   {
     title: "5. Gewährleistung und Haftung",

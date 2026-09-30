@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
-  Menu, X, ShoppingCart, Search, Globe, ChevronDown, UserRound, Heart,
+  Menu, X, ShoppingCart, Search, Truck, ChevronDown, UserRound, Heart, Phone,
 } from "lucide-react";
 import Logo from "./Logo";
 import { CATEGORIES } from "../data/categories";
@@ -11,6 +11,7 @@ import { useFavorites } from "../context/FavoritesContext";
 import { useAccount } from "../context/AccountContext";
 import { formatPrice } from "../lib/format";
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_FEE } from "../data/products";
+import { COMPANY } from "../data/legalContent";
 
 export default function Header() {
   const { count } = useCart();
@@ -57,15 +58,17 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="topbar">
-        <span className="topbar-item topbar-shipping">
-          Jetzt vorsorgen: Aktionspreise auf feste Brennstoffe · Palettenversand
-        </span>
-        <span className="topbar-item topbar-legal">AM Holzbrennstoffe UG · Handel mit festen Brennstoffen</span>
-        <div className="topbar-item topbar-country" aria-label="Ausgewähltes Lieferland">
-          <Globe size={14} strokeWidth={1.8} />
-          <span>Lieferung nach</span>
-          <strong>DE · Deutsch</strong>
-          <ChevronDown size={13} strokeWidth={1.8} />
+        <div className="topbar-info">
+          <span className="topbar-shipping">Aktionspreise auf feste Brennstoffe · Palettenversand</span>
+          <span className="topbar-legal">AM Holzbrennstoffe UG · Handel mit festen Brennstoffen</span>
+        </div>
+        <div className="topbar-actions">
+          {COMPANY.phone && <a className="topbar-phone" href={COMPANY.phoneHref} aria-label={`Kundenservice anrufen: ${COMPANY.phone}`} title={COMPANY.phoneNotice}><Phone size={14} strokeWidth={1.8} /><span>{COMPANY.phone}</span></a>}
+          <div className="topbar-country" aria-label="Ausgewähltes Lieferland">
+            <Truck size={14} strokeWidth={1.8} />
+            <strong>DE · EUR</strong>
+            <ChevronDown size={13} strokeWidth={1.8} />
+          </div>
         </div>
       </div>
 

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: AM Holzbrennstoffe UG - Commandes API
  * Description: Crée les commandes WooCommerce envoyées depuis le formulaire AM Holzbrennstoffe UG.
- * Version: 1.9.0
+ * Version: 1.14.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -439,44 +439,58 @@ function ossau_get_customer_orders( WP_REST_Request $request ) {
 function ossau_next_order_reference() {
 	global $wpdb;
 
-	$option_name = 'ossau_order_reference_sequence';
+	$option_name = 'amhug_order_reference_sequence';
 	$existing = get_option( $option_name, null );
 
 	if ( null === $existing ) {
-		if ( add_option( $option_name, '30001', '', false ) ) {
-			return 30000;
+		if ( add_option( $option_name, '135', '', false ) ) {
+			return 134;
 		}
 	}
 
 	$wpdb->query(
 		$wpdb->prepare(
-			"UPDATE {$wpdb->options} SET option_value = LAST_INSERT_ID(CAST(option_value AS UNSIGNED) + 1) WHERE option_name = %s",
+			"UPDATE {$wpdb->options} SET option_value = LAST_INSERT_ID(GREATEST(CAST(option_value AS UNSIGNED), 134) + 1) WHERE option_name = %s",
 			$option_name
 		)
 	);
 
-	return max( 30000, (int) $wpdb->get_var( 'SELECT LAST_INSERT_ID()' ) - 1 );
+	return max( 134, (int) $wpdb->get_var( 'SELECT LAST_INSERT_ID()' ) - 1 );
 }
 
-function ossau_order_email_headers() {
+function ossau_order_email_headers( $reply_to = '' ) {
+	$reply_to = sanitize_email( $reply_to );
+	if ( ! is_email( $reply_to ) ) {
+		$reply_to = 'info@amholzbrennstoffeug.de';
+	}
+
 	return array(
 		'Content-Type: text/html; charset=UTF-8',
 		'From: AM Holzbrennstoffe UG <info@amholzbrennstoffeug.de>',
-		'Reply-To: info@amholzbrennstoffeug.de',
+		'Reply-To: ' . $reply_to,
 	);
 }
 
 function ossau_order_transfer_details( $reference ) {
-	$holder = defined( 'OSSAU_BANK_ACCOUNT_HOLDER' ) ? trim( OSSAU_BANK_ACCOUNT_HOLDER ) : '';
-	$iban = defined( 'OSSAU_BANK_IBAN' ) ? trim( OSSAU_BANK_IBAN ) : '';
-	$bic = defined( 'OSSAU_BANK_BIC' ) ? trim( OSSAU_BANK_BIC ) : '';
+	$default_holder = 'ELIAS ALAIN DOMINIQUE PECRIAUX';
+	$default_iban = 'DE97 2022 0800 0048 4084 08';
+	$default_bic = 'SXPYDKKKXXX';
+	$holder = defined( 'OSSAU_BANK_ACCOUNT_HOLDER' ) ? trim( OSSAU_BANK_ACCOUNT_HOLDER ) : $default_holder;
+	$iban = defined( 'OSSAU_BANK_IBAN' ) ? trim( OSSAU_BANK_IBAN ) : $default_iban;
+	$bic = defined( 'OSSAU_BANK_BIC' ) ? trim( OSSAU_BANK_BIC ) : $default_bic;
+	$iban_compact = strtoupper( preg_replace( '/[^A-Z0-9]/i', '', $iban ) );
+	$is_demo_data = 'DE' . str_repeat( '0', 22 ) === $iban_compact
+		|| false !== stripos( $holder, 'HIER KONTOINHABER' )
+		|| false !== stripos( $bic, 'PLATZHALTER' );
 
-	if ( ! $holder || ! $iban || ! $bic ) {
-		return '<div style="margin-top:28px;padding:20px;background:#f7f4ee;border:1px solid #e6e1d8;border-left:4px solid #b8451f;"><p style="margin:0;font-size:14px;line-height:1.6;color:#24241f;">Nous vous communiquerons les coordonnées bancaires après vérification de votre commande.</p></div>';
+	if ( ! $holder || ! $iban || ! $bic || $is_demo_data ) {
+		$holder = $default_holder;
+		$iban = $default_iban;
+		$bic = $default_bic;
 	}
 
 	return sprintf(
-		'<div style="margin-top:28px;padding:20px;background:#f7f4ee;border:1px solid #e6e1d8;border-left:4px solid #b8451f;"><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;margin-bottom:10px;">Informations pour votre virement</div><div style="font-size:14px;line-height:1.9;color:#24241f;"><strong>Titulaire du compte :</strong> %s<br><strong>IBAN :</strong> %s<br><strong>BIC :</strong> %s</div><p style="margin:14px 0 0;color:#6f6a60;font-size:12px;line-height:1.5;">Merci d indiquer la référence <strong>%s</strong> dans le libellé du virement.</p></div>',
+		'<div style="margin-top:28px;padding:20px;background:#f7f4ee;border:1px solid #e6e1d8;border-left:4px solid #b8451f;"><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;margin-bottom:10px;">Informationen zur Überweisung</div><div style="font-size:14px;line-height:1.9;color:#24241f;"><strong>Kontoinhaber:</strong> %s<br><strong>IBAN:</strong> %s<br><strong>BIC:</strong> %s</div><p style="margin:14px 0 0;color:#6f6a60;font-size:12px;line-height:1.5;">Bitte geben Sie die Bestellnummer <strong>%s</strong> als Verwendungszweck an.</p></div>',
 		esc_html( $holder ),
 		esc_html( $iban ),
 		esc_html( $bic ),
@@ -526,8 +540,8 @@ function ossau_order_email( WC_Order $order, $reference, $recipient, $is_interna
 		return false;
 	}
 
-	$customer_name = trim( $order->get_formatted_billing_full_name() ) ?: 'Client AM Holzbrennstoffe UG';
-	$delivery_mode = 'Livraison sur palette a l adresse indiquee';
+	$customer_name = trim( $order->get_formatted_billing_full_name() ) ?: ( $is_internal ? 'Client AM Holzbrennstoffe UG' : 'Kunde von AM Holzbrennstoffe UG' );
+	$delivery_mode = $is_internal ? 'Livraison sur palette a l adresse indiquee' : 'Palettenlieferung an die angegebene Adresse';
 	$item_rows = '';
 
 	foreach ( $order->get_items( 'line_item' ) as $item ) {
@@ -539,10 +553,10 @@ function ossau_order_email( WC_Order $order, $reference, $recipient, $is_interna
 		);
 	}
 
-	$heading = $is_internal ? 'Nouvelle commande a preparer' : 'Votre commande est enregistree';
+	$heading = $is_internal ? 'Nouvelle commande a preparer' : 'Ihre Bestellung ist verbindlich bestätigt';
 	$intro = $is_internal
 		? sprintf( 'Une nouvelle commande vient d etre enregistree au nom de <strong>%s</strong>.', esc_html( $customer_name ) )
-		: sprintf( 'Bonjour %s,<br>Merci pour votre commande. Nous la verifierons et vous contacterons rapidement pour la suite.', esc_html( $customer_name ) );
+		: sprintf( 'Guten Tag %s,<br>mit Eingang Ihrer Bestellung ist der Kaufvertrag zustande gekommen. Bitte überweisen Sie den Gesamtbetrag innerhalb von 7 Kalendertagen ab Zugang dieser Vertragsbestätigung. Bankverbindung und Zahlungsreferenz finden Sie unten. Geht die Zahlung nicht fristgerecht ein, erinnern wir Sie und setzen eine angemessene Nachfrist. Nach Zahlungseingang bereiten wir Ihre Bestellung vor.', esc_html( $customer_name ) );
 	$contact = sprintf(
 		'%s<br>%s<br>%s',
 		esc_html( $order->get_billing_email() ),
@@ -551,8 +565,26 @@ function ossau_order_email( WC_Order $order, $reference, $recipient, $is_interna
 	);
 	$subject = $is_internal
 		? sprintf( '[AM Holzbrennstoffe UG] Nouvelle commande %s', $reference )
-		: sprintf( '[AM Holzbrennstoffe UG] Confirmation de votre commande %s', $reference );
+		: sprintf( '[AM Holzbrennstoffe UG] Vertragsbestätigung %s', $reference );
 	$transfer_details = $is_internal ? '' : ossau_order_transfer_details( $reference );
+	$delivery_day = sanitize_text_field( $order->get_meta( '_ossau_delivery_day' ) );
+	$delivery_window = sanitize_key( $order->get_meta( '_ossau_delivery_window' ) );
+	$delivery_window_labels = array(
+		'08-12' => '8:00–12:00',
+		'14-18' => '14:00–18:00',
+		'08-10' => '8:00–10:00',
+		'14-16' => '14:00–16:00',
+	);
+	$delivery_preferences = array();
+	if ( $delivery_day ) {
+		$delivery_preferences[] = ( $is_internal ? 'jour souhaité : ' : 'Wunschtag: ' ) . $delivery_day;
+	}
+	if ( isset( $delivery_window_labels[ $delivery_window ] ) ) {
+		$delivery_preferences[] = ( $is_internal ? 'créneau souhaité : ' : 'Zeitfenster: ' ) . $delivery_window_labels[ $delivery_window ];
+	}
+	if ( $delivery_preferences ) {
+		$delivery_mode .= ' · ' . implode( ' · ', $delivery_preferences );
+	}
 
 	$message = sprintf(
 		'<!doctype html><html><body style="margin:0;padding:0;background:#f4f1ea;font-family:Arial,sans-serif;color:#24241f;"><div style="max-width:640px;margin:0 auto;padding:28px 16px;"><div style="background:#2e3b26;padding:28px 32px;color:#fff;"><div style="font-size:12px;letter-spacing:1.6px;color:#d4a84b;font-weight:700;">AM HOLZBRENNSTOFFE UG</div><h1 style="font-size:25px;line-height:1.25;margin:12px 0 0;color:#fff;">%s</h1></div><div style="background:#fff;padding:30px 32px;"><p style="font-size:16px;line-height:1.6;margin:0 0 24px;">%s</p><div style="padding:16px;background:#f7f4ee;border-left:4px solid #b8451f;margin-bottom:24px;"><div style="font-size:12px;color:#6f6a60;text-transform:uppercase;letter-spacing:1px;">Reference de commande</div><strong style="display:block;font-size:21px;margin-top:5px;color:#24241f;">%s</strong></div><table style="width:100%%;border-collapse:collapse;font-size:14px;"><thead><tr><th style="text-align:left;padding-bottom:9px;color:#6f6a60;font-size:12px;text-transform:uppercase;letter-spacing:.8px;">Articles</th><th style="text-align:right;padding-bottom:9px;color:#6f6a60;font-size:12px;text-transform:uppercase;letter-spacing:.8px;">Montant</th></tr></thead><tbody>%s</tbody><tfoot><tr><td style="padding-top:16px;font-weight:700;font-size:16px;">Total TTC</td><td style="padding-top:16px;text-align:right;font-weight:700;font-size:18px;">%s</td></tr></tfoot></table>%s<div style="margin-top:28px;padding-top:20px;border-top:1px solid #e6e1d8;font-size:14px;line-height:1.6;"><strong>Mode de reception :</strong> %s<br><strong>Coordonnees client :</strong><br>%s</div></div><div style="padding:18px 32px;color:#6f6a60;font-size:12px;line-height:1.5;">AM Holzbrennstoffe UG · info@amholzbrennstoffeug.de<br>Conservez la reference %s dans le libelle de votre virement.</div></div></div></body></html>',
@@ -567,22 +599,71 @@ function ossau_order_email( WC_Order $order, $reference, $recipient, $is_interna
 		esc_html( $reference )
 	);
 
-	return wp_mail( $recipient, $subject, $message, ossau_order_email_headers() );
+	if ( ! $is_internal ) {
+		$message = str_replace(
+			array( 'Reference de commande', 'Articles', 'Montant', 'Total TTC', 'Mode de reception :', 'Coordonnees client :' ),
+			array( 'Bestellnummer', 'Artikel', 'Betrag', 'Gesamtbetrag inkl. MwSt.', 'Lieferart:', 'Ihre Kontaktdaten:' ),
+			$message
+		);
+		$message = str_replace(
+			sprintf( 'Conservez la reference %s dans le libelle de votre virement.', esc_html( $reference ) ),
+			sprintf( 'Bitte geben Sie bei der Überweisung die Bestellnummer %s als Verwendungszweck an.', esc_html( $reference ) ),
+			$message
+		);
+	}
+
+	$reply_to = $is_internal ? $order->get_billing_email() : 'info@amholzbrennstoffeug.de';
+	return wp_mail( $recipient, $subject, $message, ossau_order_email_headers( $reply_to ) );
 }
 
 function ossau_send_order_emails( WC_Order $order, $reference ) {
 	$admin_sent = (bool) $order->get_meta( '_ossau_admin_email_sent' );
 	$customer_sent = (bool) $order->get_meta( '_ossau_customer_email_sent' );
 
-	if ( ! $admin_sent && ossau_order_email( $order, $reference, 'info@amholzbrennstoffeug.de', true ) ) {
-		$order->update_meta_data( '_ossau_admin_email_sent', gmdate( 'c' ) );
+	if ( ! $admin_sent ) {
+		if ( ossau_order_email( $order, $reference, 'info@amholzbrennstoffeug.de', true ) ) {
+			$order->update_meta_data( '_ossau_admin_email_sent', gmdate( 'c' ) );
+		} else {
+			error_log( sprintf( '[AM Holzbrennstoffe UG] Echec de l e-mail interne pour la commande %d.', $order->get_id() ) );
+		}
 	}
 
-	if ( ! $customer_sent && ossau_order_email( $order, $reference, $order->get_billing_email() ) ) {
-		$order->update_meta_data( '_ossau_customer_email_sent', gmdate( 'c' ) );
+	if ( ! $customer_sent ) {
+		if ( ossau_order_email( $order, $reference, $order->get_billing_email() ) ) {
+			$order->update_meta_data( '_ossau_customer_email_sent', gmdate( 'c' ) );
+		} else {
+			error_log( sprintf( '[AM Holzbrennstoffe UG] Echec de l e-mail client pour la commande %d.', $order->get_id() ) );
+		}
 	}
 
 	$order->save();
+}
+
+function ossau_process_order_emails_async( $order_id, $reference ) {
+	$order = wc_get_order( absint( $order_id ) );
+	if ( $order ) {
+		ossau_send_order_emails( $order, sanitize_text_field( $reference ) );
+	}
+}
+add_action( 'ossau_process_order_emails_async', 'ossau_process_order_emails_async', 10, 2 );
+
+function ossau_queue_order_emails( $order_id, $reference ) {
+	$args = array( absint( $order_id ), sanitize_text_field( $reference ) );
+
+	if ( function_exists( 'as_enqueue_async_action' ) ) {
+		$action_id = as_enqueue_async_action( 'ossau_process_order_emails_async', $args, 'amhug-orders' );
+		if ( $action_id ) {
+			return true;
+		}
+	}
+
+	$scheduled = wp_schedule_single_event( time() + 5, 'ossau_process_order_emails_async', $args );
+	if ( ! is_wp_error( $scheduled ) && false !== $scheduled ) {
+		return true;
+	}
+
+	error_log( sprintf( '[AM Holzbrennstoffe UG] Impossible de planifier les e-mails de la commande %d.', absint( $order_id ) ) );
+	return false;
 }
 
 function ossau_create_order( WP_REST_Request $request ) {
@@ -625,20 +706,27 @@ function ossau_create_order( WP_REST_Request $request ) {
 		$order->add_item( $order_item );
 	}
 
-	$reference = sprintf( 'OB-%s-%d', wp_date( 'Y' ), ossau_next_order_reference() );
+	$reference = sprintf( 'AMHUG%s-%d', wp_date( 'y' ), ossau_next_order_reference() );
 	$order->set_shipping_total( max( 0, (float) ( $data['totals']['shipping'] ?? 0 ) ) );
 	$order->update_meta_data( '_ossau_order_reference', $reference );
 	$order->update_meta_data( '_ossau_delivery_mode', sanitize_key( $customer['deliveryMode'] ?? '' ) );
+	$delivery_days = array( 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag' );
+	$delivery_windows = array( '08-12', '14-18', '08-10', '14-16' );
+	$delivery_day = sanitize_text_field( $customer['deliveryDay'] ?? '' );
+	$delivery_window = sanitize_key( $customer['deliveryWindow'] ?? '' );
+	$order->update_meta_data( '_ossau_delivery_day', in_array( $delivery_day, $delivery_days, true ) ? $delivery_day : '' );
+	$order->update_meta_data( '_ossau_delivery_window', in_array( $delivery_window, $delivery_windows, true ) ? $delivery_window : '' );
 	$order->set_customer_note( sanitize_textarea_field( $customer['note'] ?? '' ) );
 	$order->calculate_totals();
 	$order->update_status( 'pending' );
 	$order->save();
-	ossau_send_order_emails( $order, $reference );
+	$emails_queued = ossau_queue_order_emails( $order->get_id(), $reference );
 
 	return new WP_REST_Response( array(
 		'success'  => true,
 		'order_id' => $order->get_id(),
 		'reference' => $reference,
+		'emails_queued' => $emails_queued,
 		'admin_email_sent' => (bool) $order->get_meta( '_ossau_admin_email_sent' ),
 		'customer_email_sent' => (bool) $order->get_meta( '_ossau_customer_email_sent' ),
 	), 201 );

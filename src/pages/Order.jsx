@@ -15,6 +15,8 @@ const initialForm = {
   postalCode: "",
   city: "",
   delivery: "home",
+  deliveryDay: "",
+  deliveryWindow: "",
   note: "",
   terms: false,
 };
@@ -24,6 +26,13 @@ const ORDER_REFERENCE_COUNTER_KEY = "ossau-bois-next-order-reference";
 const ORDER_REFERENCE_START = 30000;
 const WORDPRESS_API_URL = (import.meta.env.VITE_WORDPRESS_API_URL || "").replace(/\/+$/, "");
 const WORDPRESS_API_KEY = import.meta.env.VITE_WORDPRESS_API_KEY || "";
+const DELIVERY_DAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+const DELIVERY_WINDOWS = [
+  { value: "08-12", label: "Vormittag", detail: "8:00–12:00" },
+  { value: "14-18", label: "Nachmittag", detail: "14:00–18:00" },
+  { value: "08-10", label: "Früher Vormittag", detail: "8:00–10:00" },
+  { value: "14-16", label: "Früher Nachmittag", detail: "14:00–16:00" },
+];
 
 function buildOrderPayload(form, lines, subtotal, shipping, total, reference) {
   const billing = {
@@ -50,6 +59,8 @@ function buildOrderPayload(form, lines, subtotal, shipping, total, reference) {
       postalCode: form.postalCode || "",
       city: form.city || "",
       deliveryMode: form.delivery,
+      deliveryDay: form.deliveryDay,
+      deliveryWindow: form.deliveryWindow,
       note: form.note || "",
     },
     billing,
@@ -71,6 +82,8 @@ function buildOrderPayload(form, lines, subtotal, shipping, total, reference) {
     meta_data: [
       { key: "_ossau_order_reference", value: reference },
       { key: "_ossau_delivery_mode", value: form.delivery },
+      { key: "_ossau_delivery_day", value: form.deliveryDay },
+      { key: "_ossau_delivery_window", value: form.deliveryWindow },
       { key: "_ossau_customer_note", value: form.note || "" },
     ],
     totals: {
@@ -132,12 +145,13 @@ export default function Order() {
       <section className="section order-page">
         <div className="order-confirmation">
           <div className="order-confirmation-icon"><Check size={34} /></div>
-          <span className="section-kicker">ANFRAGE GESPEICHERT</span>
-          <h1 className="page-title">Ihre Bestellung wartet auf die Überweisung</h1>
-          <p>Vielen Dank, {submitted.firstName}. Ihre Anfrage wurde unter der Referenz <strong>{submitted.reference}</strong> gespeichert. Eine Zusammenfassung wird an {submitted.email} gesendet.</p>
+          <span className="section-kicker">VERTRAG GESCHLOSSEN</span>
+          <h1 className="page-title">Ihre Bestellung ist verbindlich eingegangen</h1>
+          <p>Vielen Dank, {submitted.firstName}. Mit Eingang Ihrer Bestellung ist der Kaufvertrag zustande gekommen. Die Vertragsbestätigung und Zahlungsdaten senden wir an {submitted.email}. Bitte überweisen Sie den Gesamtbetrag innerhalb von 7 Kalendertagen nach Erhalt der Bestätigung.</p>
+          {(submitted.deliveryDay || submitted.deliveryWindow) && <p className="order-preference-confirmation">Ihr Zustellwunsch: {[submitted.deliveryDay, DELIVERY_WINDOWS.find((timeWindow) => timeWindow.value === submitted.deliveryWindow)?.detail].filter(Boolean).join(" · ")}. Wir stimmen die Zustellung mit der Spedition ab.</p>}
           <div className="order-transfer-confirmation">
-            <div><CreditCard size={21} /><div><strong>Nächster Schritt: Überweisung ausführen</strong><span>Geben Sie die Referenz {submitted.reference} im Verwendungszweck an.</span></div></div>
-            <p>Die endgültigen Bankdaten und der zu zahlende Betrag stehen in der Bestätigungs-E-Mail von AM Holzbrennstoffe UG.</p>
+            <div><CreditCard size={21} /><div><strong>Überweisung innerhalb von 7 Kalendertagen</strong><span>Geben Sie die Referenz {submitted.reference} im Verwendungszweck an.</span></div></div>
+            <p>Die Bankverbindung und der genaue Zahlbetrag stehen in der Vertragsbestätigung von AM Holzbrennstoffe UG.</p>
           </div>
           <div className="order-confirmation-actions"><Link to="/" className="btn btn-primary">Zur Startseite <ArrowRight size={16} /></Link><Link to="/contact" className="order-text-link">Fragen? Kontakt aufnehmen</Link></div>
         </div>
@@ -207,7 +221,7 @@ export default function Order() {
   return (
     <section className="section order-page">
       <div className="order-breadcrumbs"><Link to="/">Startseite</Link><span aria-hidden="true">›</span><Link to="/panier">Warenkorb</Link><span aria-hidden="true">›</span><strong>Bestellung</strong></div>
-      <div className="order-heading"><div><span className="section-kicker">ANFRAGE ABSCHLIESSEN</span><h1 className="page-title">Ihre Daten für die Lieferung</h1><p>Geben Sie die Informationen für die Vorbereitung und den Versand Ihrer Brennstoffe an.</p></div><ShieldCheck size={48} strokeWidth={1.1} /></div>
+      <div className="order-heading"><div><span className="section-kicker">BESTELLUNG VERBINDLICH ABSCHLIESSEN</span><h1 className="page-title">Ihre Daten für die Lieferung</h1><p>Prüfen Sie Ihre Angaben und den Gesamtbetrag. Mit dem Absenden schließen Sie einen verbindlichen Kaufvertrag.</p></div><ShieldCheck size={48} strokeWidth={1.1} /></div>
       <form className="order-layout" onSubmit={submit}>
         <div className="order-form-column">
           <section className="order-form-section">
@@ -224,15 +238,48 @@ export default function Order() {
           <section className="order-form-section">
             <div className="order-section-heading"><span>02</span><div><h2>Lieferadresse</h2><p>Ihre Bestellung wird auf Palette an die angegebene Adresse versendet. Die Lieferdetails erhalten Sie vorab.</p></div></div>
             <div className="order-delivery-options">
-              <div className="order-delivery-option active"><Truck size={21} /><span><strong>Palettenlieferung</strong><small>An die angegebene Adresse · 6 bis 8 Werktage</small></span></div>
+              <div className="order-delivery-option active"><Truck size={21} /><span><strong>Palettenlieferung · {shipping === 0 ? "kostenlos" : formatPrice(shipping)}</strong><small>An die angegebene Adresse · Richtwert 6 bis 8 Werktage</small></span></div>
             </div>
             <div className="order-form-grid order-address-grid"><label className="field order-field-full"><span>Adresse *</span><input required value={form.address} onChange={(event) => update("address", event.target.value)} autoComplete="street-address" placeholder="Hausnummer und Straße" /></label><label className="field"><span>Postleitzahl *</span><input required value={form.postalCode} onChange={(event) => update("postalCode", event.target.value)} autoComplete="postal-code" /></label><label className="field"><span>Ort *</span><input required value={form.city} onChange={(event) => update("city", event.target.value)} autoComplete="address-level2" /></label></div>
             <label className="field order-note-field"><span>Zusätzliche Hinweise <small>optional</small></span><textarea rows="3" value={form.note} onChange={(event) => update("note", event.target.value)} placeholder="Zufahrt, Anwesenheit vor Ort, Hinweise für die Spedition ..." /></label>
           </section>
 
+          <section className="order-form-section">
+            <div className="order-section-heading"><span>03</span><div><h2>Wunschtermin</h2><p>Wählen Sie unverbindlich einen bevorzugten Wochentag und ein Zeitfenster. Wir stimmen die Zustellung mit der Spedition ab.</p></div></div>
+            <div className="order-preference-group">
+              <span className="order-preference-label">Wunschtag <small>optional</small></span>
+              <div className="order-day-options" role="group" aria-label="Bevorzugter Liefertag">
+                {DELIVERY_DAYS.map((day) => (
+                  <button
+                    key={day}
+                    type="button"
+                    className={`order-day-option${form.deliveryDay === day ? " selected" : ""}`}
+                    aria-pressed={form.deliveryDay === day}
+                    onClick={() => update("deliveryDay", form.deliveryDay === day ? "" : day)}
+                  >
+                    {day}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <fieldset className="order-preference-group order-window-fieldset">
+              <legend className="order-preference-label">Wunschzeitfenster <small>optional</small></legend>
+              <div className="order-window-options">
+                {DELIVERY_WINDOWS.map((timeWindow) => (
+                  <label className={`order-window-option${form.deliveryWindow === timeWindow.value ? " selected" : ""}`} key={timeWindow.value}>
+                    <input type="radio" name="deliveryWindow" value={timeWindow.value} checked={form.deliveryWindow === timeWindow.value} onChange={() => update("deliveryWindow", timeWindow.value)} />
+                    <span className="order-window-radio" aria-hidden="true" />
+                    <span className="order-window-copy"><strong>{timeWindow.label}</strong><small>{timeWindow.detail}</small></span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <p className="order-preference-note">Die Zeitangaben sind unverbindliche Wünsche und hängen von der Tourenplanung der Spedition ab.</p>
+          </section>
+
           <section className="order-form-section order-payment-section">
-            <div className="order-section-heading"><span>03</span><div><h2>Zahlung per Banküberweisung</h2><p>Ihre Bestellung wird nach Eingang und Prüfung der Überweisung vorbereitet.</p></div></div>
-            <div className="order-transfer-note"><CreditCard size={22} /><div><strong>Klare Zahlung ohne Online-Bankeingabe</strong><p>Nach der Bestätigung erhalten Sie die Bankverbindung und den exakten Betrag per E-Mail.</p></div></div>
+            <div className="order-section-heading"><span>04</span><div><h2>Zahlung per Banküberweisung</h2><p>Der Kaufvertrag kommt mit Eingang Ihrer Bestellung zustande. Das Zahlungsziel beträgt 7 Kalendertage ab Zugang der Vertragsbestätigung.</p></div></div>
+            <div className="order-transfer-note"><CreditCard size={22} /><div><strong>Bankverbindung direkt mit der Vertragsbestätigung</strong><p>Sie erhalten Zahlbetrag, Bankverbindung und Zahlungsreferenz per E-Mail. Bitte geben Sie die Referenz im Verwendungszweck an.</p><Link to="/zahlung" className="order-text-link">Zahlungsablauf ansehen</Link></div></div>
             <label className="order-checkbox"><input type="checkbox" checked={form.terms} onChange={(event) => update("terms", event.target.checked)} required /><span>Ich habe die <Link to="/conditions-generales-de-vente">Allgemeinen Geschäftsbedingungen</Link> gelesen und akzeptiere sie. *</span></label>
           </section>
           {submitError && (
@@ -240,12 +287,18 @@ export default function Order() {
               {submitError}
             </div>
           )}
-          <div className="order-form-actions"><Link to="/panier" className="order-back-link"><ArrowLeft size={16} /> Zurück zum Warenkorb</Link><button className="btn btn-primary" type="submit" disabled={isSubmitting}>{isSubmitting ? "Wird gesendet..." : "Anfrage absenden"} <ArrowRight size={17} /></button></div>
+          <div className="order-summary-box order-final-summary">
+            <div className="order-summary-title"><h2>Ihre zahlungspflichtige Bestellung</h2><span>{count} Artikel</span></div>
+            <div className="order-summary-lines">{lines.map(({ product, qty, lineTotal }) => <div className="order-summary-line" key={product.id}><span><strong>{qty} ×</strong> {product.name}</span><b>{formatPrice(lineTotal)}</b></div>)}</div>
+            <div className="summary-row"><span>Zwischensumme</span><strong>{formatPrice(subtotal)}</strong></div>
+            <div className="summary-row"><span>Lieferung</span><strong>{shipping === 0 ? "Kostenlos" : formatPrice(shipping)}</strong></div>
+            <div className="summary-total"><span>Gesamt inkl. MwSt.</span><strong>{formatPrice(total)}</strong></div>
+          </div>
+          <div className="order-form-actions"><Link to="/panier" className="order-back-link"><ArrowLeft size={16} /> Zurück zum Warenkorb</Link><button className="btn btn-primary" type="submit" disabled={isSubmitting}>{isSubmitting ? "Wird übermittelt..." : "Zahlungspflichtig bestellen"} <ArrowRight size={17} /></button></div>
         </div>
 
         <aside className="order-sidebar">
-          <div className="order-summary-box"><div className="order-summary-title"><h2>Ihre Bestellung</h2><span>{count} Artikel</span></div><div className="order-summary-lines">{lines.map(({ product, qty, lineTotal }) => <div className="order-summary-line" key={product.id}><span><strong>{qty} ×</strong> {product.name}</span><b>{formatPrice(lineTotal)}</b></div>)}</div><div className="summary-row"><span>Zwischensumme</span><strong>{formatPrice(subtotal)}</strong></div><div className="summary-row"><span>Lieferung</span><strong>{shipping === 0 ? "Kostenlos" : formatPrice(shipping)}</strong></div><div className="summary-total"><span>Gesamt inkl. MwSt.</span><strong>{formatPrice(total)}</strong></div></div>
-          <div className="order-bank-box"><span className="section-kicker">ZAHLUNG</span><h2>Banküberweisung</h2><p>Die Bankverbindung erhalten Sie nach der Bestätigung, damit Ihre Zahlung eindeutig zugeordnet werden kann.</p><div className="order-bank-row"><Clipboard size={16} /><span>Verwendungszweck<br /><strong>Ihre Bestellreferenz</strong></span></div><div className="order-bank-row"><Mail size={16} /><span>Bestätigung per E-Mail<br /><strong>{COMPANY.email}</strong></span></div></div>
+          <div className="order-bank-box"><span className="section-kicker">ZAHLUNG</span><h2>Banküberweisung</h2><p>Mit der Vertragsbestätigung erhalten Sie Bankverbindung und Zahlungsreferenz. Das Zahlungsziel beträgt 7 Kalendertage ab Zugang der E-Mail.</p><div className="order-bank-row"><Clipboard size={16} /><span>Verwendungszweck<br /><strong>Ihre Bestellreferenz</strong></span></div><div className="order-bank-row"><Mail size={16} /><span>Vertragsbestätigung per E-Mail<br /><strong>{COMPANY.email}</strong></span></div></div>
           <div className="order-reassurance"><ShieldCheck size={18} /><span>Ihre Daten werden ausschließlich zur Bearbeitung Ihrer Bestellung verwendet.</span></div>
         </aside>
       </form>

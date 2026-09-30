@@ -21,6 +21,26 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Welche Zahlungsarten akzeptieren Sie?",
-    a: "Die Zahlung erfolgt per Banküberweisung. Nach Bestätigung Ihrer Anfrage senden wir Ihnen die Zahlungsinformationen und den genauen Betrag per E-Mail zu.",
+    a: "Die Zahlung erfolgt per Banküberweisung. Mit der Vertragsbestätigung erhalten Sie Zahlbetrag, Bankverbindung und Zahlungsreferenz. Bitte überweisen Sie innerhalb von 7 Kalendertagen und geben Sie die Referenz im Verwendungszweck an.",
+    link: { to: "/zahlung", label: "Den Zahlungsablauf im Detail ansehen" },
+  },
+  {
+    q: "Wann kommt der Kaufvertrag zustande?",
+    a: "Wenn Sie auf „Zahlungspflichtig bestellen“ klicken und Ihre Bestellung erfolgreich bei uns eingeht, kommt der Kaufvertrag zustande. Wir bestätigen den Vertragsschluss per E-Mail.",
+    link: { to: "/conditions-generales-de-vente", label: "Zu den Allgemeinen Geschäftsbedingungen" },
+  },
+  {
+    q: "Was passiert, wenn die Überweisung nicht innerhalb von 7 Tagen eingeht?",
+    a: "Wir erinnern Sie an die Zahlung und setzen eine angemessene Nachfrist. Erst wenn diese erfolglos verstreicht, prüfen wir die weiteren gesetzlichen Schritte. Die gesetzliche Regel zum Zahlungsverzug gegenüber Verbrauchern ist keine allgemeine Zahlungsfrist.",
+    link: { to: "/zahlung", label: "Zahlungsablauf und Fristen ansehen" },
+  },
+  {
+    q: "Wie finde ich den passenden Brennstoff?",
+    a: "Vergleichen Sie Brennstoffart, Format und die technischen Angaben auf der Produktseite mit den Vorgaben Ihres Heizgeräts. Wenn Sie unsicher sind, nennen Sie uns vor der Bestellung das Gerät und das gewünschte Produkt.",
+  },
+  {
+    q: "Wie gehe ich bei einem Widerruf oder einer Rückgabe vor?",
+    a: "Sofern das gesetzliche Widerrufsrecht gilt, beträgt die Frist grundsätzlich 14 Tage ab Erhalt. Die Widerrufsbelehrung mit den geltenden Bedingungen erhalten Sie im Bestellprozess. Stimmen Sie den Rücktransport einer Palette bitte vorab mit uns ab.",
+    link: { to: "/retouren", label: "Informationen zu Widerruf und Rückgabe" },
   },
 ];

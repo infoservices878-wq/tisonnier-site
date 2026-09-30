@@ -34,12 +34,16 @@
         /* -------- Nav -------- */
         .nav { position: sticky; top: 0; z-index: 30; background: var(--paper); border-bottom: 1px solid var(--line); }
 
-        .topbar { background: var(--pine-dark); color: rgba(246,240,226,0.85); font-size: 12px; display: flex; align-items: center; gap: 16px; padding: 7px 18px; overflow-x: auto; white-space: nowrap; }
+        .topbar { background: var(--pine-dark); color: rgba(246,240,226,0.85); font-size: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; padding: 7px 18px; }
+        .topbar-info { display: flex; align-items: center; gap: 16px; min-width: 0; }
         .topbar-shipping { font-weight: 500; color: var(--paper); }
-        .topbar-legal { display: none; color: rgba(246,240,226,0.6); }
-        .topbar-country { margin-left: auto; display: flex; align-items: center; gap: 6px; color: var(--paper); flex-shrink: 0; }
-        .topbar-country strong { font-weight: 600; }
+        .topbar-legal { display: none; color: rgba(246,240,226,0.6); white-space: nowrap; }
         @media (min-width: 760px) { .topbar-legal { display: inline; } }
+        .topbar-actions { display: flex; align-items: center; justify-content: flex-end; gap: 16px; margin-left: auto; }
+        .topbar-phone { display: inline-flex; align-items: center; gap: 6px; color: var(--paper); flex-shrink: 0; text-decoration: none; }
+        .topbar-phone:hover { text-decoration: underline; }
+        .topbar-country { display: flex; align-items: center; gap: 6px; color: var(--paper); flex-shrink: 0; }
+        .topbar-country strong { font-weight: 600; }
 
         .nav-main { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 14px 18px; max-width: 1240px; margin: 0 auto; }
         .logo { display: flex; align-items: center; width: 112px; height: 58px; flex: 0 0 112px; overflow: hidden; }
@@ -361,17 +365,18 @@
         .footer-top { border-bottom: 1px solid rgba(246, 240, 226, 0.12); }
         .footer-top-inner {
           max-width: 1240px; margin: 0 auto; padding: 32px 24px 28px;
-          display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; justify-content: space-between;
+          display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+          gap: 40px; align-items: center;
         }
-        .footer-brand { display: flex; align-items: center; gap: 56px; flex: 1 1 640px; max-width: 800px; }
+        .footer-brand { display: grid; grid-template-columns: 170px minmax(0, 1fr); align-items: center; gap: 32px; min-width: 0; }
         .footer .logo { width: 170px; height: 106px; flex-basis: 170px; }
         .footer .logo-word { color: #f6f0e2 !important; font-size: 22px; letter-spacing: 0.02em; }
         .footer .logo svg path { fill: #f6f0e2; }
         .footer-desc {
           margin-top: 0; font-size: 14px; line-height: 1.55;
-          color: rgba(246, 240, 226, 0.72); max-width: 46ch;
+          color: rgba(246, 240, 226, 0.72); max-width: 46ch; min-width: 0;
         }
-        .footer-contact-box { text-align: right; min-width: 220px; }
+        .footer-contact-box { text-align: right; width: 100%; max-width: 360px; min-width: 0; justify-self: end; }
         .footer-contact-label {
           display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
           color: #d4a84b; margin-bottom: 8px;
@@ -380,7 +385,8 @@
           display: block; font-size: 18px; font-weight: 600; color: #f6f0e2; margin-bottom: 4px;
         }
         .footer-contact-mail:hover, .footer-contact-phone:hover { text-decoration: underline; }
-        .footer-contact-hours { display: block; font-size: 12.5px; color: rgba(246, 240, 226, 0.6); }
+        .footer-contact-hours { display: block; font-size: 12.5px; line-height: 1.5; color: rgba(246, 240, 226, 0.6); overflow-wrap: anywhere; }
+        .footer-contact-box .footer-note { max-width: 360px; margin-left: auto; font-size: 11.5px; overflow-wrap: anywhere; }
         .footer-main { border-bottom: 1px solid rgba(246, 240, 226, 0.12); }
         .footer-main-inner {
           max-width: 1240px; margin: 0 auto; padding: 36px 24px 40px;
@@ -411,6 +417,34 @@
         @media (min-width: 980px) {
           .footer-col-last { border-left: 1px solid rgba(246, 240, 226, 0.18); padding-left: 22px; }
         }
+          .footer-payment-band {
+            max-width: 1240px; margin: 0 auto; padding: 20px 24px 22px;
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+            border-bottom: 1px solid rgba(246, 240, 226, 0.12);
+          }
+          .footer-payment-heading { color: rgba(246, 240, 226, 0.62); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; }
+          .footer-payment-methods { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; }
+          .footer-payment-option {
+            display: inline-flex; align-items: center; justify-content: center; gap: 9px; height: 46px; padding: 7px 14px;
+            border-radius: 8px; background: #fff; color: #1d2632 !important; border: 1px solid rgba(0, 0, 0, 0.08);
+            text-decoration: none; flex: 0 0 auto;
+          }
+          .footer-payment-bank { justify-content: flex-start; min-width: 202px; padding: 7px 13px; }
+          .footer-payment-option:hover { outline: 2px solid rgba(212, 168, 75, 0.7); outline-offset: 1px; }
+          .footer-payment-icon { display: grid; place-items: center; width: 28px; height: 28px; flex: 0 0 28px; border-radius: 50%; background: #a8d900; color: #20321c; }
+          .footer-payment-copy { display: grid; gap: 1px; min-width: 0; }
+          .footer-payment-copy strong { font-size: 13px; line-height: 1.15; }
+          .footer-payment-copy small { color: #656b73; font-size: 10px; line-height: 1.25; }
+          .footer-payment-mark { min-width: 64px; }
+          .footer-payment-mark img { display: block; width: auto; max-width: 82px; height: 25px; object-fit: contain; }
+          .footer-payment-visa img { width: 44px; }
+          .footer-payment-mastercard { min-width: 64px; }
+          .footer-payment-amex { min-width: 70px; }
+          .footer-payment-amex img { max-width: 54px; height: 30px; }
+          .footer-payment-paypal { min-width: 82px; }
+          .footer-payment-paypal img { max-width: 58px; }
+          .footer-payment-apple { min-width: 64px; }
+          .footer-payment-apple img { width: 32px; height: 32px; }
         .footer-bottom { background: #152015; }
         .footer-bottom-inner {
           max-width: 1240px; margin: 0 auto; padding: 14px 24px;
@@ -419,6 +453,10 @@
         }
         .footer-bottom-sep { color: rgba(246, 240, 226, 0.45); }
         @media (max-width: 640px) {
+          .topbar { justify-content: space-between; gap: 8px 12px; padding: 7px 12px; }
+          .topbar-info { flex: 1 1 260px; }
+          .topbar-shipping { line-height: 1.35; }
+          .topbar-actions { gap: 12px; }
           .nav-main { flex-wrap: nowrap; gap: 8px; padding: 9px 12px; }
           .nav-main .logo { width: 78px; height: 42px; flex: 0 0 78px; }
           .nav-search-wrap { order: 0; flex: 1 1 auto; min-width: 0; }
@@ -428,12 +466,17 @@
           .nav-search-wrap .search-submit { padding: 8px 9px; font-size: 11px; }
           .nav-actions { margin-left: 0; flex: 0 0 auto; }
           .menu-toggle { padding: 7px; }
-          .footer-brand { flex-direction: column; align-items: flex-start; gap: 0; }
+          .footer-top-inner { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+          .footer-brand { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 4px; }
           .footer .logo { height: 48px; flex-basis: 48px; }
           .footer-desc { margin-top: 4px; }
-          .footer-contact-box { text-align: left; width: 100%; }
+          .footer-contact-box { text-align: left; width: 100%; max-width: none; justify-self: start; }
+          .footer-contact-box .footer-note { margin-left: 0; }
           .footer-top-inner { padding: 28px 18px 24px; }
           .footer-main-inner { padding: 28px 18px 32px; }
+          .footer-payment-band { align-items: flex-start; padding: 18px; }
+          .footer-payment-methods { justify-content: flex-start; }
+          .footer-payment-bank { min-width: 202px; }
         }
 
         /* -------- Legal pages -------- */
@@ -826,6 +869,27 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .order-delivery-option span { display: flex; flex-direction: column; gap: 4px; }
 .order-delivery-option strong { color: var(--ink); font-size: 13px; }
 .order-delivery-option small { color: var(--ink-soft); font-size: 11.5px; line-height: 1.4; }
+.order-preference-group { margin-top: 22px; }
+.order-preference-label { display: block; margin-bottom: 10px; color: var(--ink); font-size: 13px; font-weight: 600; }
+.order-preference-label small { margin-left: 4px; }
+.order-day-options { display: flex; flex-wrap: wrap; gap: 8px; }
+.order-day-option { min-width: 74px; padding: 9px 13px; border: 1px solid var(--line) !important; border-radius: 24px; background: var(--card) !important; color: var(--ink-soft) !important; font-size: 12px; font-weight: 600; text-align: center; transition: background .15s ease, color .15s ease, border-color .15s ease; }
+.order-day-option:hover { border-color: var(--pine) !important; }
+.order-day-option.selected { border-color: var(--pine) !important; background: var(--pine) !important; color: var(--paper) !important; }
+.order-window-fieldset { min-width: 0; padding: 0; border: 0; }
+.order-window-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.order-window-option { display: flex; align-items: center; gap: 11px; min-width: 0; min-height: 52px; padding: 10px 13px; border: 1px solid var(--line); background: var(--card); cursor: pointer; }
+.order-window-option:hover, .order-window-option.selected { border-color: var(--pine); }
+.order-window-option.selected { background: rgba(46, 59, 38, .07); }
+.order-window-option input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.order-window-option input:focus-visible + .order-window-radio { outline: 2px solid var(--ember); outline-offset: 3px; }
+.order-window-radio { display: grid; place-items: center; width: 18px; height: 18px; flex: 0 0 18px; border: 1px solid #8a8b82; border-radius: 50%; background: var(--card); }
+.order-window-option.selected .order-window-radio { border: 5px solid var(--pine); }
+.order-window-copy { display: grid; gap: 3px; min-width: 0; }
+.order-window-copy strong { color: var(--ink); font-size: 13px; }
+.order-window-copy small { color: var(--ink-soft); font-size: 11.5px; }
+.order-preference-note { margin: 13px 0 0; color: var(--ink-soft); font-size: 12px; }
+.order-preference-confirmation { width: 100%; padding: 14px 16px; margin: -6px 0 18px; background: rgba(46,59,38,.07); color: var(--ink-soft); font-size: 13px; text-align: left; }
 .order-address-grid { margin-bottom: 16px; }
 .order-note-field { margin-top: 14px; }
 .order-transfer-note { display: flex; gap: 12px; padding: 16px; margin-bottom: 18px; border-left: 3px solid var(--ember); background: rgba(184,69,31,.08); color: var(--ember-dark); }
@@ -873,7 +937,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .order-transfer-confirmation p { margin: 13px 0 0; padding-top: 13px; border-top: 1px solid var(--line); }
 .order-confirmation-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; justify-content: center; }
 @media (max-width: 859px) { .order-layout { grid-template-columns: 1fr; } .order-form-column { grid-row: 1; } .order-sidebar { position: static; grid-row: 2; } }
-@media (max-width: 600px) { .order-heading { align-items: flex-start; } .order-heading > svg { display: none; } .order-form-grid, .order-delivery-options { grid-template-columns: 1fr; } .order-field-full { grid-column: auto; } .order-form-actions { align-items: stretch; flex-direction: column-reverse; } .order-form-actions .btn { justify-content: center; } .order-back-link { justify-content: center; } }
+@media (max-width: 600px) { .order-heading { align-items: flex-start; } .order-heading > svg { display: none; } .order-form-grid, .order-delivery-options, .order-window-options { grid-template-columns: 1fr; } .order-field-full { grid-column: auto; } .order-form-actions { align-items: stretch; flex-direction: column-reverse; } .order-form-actions .btn { justify-content: center; } .order-back-link { justify-content: center; } }
 
 .product-detail-grid {
   display: grid; gap: 28px;

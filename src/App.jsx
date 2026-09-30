@@ -12,6 +12,8 @@ import Order from "./pages/Order";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
 import Delivery from "./pages/Delivery";
+import Payment from "./pages/Payment";
+import Returns from "./pages/Returns";
 import FAQ from "./pages/FAQ";
 import LegalPage from "./pages/LegalPage";
 import NotFound from "./pages/NotFound";
@@ -40,6 +42,8 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/entreprise" element={<About />} />
           <Route path="/livraison" element={<Delivery />} />
+          <Route path="/zahlung" element={<Payment />} />
+          <Route path="/retouren" element={<Returns />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/mentions-legales" element={<LegalPage />} />
           <Route path="/politique-de-confidentialite" element={<LegalPage />} />
