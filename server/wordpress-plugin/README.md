@@ -1,7 +1,7 @@
 # Installation WordPress
 
 1. Créez le dossier `wp-content/plugins/ossau-orders` sur le serveur WordPress.
-2. Copiez-y `ossau-orders.php`, puis activez **AM Holzbrennstoffe UG - Commandes API** dans l’administration WordPress.
+2. Copiez-y `ossau-orders.php` et `ossau-invoices.php`, puis activez **AM Holzbrennstoffe UG - Commandes API** dans l’administration WordPress.
 3. Ajoutez dans `wp-config.php`, avant la ligne `/* That's all, stop editing! */` :
 
 ```php
@@ -37,6 +37,8 @@ Le plugin crée des commandes WooCommerce avec les coordonnées de facturation e
 
 - `info@amholzbrennstoffeug.de` reçoit la nouvelle commande complète ;
 - l'adresse saisie par le client reçoit une confirmation avec sa référence, ses articles, son total et ses coordonnées.
+
+Chaque commande reçoit aussi une facture PDF générée depuis les données enregistrées dans WooCommerce (adresses, articles, taxes, livraison, référence et échéance). Le PDF est joint à l'e-mail du client et accessible depuis la page de confirmation par un lien signé. Le fichier est conservé dans un répertoire privé sous `wp-content/uploads/ossau-invoices-private`; ne supprimez pas ce répertoire si vous voulez préserver le téléchargement des factures déjà envoyées.
 
 Pour garantir la bonne réception des e-mails (notamment chez Gmail, Outlook et Orange), configurez l'envoi SMTP de WordPress avec une adresse d'expédition `info@amholzbrennstoffeug.de`. Le plugin utilise déjà cette adresse comme expéditeur et adresse de réponse.
 

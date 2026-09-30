@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Clipboard, CreditCard, Mail, ShieldCheck, Truck } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Clipboard, CreditCard, Download, Mail, MapPin, Printer, ShieldCheck, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { formatPrice } from "../lib/format";
@@ -141,19 +141,134 @@ export default function Order() {
   }, [count, submitted]);
 
   if (submitted) {
+    const bankDetails = submitted.bankTransfer || {};
+    const confirmationLines = submitted.orderItems?.length
+      ? submitted.orderItems.map((item) => ({ product: { name: item.name }, qty: item.quantity, lineTotal: item.total }))
+      : submitted.orderLines || lines || [];
+    const confirmationSubtotal = submitted.orderSubtotal ?? subtotal;
+    const confirmationShipping = submitted.orderShipping ?? shipping;
+    const confirmationTax = submitted.orderTax ?? 0;
+    const confirmationTaxLines = submitted.orderTaxLines || [];
+    const confirmationTotal = submitted.orderTotal ?? total;
+
     return (
-      <section className="section order-page">
-        <div className="order-confirmation">
-          <div className="order-confirmation-icon"><Check size={34} /></div>
-          <span className="section-kicker">VERTRAG GESCHLOSSEN</span>
-          <h1 className="page-title">Ihre Bestellung ist verbindlich eingegangen</h1>
-          <p>Vielen Dank, {submitted.firstName}. Mit Eingang Ihrer Bestellung ist der Kaufvertrag zustande gekommen. Die Vertragsbestätigung und Zahlungsdaten senden wir an {submitted.email}. Bitte überweisen Sie den Gesamtbetrag innerhalb von 7 Kalendertagen nach Erhalt der Bestätigung.</p>
-          {(submitted.deliveryDay || submitted.deliveryWindow) && <p className="order-preference-confirmation">Ihr Zustellwunsch: {[submitted.deliveryDay, DELIVERY_WINDOWS.find((timeWindow) => timeWindow.value === submitted.deliveryWindow)?.detail].filter(Boolean).join(" · ")}. Wir stimmen die Zustellung mit der Spedition ab.</p>}
-          <div className="order-transfer-confirmation">
-            <div><CreditCard size={21} /><div><strong>Überweisung innerhalb von 7 Kalendertagen</strong><span>Geben Sie die Referenz {submitted.reference} im Verwendungszweck an.</span></div></div>
-            <p>Die Bankverbindung und der genaue Zahlbetrag stehen in der Vertragsbestätigung von AM Holzbrennstoffe UG.</p>
+      <section className="section order-page order-confirmation-page">
+        <div className="order-confirmation-layout">
+          <div className="order-confirmation-main">
+            <div className="confirmation-success-banner">
+              <div className="confirmation-success-check"><Check size={16} /></div>
+              <h1>Vielen Dank für Ihre Bestellung</h1>
+              <p className="confirmation-order-reference">Bestellnummer {submitted.reference}</p>
+              <p>Eine Bestätigung wurde an {submitted.email} gesendet.</p>
+            </div>
+
+            <div className="confirmation-card">
+              <div className="confirmation-card-header">
+                <div className="confirmation-card-icon"><CreditCard size={18} /></div>
+                <h2>Bestellung abschließen</h2>
+              </div>
+              <p>
+                Bitte überweisen Sie den Gesamtbetrag von <strong>{formatPrice(confirmationTotal)}</strong> auf das unten angegebene Konto. Bitte nennen Sie dabei die Bestellnummer, damit wir Ihre Zahlung sauber zuordnen können.
+              </p>
+
+              <div className="bank-detail-row">
+                <span className="bank-label">Kontoinhaber</span>
+                <span className="bank-value">{bankDetails.holder || ""}</span>
+              </div>
+              <div className="bank-detail-row bank-detail-highlight">
+                <span className="bank-label">IBAN</span>
+                <span className="bank-value">{bankDetails.iban || ""}</span>
+              </div>
+              <div className="bank-detail-row">
+                <span className="bank-label">BIC</span>
+                <span className="bank-value">{bankDetails.bic || ""}</span>
+              </div>
+              <div className="bank-detail-row">
+                <span className="bank-label">Zahlungsziel</span>
+                <span className="bank-value">7 Kalendertage nach Erhalt der Bestellbestätigung</span>
+              </div>
+            </div>
+
+            <div className="confirmation-card">
+              <div className="confirmation-card-header">
+                <div className="confirmation-card-icon"><Clipboard size={18} /></div>
+                <h2>Nächste Schritte</h2>
+              </div>
+              <ol className="confirmation-steps">
+                <li>Wir bestätigen den Eingang Ihrer Zahlung.</li>
+                <li>Ihre Bestellung wird innerhalb von 1 bis 2 Werktagen vorbereitet.</li>
+                <li>Der Spediteur vereinbart mit Ihnen die Lieferzeit und den Zustelltermin.</li>
+              </ol>
+              <div className="confirmation-delivery-window">
+                <Truck size={16} />
+                <span>CH, LI, DE, AT, LU · 3 bis 15 Werktage</span>
+              </div>
+            </div>
+
+            <div className="confirmation-card">
+              <div className="confirmation-card-header">
+                <div className="confirmation-card-icon"><MapPin size={18} /></div>
+                <h2>Lieferadresse</h2>
+              </div>
+              <div className="delivery-address-block">
+                <p>{submitted.firstName} {submitted.lastName}</p>
+                <p>{submitted.address}</p>
+                <p>{submitted.postalCode} {submitted.city}</p>
+                <p>{submitted.country || "DE"}</p>
+                <p className="delivery-phone">{submitted.phone}</p>
+              </div>
+            </div>
           </div>
-          <div className="order-confirmation-actions"><Link to="/" className="btn btn-primary">Zur Startseite <ArrowRight size={16} /></Link><Link to="/contact" className="order-text-link">Fragen? Kontakt aufnehmen</Link></div>
+
+          <aside className="order-confirmation-sidebar">
+            <div className="confirmation-summary-card">
+              <h3>Ihre Bestellung</h3>
+              {confirmationLines.length > 0 ? (
+                confirmationLines.map(({ product, qty, lineTotal }) => (
+                  <div key={`${product.id}-${qty}`} className="confirmation-summary-line">
+                    <span>
+                      <strong>{qty} ×</strong> {product.name}
+                    </span>
+                    <b>{formatPrice(lineTotal ?? product.price * qty)}</b>
+                  </div>
+                ))
+              ) : (
+                <div className="confirmation-summary-line"><span>Bestellung gespeichert</span><b>{formatPrice(confirmationTotal)}</b></div>
+              )}
+
+              <div className="confirmation-summary-row">
+                <span>Zwischensumme</span>
+                <strong>{formatPrice(confirmationSubtotal)}</strong>
+              </div>
+              <div className="confirmation-summary-row">
+                <span>Lieferung</span>
+                <strong>{confirmationShipping === 0 ? "Kostenlos" : formatPrice(confirmationShipping)}</strong>
+              </div>
+              <div className="confirmation-summary-divider" />
+              <div className="confirmation-summary-total">
+                <span>Gesamtbetrag</span>
+                <strong>{formatPrice(confirmationTotal)}</strong>
+              </div>
+              {confirmationTaxLines.length > 0
+                ? confirmationTaxLines.map((taxLine) => (
+                  <div key={taxLine.label} className="confirmation-summary-vat">{taxLine.label} {formatPrice(taxLine.amount)}</div>
+                ))
+                : confirmationTax > 0 && (
+                  <div className="confirmation-summary-vat">Enthaltene MwSt. {formatPrice(confirmationTax)}</div>
+                )}
+
+              {submitted.invoiceUrl && (
+                <a href={submitted.invoiceUrl} className="confirmation-action-button confirmation-action-success">
+                  <Download size={16} /> Rechnung herunterladen (PDF)
+                </a>
+              )}
+              <button type="button" className="confirmation-action-button confirmation-action-secondary" onClick={() => window.print()}>
+                <Printer size={16} /> Drucken
+              </button>
+            </div>
+
+            <Link to="/catalogue" className="confirmation-back-link">Zurück zum Shop</Link>
+          </aside>
         </div>
       </section>
     );
@@ -209,6 +324,19 @@ export default function Order() {
         ...form,
         reference: savedReference,
         orderId: payload.order_id || null,
+        invoiceUrl: payload.invoice_url || "",
+        bankTransfer: payload.bank_transfer || null,
+        orderLines: lines.map(({ product, qty, lineTotal }) => ({
+          product,
+          qty,
+          lineTotal,
+        })),
+        orderItems: payload.order_items || [],
+        orderSubtotal: payload.order_subtotal ?? subtotal,
+        orderShipping: payload.order_shipping ?? shipping,
+        orderTax: payload.order_tax ?? 0,
+        orderTaxLines: payload.order_tax_lines || [],
+        orderTotal: payload.order_total ?? total,
       });
       clear();
     } catch (error) {
