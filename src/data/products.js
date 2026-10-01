@@ -635,6 +635,86 @@ export const PRODUCTS = [
     ],
   },
   {
+    id: "bois-chauffage-hetre-sec-25-cm-palette-2-rm-gresswiller",
+    category: "bois-chauffage",
+    name: "Bois de chauffage en hêtre sec 25 cm · palette de 2 stères",
+    brand: "Holzbrennstoffe",
+    reference: "GWH-851",
+    image: "/bois%20de%20chauffage/hetre%2025cm.jpg",
+    packaging: "1 palette · env. 2 stères empilés",
+    price: 369,
+    discountRate: 0.1,
+    promoPrice: null,
+    stock: "En stock",
+    description:
+      "Palette de bûches de hêtre sèches d’environ 25 cm, fendues et empilées, pour poêles, cheminées et chauffages au bois compatibles. Elle contient environ 2 stères de bois.",
+    benefits: [
+      "Hêtre sec à combustion régulière et braises durables",
+      "Bûches fendues d’environ 25 cm, prêtes à l’emploi",
+      "Palette complète d’environ 2 stères empilés",
+      "Livraison standard gratuite en France et en Allemagne",
+    ],
+    preparation:
+      "Le hêtre est séché, fendu en bûches d’environ 25 cm puis empilé sur une palette pour le transport.",
+    usage:
+      "Utiliser dans un poêle, une cheminée ou un chauffage au bois compatible avec des bûches d’environ 25 cm.",
+    storage:
+      "Stocker sous abri, dans un endroit ventilé et protégé de l’humidité.",
+    delivery:
+      "Livraison standard gratuite en France et en Allemagne. Délai indicatif : 1 à 2 semaines. La livraison dépend de l’accessibilité de l’adresse et des conditions de déchargement.",
+    specs: [
+      ["Essence", "Hêtre"],
+      ["État du bois", "Sec"],
+      ["Humidité résiduelle", "env. 15–20 %"],
+      ["Longueur des bûches", "env. 25 cm"],
+      ["Quantité", "env. 2 stères empilés"],
+      ["Conditionnement", "1 palette"],
+      ["Dimensions de la palette", "env. 100 × 120 × 155 cm"],
+      ["Poids", "env. 900–1 000 kg"],
+      ["Pouvoir calorifique", "env. 4,0–4,2 kWh/kg"],
+      ["Référence fournisseur", "GWH-851"],
+    ],
+  },
+  {
+    id: "brennholz-lkw-ladung-hainbuche-24-paletten",
+    category: "bois-chauffage",
+    name: "Brennholz LKW-Ladung · Hainbuche · 24 Paletten",
+    brand: "Gresswiller Holz",
+    reference: "GWH-982-01",
+    image: "/bois%20de%20chauffage/brennholz-lkw.jpg",
+    packaging: "24 Paletten × 2 Raummeter · insgesamt ca. 48 Raummeter",
+    price: 4380,
+    discountRate: 0.1,
+    promoPrice: null,
+    stock: "Auf Lager",
+    description:
+      "Komplette LKW-Ladung mit hochwertigem, kammergetrocknetem Hainbuchen-Brennholz auf Paletten. Das Holz wird sorgfältig getrocknet, sortiert und für eine effiziente, saubere Verbrennung vorbereitet.",
+    benefits: [
+      "24 Paletten mit je 2 gestapelten Raummetern",
+      "Kammergetrocknet mit einer Restfeuchte unter 18 %",
+      "Gleichmäßige Qualität durch sorgfältige Sortierung und Palettenverpackung",
+      "Direktanlieferung per Tautliner-LKW",
+    ],
+    preparation:
+      "Das Hainbuchenholz wird getrocknet, sortiert und sauber auf Paletten gestapelt. Die komplette LKW-Ladung wird für einen sicheren Transport vorbereitet.",
+    usage:
+      "In geeigneten Holzöfen, Kaminen, Heizkaminen und Holzheizungen gemäß den Herstellerangaben verwenden.",
+    storage: "Die Paletten trocken, sauber, belüftet und vor direktem Bodenkontakt geschützt lagern.",
+    delivery:
+      "Kostenlose Lieferung nach Deutschland und Frankreich. Lieferzeit ca. 1–2 Wochen. Die Entladung des LKWs erfolgt durch den Kunden; ein Gabelstapler ist erforderlich.",
+    specs: [
+      ["Holzart", "Hainbuche"],
+      ["Trocknung", "Kammergetrocknet"],
+      ["Restfeuchte", "unter 18 %"],
+      ["Palettenanzahl", "24 Paletten"],
+      ["Inhalt je Palette", "2 Raummeter, gestapelt"],
+      ["Gesamtmenge", "ca. 48 Raummeter"],
+      ["Entladung", "Gabelstapler durch Kunden erforderlich"],
+      ["Lieferzeit", "ca. 1–2 Wochen"],
+      ["Herstellerreferenz", "GWH-982-01"],
+    ],
+  },
+  {
     id: "bois-chauffage-chene-sec-25-cm-palette",
     category: "bois-chauffage",
     name: "Bois de chauffage en chêne sec 25 cm · palette complète de 1 stère empilé",
@@ -1407,11 +1487,11 @@ export const PRODUCTS = [
   storage: "Trocken, sauber und vor Feuchtigkeit geschützt lagern.",
   delivery: "Palettenversand an die angegebene Lieferadresse. Bitte beachten Sie die Lieferinformationen vor der Zustellung.",
   stock: "Auf Lager",
-  price: Number((product.price * (1 - PRODUCT_DISCOUNT_RATE)).toFixed(2)),
+  price: Number((product.price * (1 - (product.discountRate ?? PRODUCT_DISCOUNT_RATE))).toFixed(2)),
   promoPrice:
     product.promoPrice === null
       ? null
-      : Number((product.promoPrice * (1 - PRODUCT_DISCOUNT_RATE)).toFixed(2)),
+      : Number((product.promoPrice * (1 - (product.discountRate ?? PRODUCT_DISCOUNT_RATE))).toFixed(2)),
 }));
 
 GERMAN_CATEGORY_COPY = {
@@ -1439,6 +1519,32 @@ PRODUCT_TRANSLATIONS = {
   "houille-calibree-standard-8-25-mm-25-27-mj-1000-kg": { name: "Steinkohle Standard 8–25 mm, 25–27 MJ/kg · Palette 1.000 kg", packaging: "Palette 1.000 kg – 50 Säcke à 20 kg" },
   "houille-calibre-noix-25-80-mm-26-28-mj-1000-kg": { name: "Steinkohle Nuss 25–80 mm, 26–28 MJ/kg · Palette 1.000 kg", packaging: "Palette 1.000 kg – 50 Säcke à 20 kg" },
   "bois-chauffage-hetre-sec-25-cm-palette": { name: "Trockenes Buchen-Brennholz 25 cm · Palette", packaging: "1 Raummeter gestapelt, ca. 1,4–1,6 m³ lose" },
+  "bois-chauffage-hetre-sec-25-cm-palette-2-rm-gresswiller": {
+    name: "Trockenes Buchen-Brennholz 25 cm · Palette 2 Raummeter",
+    packaging: "1 Palette · ca. 2 Raummeter gestapelt",
+    description: "Palette mit trockenem, gespaltenem und sorgfältig gestapeltem Buchen-Brennholz mit einer Scheitlänge von ca. 25 cm. Geeignet für Öfen, Kamine und kompatible Holzheizungen.",
+    benefits: [
+      "Trockenes Buchenholz für eine gleichmäßige Verbrennung und lang anhaltende Glut",
+      "Gespaltene, gebrauchsfertige Scheite mit ca. 25 cm Länge",
+      "Komplette Palette mit ca. 2 gestapelten Raummetern",
+      "Sicher für Transport und Lagerung auf Palette verpackt",
+    ],
+    preparation: "Das Buchenholz wird getrocknet, auf ca. 25 cm gespalten und für den Transport ordentlich auf einer Palette gestapelt.",
+    usage: "In einem für 25-cm-Holzscheite geeigneten Ofen, Kamin oder Holzheizgerät gemäß den Herstellerangaben verwenden.",
+  },
+  "brennholz-lkw-ladung-hainbuche-24-paletten": {
+    description: "Komplette LKW-Ladung mit hochwertigem, kammergetrocknetem Hainbuchen-Brennholz auf Paletten. Das Holz wird sorgfältig getrocknet, sortiert und für eine effiziente, saubere Verbrennung vorbereitet.",
+    benefits: [
+      "24 Paletten mit je 2 gestapelten Raummetern",
+      "Kammergetrocknet mit einer Restfeuchte unter 18 %",
+      "Gleichmäßige Qualität durch sorgfältige Sortierung und Palettenverpackung",
+      "Direktanlieferung per Tautliner-LKW",
+    ],
+    preparation: "Das Hainbuchenholz wird getrocknet, sortiert und sauber auf Paletten gestapelt. Die komplette LKW-Ladung wird für einen sicheren Transport vorbereitet.",
+    usage: "In geeigneten Holzöfen, Kaminen, Heizkaminen und Holzheizungen gemäß den Herstellerangaben verwenden.",
+    storage: "Die Paletten trocken, sauber, belüftet und vor direktem Bodenkontakt geschützt lagern.",
+    delivery: "Kostenlose Lieferung nach Deutschland und Frankreich. Lieferzeit ca. 1–2 Wochen. Die Entladung des LKWs erfolgt durch den Kunden; ein Gabelstapler ist erforderlich.",
+  },
   "bois-chauffage-chene-sec-25-cm-palette": { name: "Trockenes Eichen-Brennholz 25 cm · Palette", packaging: "1 Raummeter gestapelt, ca. 1,4–1,6 m³ lose" },
   "bois-chauffage-bouleau-sec-25-cm-palette": { name: "Trockenes Birken-Brennholz 25 cm · Palette", packaging: "1 Raummeter gestapelt, ca. 1,5 m³ lose" },
   "allume-feu-laine-bois-cire-100-pieces": { name: "Ökologische Anzündhilfe aus Holzwolle und Wachs · 100 Stück", packaging: "Karton mit 100 Stück" },
@@ -1470,8 +1576,8 @@ PRODUCTS.forEach((product) => {
     benefits: translation.benefits || categoryCopy.benefits || product.benefits,
     preparation: translation.preparation || categoryCopy.preparation || product.preparation,
     usage: translation.usage || categoryCopy.usage || product.usage,
-    storage: "Trocken, sauber und vor Feuchtigkeit geschützt lagern.",
-    delivery: "Palettenversand an die angegebene Lieferadresse. Bitte beachten Sie die Lieferinformationen vor der Zustellung.",
+    storage: translation.storage || "Trocken, sauber und vor Feuchtigkeit geschützt lagern.",
+    delivery: translation.delivery || "Palettenversand an die angegebene Lieferadresse. Bitte beachten Sie die Lieferinformationen vor der Zustellung.",
     stock: "Auf Lager",
     specs: (product.specs || []).map(([label, value]) => [translateSpecLabel(label), translateSpecValue(value)]),
   });
@@ -1498,9 +1604,9 @@ PRODUCTS.forEach((product) => {
 
 function translateSpecLabel(label) {
   const labels = {
-    "Essence": "Holzart", "Essences": "Holzarten", "Longueur": "Länge", "Longueur des bûches": "Scheitlänge", "Diamètre": "Durchmesser", "Dimensions": "Abmessungen", "Dimensions de la palette": "Palettenmaße", "Section": "Scheitstärke", "Sections classiques": "Standard-Scheitstärke", "Sections fines": "Dünne Scheitstärke",
+    "Essence": "Holzart", "Essences": "Holzarten", "État du bois": "Holzzustand", "Longueur": "Länge", "Longueur des bûches": "Scheitlänge", "Diamètre": "Durchmesser", "Dimensions": "Abmessungen", "Dimensions de la palette": "Palettenmaße", "Section": "Scheitstärke", "Sections classiques": "Standard-Scheitstärke", "Sections fines": "Dünne Scheitstärke",
     "Humidité": "Restfeuchte", "Humidité résiduelle": "Restfeuchte", "Séchage": "Trocknung", "Pouvoir calorifique": "Heizwert", "Taux de cendres": "Aschegehalt", "Cendres au repos": "Aschegehalt", "Taux de fines": "Feinanteil", "Masse volumique apparente": "Schüttdichte", "Résistance mécanique": "Mechanische Festigkeit",
-    "Conditionnement": "Verpackung", "Contenance par palette": "Inhalt je Palette", "Poids": "Gewicht", "Poids total": "Gesamtgewicht", "Poids par lot": "Gewicht je Paket", "Poids indicatif": "Richtgewicht", "Volume": "Volumen", "Volume total": "Gesamtvolumen", "Équivalent": "Entspricht", "Nombre de pièces": "Stückzahl", "Pièces par paquet": "Stück je Paket",
+    "Conditionnement": "Verpackung", "Contenance par palette": "Inhalt je Palette", "Quantité": "Menge", "Poids": "Gewicht", "Poids total": "Gesamtgewicht", "Poids par lot": "Gewicht je Paket", "Poids indicatif": "Richtgewicht", "Volume": "Volumen", "Volume total": "Gesamtvolumen", "Équivalent": "Entspricht", "Nombre de pièces": "Stückzahl", "Pièces par paquet": "Stück je Paket",
     "Type": "Typ", "Type de bois": "Holztyp", "Matériau": "Material", "Forme": "Form", "Granulométrie": "Körnung", "Caractéristiques": "Eigenschaften", "Certification": "Zertifizierung", "Technologie": "Technologie", "Liants": "Bindemittel", "Présentation": "Ausführung", "Prêt à l’emploi": "Gebrauchsfertig", "Utilisation": "Anwendung", "Stockage": "Lagerung", "Appareils compatibles": "Geeignete Geräte", "Origine": "Herkunft", "Répartition": "Aufteilung", "Référence fournisseur": "Herstellerreferenz", "Référence catalogue": "Katalogreferenz", "Prix emporté indicatif": "Abholpreis (Richtwert)",
     "Durée de combustion": "Brenndauer", "Durée des braises": "Glutdauer", "Odeur": "Geruch", "Soufre": "Schwefel", "Teneur en soufre": "Schwefelgehalt", "Matières volatiles": "Flüchtige Bestandteile", "Température de ramollissement des cendres": "Ascheerweichungstemperatur", "Composition complémentaire": "Ergänzende Zusammensetzung"
   };
@@ -1513,9 +1619,9 @@ function translateSpecValue(value) {
     .replaceAll("feuillus", "Laubhölzer").replaceAll("Feuillus", "Laubhölzer").replaceAll("résineux", "Nadelhölzer").replaceAll("Résineux", "Nadelhölzer")
     .replaceAll("Bûches", "Scheite").replaceAll("Bûchettes", "Anzündholz").replaceAll("bûches", "Scheite").replaceAll("bûchettes", "Anzündholz")
     .replaceAll("Palette de", "Palette mit").replaceAll("Palette perdue", "Einwegpalette").replaceAll("Demi-palette", "Halbpalette").replaceAll("sacs", "Säcke").replaceAll("paquets", "Pakete").replaceAll("cartons", "Kartons").replaceAll("pièces", "Stück").replaceAll("lots", "Pakete")
-    .replaceAll("stères", "Raummeter").replaceAll("stère", "Raummeter").replaceAll("en vrac", "lose").replaceAll("empilé", "gestapelt")
+    .replaceAll("stères", "Raummeter").replaceAll("stère", "Raummeter").replaceAll("en vrac", "lose").replaceAll("empilés", "gestapelt").replaceAll("empilée", "gestapelt").replaceAll("empilé", "gestapelt").replaceAll("1 palette", "1 Palette")
     .replaceAll("Séchage au four", "Ofentrocknung").replaceAll("Séchage industriel en étuve", "Industrielle Kammertrocknung").replaceAll("Séché en séchoir", "Kammertrocknung").replaceAll("Pré-séché", "Vorgetrocknet").replaceAll("Bois sec", "Trockenes Holz").replaceAll("100 % naturel", "100 % natürlich").replaceAll("Extra-sec, 18 mois minimum", "Extra trocken, mindestens 18 Monate getrocknet").replaceAll("Séchage naturel selon la fiche fournisseur", "Natürliche Trocknung gemäß Herstellerangaben")
-    .replaceAll("env.", "ca.").replaceAll("Env.", "Ca.").replaceAll("à cœur", "im Kern").replaceAll("heures", "Stunden").replaceAll("minutes", "Minuten").replaceAll("selon l’appareil", "je nach Gerät")
+    .replaceAll("env.", "ca.").replaceAll("Env.", "Ca.").replaceAll("Sec", "Trocken").replaceAll("à cœur", "im Kern").replaceAll("heures", "Stunden").replaceAll("minutes", "Minuten").replaceAll("selon l’appareil", "je nach Gerät")
     .replaceAll("Aucun", "Keine").replaceAll("Oui", "Ja").replaceAll("France, forêts gérées durablement", "Frankreich, nachhaltig bewirtschaftete Wälder").replaceAll("France", "Frankreich").replaceAll("Allemagne", "Deutschland").replaceAll("Produit sélectionné pour le marché allemand", "Für den deutschen Markt ausgewähltes Produkt")
     .replaceAll("Bois de pin", "Kiefernholz").replaceAll("Bois dur", "Hartholz").replaceAll("Laine de bois naturelle et cire", "Natürliche Holzwolle und Wachs").replaceAll("Papier recyclé et cire", "Recyclingpapier und Wachs").replaceAll("Lignite raffiné", "Veredelte Braunkohle");
 }
