@@ -351,11 +351,17 @@ function ossau_invoice_private_directory() {
 
 	$index_file = trailingslashit( $directory ) . 'index.php';
 	if ( ! file_exists( $index_file ) ) {
-		file_put_contents( $index_file, "<?php\n// Silence is golden.\n" );
+		if ( false === @file_put_contents( $index_file, "<?php\n// Silence is golden.\n", LOCK_EX ) ) {
+			error_log( sprintf( '[AM Holzbrennstoffe UG] Impossible de securiser le repertoire de factures : %s', $directory ) );
+			return false;
+		}
 	}
 	$htaccess_file = trailingslashit( $directory ) . '.htaccess';
 	if ( ! file_exists( $htaccess_file ) ) {
-		file_put_contents( $htaccess_file, "Options -Indexes\n<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nDeny from all\n</IfModule>\n" );
+		if ( false === @file_put_contents( $htaccess_file, "Options -Indexes\n<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nDeny from all\n</IfModule>\n", LOCK_EX ) ) {
+			error_log( sprintf( '[AM Holzbrennstoffe UG] Impossible de proteger le repertoire de factures : %s', $directory ) );
+			return false;
+		}
 	}
 
 	return $directory;
@@ -377,18 +383,32 @@ function ossau_generate_order_invoice( WC_Order $order, $reference ) {
 	if ( ! $path ) {
 		return false;
 	}
-	if ( file_exists( $path ) && filesize( $path ) > 0 ) {
+	if ( is_file( $path ) && @filesize( $path ) > 0 ) {
 		return $path;
 	}
 
 	$pdf = ossau_invoice_pdf_document( $order, $reference );
-	if ( 0 !== strpos( $pdf, '%PDF-' ) || false === file_put_contents( $path, $pdf, LOCK_EX ) ) {
+	if ( 0 !== strpos( $pdf, '%PDF-' ) ) {
+		error_log( sprintf( '[AM Holzbrennstoffe UG] Le contenu de la facture de la commande %d est invalide.', $order->get_id() ) );
+		return false;
+	}
+	if ( false === @file_put_contents( $path, $pdf, LOCK_EX ) ) {
+		error_log( sprintf( '[AM Holzbrennstoffe UG] Impossible d ecrire la facture de la commande %d dans %s.', $order->get_id(), $path ) );
 		return false;
 	}
 
 	$order->update_meta_data( '_ossau_invoice_created_at', gmdate( 'c' ) );
 	$order->save();
 	return $path;
+}
+
+function ossau_try_generate_order_invoice( WC_Order $order, $reference ) {
+	try {
+		return ossau_generate_order_invoice( $order, $reference );
+	} catch ( Throwable $error ) {
+		error_log( sprintf( '[AM Holzbrennstoffe UG] Exception pendant la generation de la facture de la commande %d : %s', $order->get_id(), $error->getMessage() ) );
+		return false;
+	}
 }
 
 function ossau_invoice_signature( $order_id, $reference ) {
@@ -420,17 +440,18 @@ function ossau_download_order_invoice( WP_REST_Request $request ) {
 	if ( ! $path ) {
 		return new WP_Error( 'invoice_not_found', 'Cette facture n’est pas disponible.', array( 'status' => 404 ) );
 	}
-	if ( ! file_exists( $path ) || filesize( $path ) <= 0 ) {
-		$path = ossau_generate_order_invoice( $order, $reference );
+	if ( ! is_file( $path ) || @filesize( $path ) <= 0 ) {
+		$path = ossau_try_generate_order_invoice( $order, $reference );
 	}
-	if ( ! $path || ! file_exists( $path ) || filesize( $path ) <= 0 ) {
+	$invoice_size = $path && is_file( $path ) ? @filesize( $path ) : false;
+	if ( ! $path || false === $invoice_size || $invoice_size <= 0 ) {
 		return new WP_Error( 'invoice_not_found', 'Cette facture n’est pas disponible.', array( 'status' => 404 ) );
 	}
 
 	nocache_headers();
 	header( 'Content-Type: application/pdf' );
 	header( 'Content-Disposition: attachment; filename="Facture-' . sanitize_file_name( $reference ) . '.pdf"' );
-	header( 'Content-Length: ' . filesize( $path ) );
+	header( 'Content-Length: ' . $invoice_size );
 	header( 'X-Content-Type-Options: nosniff' );
 	readfile( $path );
 	exit;

@@ -20,7 +20,11 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState(readStoredCart); // { [productId]: qty }
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    } catch (error) {
+      console.warn("Unable to persist the shopping cart.", error);
+    }
   }, [cart]);
 
   const add = (id, qty = 1) =>

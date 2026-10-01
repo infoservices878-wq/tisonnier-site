@@ -11,7 +11,9 @@ require_once __DIR__ . '/ossau-invoices.php';
 
 add_filter( 'allowed_http_origins', function ( $origins ) {
 	$frontend_url = defined( 'OSSAU_FRONTEND_URL' ) ? untrailingslashit( OSSAU_FRONTEND_URL ) : '';
-	$frontend_origin = $frontend_url ? wp_parse_url( $frontend_url, PHP_URL_SCHEME ) . '://' . wp_parse_url( $frontend_url, PHP_URL_HOST ) : '';
+	$frontend_origin = $frontend_url
+		? wp_parse_url( $frontend_url, PHP_URL_SCHEME ) . '://' . wp_parse_url( $frontend_url, PHP_URL_HOST )
+		: '';
 
 	if ( $frontend_origin && ! in_array( $frontend_origin, $origins, true ) ) {
 		$origins[] = $frontend_origin;
@@ -624,7 +626,7 @@ function ossau_order_email( WC_Order $order, $reference, $recipient, $is_interna
 function ossau_send_order_emails( WC_Order $order, $reference ) {
 	$admin_sent = (bool) $order->get_meta( '_ossau_admin_email_sent' );
 	$customer_sent = (bool) $order->get_meta( '_ossau_customer_email_sent' );
-	$invoice_path = ossau_generate_order_invoice( $order, $reference );
+	$invoice_path = ossau_try_generate_order_invoice( $order, $reference );
 	if ( ! $invoice_path ) {
 		error_log( sprintf( '[AM Holzbrennstoffe UG] Echec de la generation de la facture de la commande %d.', $order->get_id() ) );
 	}
@@ -651,7 +653,11 @@ function ossau_send_order_emails( WC_Order $order, $reference ) {
 function ossau_process_order_emails_async( $order_id, $reference ) {
 	$order = wc_get_order( absint( $order_id ) );
 	if ( $order ) {
-		ossau_send_order_emails( $order, sanitize_text_field( $reference ) );
+		try {
+			ossau_send_order_emails( $order, sanitize_text_field( $reference ) );
+		} catch ( Throwable $error ) {
+			error_log( sprintf( '[AM Holzbrennstoffe UG] Echec du traitement asynchrone de la commande %d : %s', $order->get_id(), $error->getMessage() ) );
+		}
 	}
 }
 add_action( 'ossau_process_order_emails_async', 'ossau_process_order_emails_async', 10, 2 );
@@ -659,14 +665,18 @@ add_action( 'ossau_process_order_emails_async', 'ossau_process_order_emails_asyn
 function ossau_queue_order_emails( $order_id, $reference ) {
 	$args = array( absint( $order_id ), sanitize_text_field( $reference ) );
 
-	if ( function_exists( 'as_enqueue_async_action' ) ) {
-		$action_id = as_enqueue_async_action( 'ossau_process_order_emails_async', $args, 'amhug-orders' );
-		if ( $action_id ) {
-			return true;
+	try {
+		if ( function_exists( 'as_enqueue_async_action' ) ) {
+			$action_id = as_enqueue_async_action( 'ossau_process_order_emails_async', $args, 'amhug-orders' );
+			if ( $action_id ) {
+				return true;
+			}
 		}
+	} catch ( Throwable $error ) {
+		error_log( sprintf( '[AM Holzbrennstoffe UG] Impossible de planifier les e-mails de la commande %d via Action Scheduler : %s', absint( $order_id ), $error->getMessage() ) );
 	}
 
-	$scheduled = wp_schedule_single_event( time(), 'ossau_process_order_emails_async', $args );
+	$scheduled = wp_schedule_single_event( time() + 5, 'ossau_process_order_emails_async', $args );
 	if ( ! is_wp_error( $scheduled ) && false !== $scheduled ) {
 		return true;
 	}
@@ -748,7 +758,7 @@ function ossau_create_order( WP_REST_Request $request ) {
 		'emails_queued' => $emails_queued,
 		'admin_email_sent' => (bool) $order->get_meta( '_ossau_admin_email_sent' ),
 		'customer_email_sent' => (bool) $order->get_meta( '_ossau_customer_email_sent' ),
-		'invoice_url' => '',
+		'invoice_url' => ossau_invoice_download_url( $order ),
 		'bank_transfer' => $bank,
 		'order_subtotal' => (float) $order->get_subtotal() + (float) $order->get_subtotal_tax(),
 		'order_shipping' => (float) $order->get_shipping_total() + (float) $order->get_shipping_tax(),

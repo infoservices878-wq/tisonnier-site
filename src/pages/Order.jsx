@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Clipboard, CreditCard, Mail, MapPin, Printer, ShieldCheck, Truck } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Clipboard, CreditCard, Download, Mail, MapPin, Printer, ShieldCheck, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { formatPrice } from "../lib/format";
@@ -102,8 +102,24 @@ function readStoredValue(key, fallback) {
   }
 }
 
+function setStoredValue(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (error) {
+    console.warn(`Unable to persist order state for "${key}".`, error);
+  }
+}
+
+function removeStoredValue(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch (error) {
+    console.warn(`Unable to remove stored order state for "${key}".`, error);
+  }
+}
+
 function createOrderReference() {
-  const storedValue = Number.parseInt(localStorage.getItem(ORDER_REFERENCE_COUNTER_KEY), 10);
+  const storedValue = Number.parseInt(readStoredValue(ORDER_REFERENCE_COUNTER_KEY, ""), 10);
   const number = Number.isInteger(storedValue) && storedValue >= ORDER_REFERENCE_START
     ? storedValue
     : ORDER_REFERENCE_START;
@@ -115,29 +131,30 @@ function saveNextOrderReference(reference) {
   const match = String(reference).match(/^AMHUG\d{2}-(\d+)$/);
   const number = match ? Number.parseInt(match[1], 10) : ORDER_REFERENCE_START;
 
-  localStorage.setItem(ORDER_REFERENCE_COUNTER_KEY, String(number + 1));
+  setStoredValue(ORDER_REFERENCE_COUNTER_KEY, String(number + 1));
 }
 
 export default function Order() {
   const { lines, subtotal, shipping, total, count, clear } = useCart();
   const [form, setForm] = useState(() => ({ ...initialForm, ...readStoredValue(FORM_STORAGE_KEY, {}), delivery: "home" }));
-  const [submitted, setSubmitted] = useState(() => readStoredValue(SUBMITTED_STORAGE_KEY, null));
+  // A stored confirmation is only valid when the cart is empty. This prevents
+  // an old confirmation from masking a new checkout after the customer adds items.
+  const [submitted, setSubmitted] = useState(() => (count === 0 ? readStoredValue(SUBMITTED_STORAGE_KEY, null) : null));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
-    if (!submitted) localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(form));
+    if (!submitted) setStoredValue(FORM_STORAGE_KEY, JSON.stringify(form));
   }, [form, submitted]);
 
   useEffect(() => {
-    if (submitted) localStorage.setItem(SUBMITTED_STORAGE_KEY, JSON.stringify(submitted));
+    if (submitted) setStoredValue(SUBMITTED_STORAGE_KEY, JSON.stringify(submitted));
   }, [submitted]);
 
   useEffect(() => {
-    if (submitted && count > 0) {
-      localStorage.removeItem(SUBMITTED_STORAGE_KEY);
-      setSubmitted(null);
-    }
+    // Do not clear an active confirmation here: clear() and setSubmitted() may
+    // be committed independently. Only discard stale persisted data for a new cart.
+    if (!submitted && count > 0) removeStoredValue(SUBMITTED_STORAGE_KEY);
   }, [count, submitted]);
 
   if (submitted) {
@@ -258,7 +275,15 @@ export default function Order() {
                   <div className="confirmation-summary-vat">Enthaltene MwSt. {formatPrice(confirmationTax)}</div>
                 )}
 
-              <p className="confirmation-invoice-note">Die Rechnung wird als PDF an Ihre Bestätigungs-E-Mail angehängt.</p>
+              {submitted.invoiceUrl ? (
+                <a href={submitted.invoiceUrl} className="confirmation-action-button confirmation-action-success" download>
+                  <Download size={16} /> Rechnung herunterladen (PDF)
+                </a>
+              ) : (
+                <span className="confirmation-action-button confirmation-action-disabled" aria-disabled="true">
+                  <Download size={16} /> Rechnung wird per E-Mail bereitgestellt
+                </span>
+              )}
               <button type="button" className="confirmation-action-button confirmation-action-secondary" onClick={() => window.print()}>
                 <Printer size={16} /> Drucken
               </button>
@@ -315,10 +340,8 @@ export default function Order() {
         throw new Error(payload.message || `Fehler ${response.status}`);
       }
 
-      localStorage.removeItem(FORM_STORAGE_KEY);
       const savedReference = payload.reference || reference;
-      saveNextOrderReference(savedReference);
-      setSubmitted({
+      const confirmation = {
         ...form,
         reference: savedReference,
         orderId: payload.order_id || null,
@@ -335,8 +358,14 @@ export default function Order() {
         orderTax: payload.order_tax ?? 0,
         orderTaxLines: payload.order_tax_lines || [],
         orderTotal: payload.order_total ?? total,
-      });
+      };
+
+      // Persist before clearing the cart so a refresh cannot lose a confirmed order.
+      setStoredValue(SUBMITTED_STORAGE_KEY, JSON.stringify(confirmation));
+      removeStoredValue(FORM_STORAGE_KEY);
+      saveNextOrderReference(savedReference);
       clear();
+      setSubmitted(confirmation);
     } catch (error) {
       setSubmitError(error.message || "Die Bestellung konnte nicht gesendet werden.");
     } finally {
