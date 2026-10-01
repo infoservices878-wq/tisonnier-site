@@ -9,6 +9,17 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/ossau-invoices.php';
 
+add_filter( 'allowed_http_origins', function ( $origins ) {
+	$frontend_url = defined( 'OSSAU_FRONTEND_URL' ) ? untrailingslashit( OSSAU_FRONTEND_URL ) : '';
+	$frontend_origin = $frontend_url ? wp_parse_url( $frontend_url, PHP_URL_SCHEME ) . '://' . wp_parse_url( $frontend_url, PHP_URL_HOST ) : '';
+
+	if ( $frontend_origin && ! in_array( $frontend_origin, $origins, true ) ) {
+		$origins[] = $frontend_origin;
+	}
+
+	return $origins;
+} );
+
 add_action( 'rest_api_init', function () {
 	register_rest_route( 'ossau/v1', '/command', array(
 		'methods'             => WP_REST_Server::CREATABLE,
@@ -655,7 +666,7 @@ function ossau_queue_order_emails( $order_id, $reference ) {
 		}
 	}
 
-	$scheduled = wp_schedule_single_event( time() + 5, 'ossau_process_order_emails_async', $args );
+	$scheduled = wp_schedule_single_event( time(), 'ossau_process_order_emails_async', $args );
 	if ( ! is_wp_error( $scheduled ) && false !== $scheduled ) {
 		return true;
 	}
@@ -718,10 +729,6 @@ function ossau_create_order( WP_REST_Request $request ) {
 	$order->calculate_totals();
 	$order->update_status( 'pending' );
 	$order->save();
-	$invoice_path = ossau_generate_order_invoice( $order, $reference );
-	if ( ! $invoice_path ) {
-		error_log( sprintf( '[AM Holzbrennstoffe UG] Echec de la generation initiale de la facture de la commande %d.', $order->get_id() ) );
-	}
 	$emails_queued = ossau_queue_order_emails( $order->get_id(), $reference );
 	$bank = ossau_invoice_bank_details();
 	$tax_totals = $order->get_tax_totals();
@@ -741,7 +748,7 @@ function ossau_create_order( WP_REST_Request $request ) {
 		'emails_queued' => $emails_queued,
 		'admin_email_sent' => (bool) $order->get_meta( '_ossau_admin_email_sent' ),
 		'customer_email_sent' => (bool) $order->get_meta( '_ossau_customer_email_sent' ),
-		'invoice_url' => $invoice_path ? ossau_invoice_download_url( $order ) : '',
+		'invoice_url' => '',
 		'bank_transfer' => $bank,
 		'order_subtotal' => (float) $order->get_subtotal() + (float) $order->get_subtotal_tax(),
 		'order_shipping' => (float) $order->get_shipping_total() + (float) $order->get_shipping_tax(),

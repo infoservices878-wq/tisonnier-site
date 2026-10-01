@@ -1112,11 +1112,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border-color: var(--line);
   color: var(--ink);
 }
-.confirmation-action-disabled {
-  background: rgba(34, 29, 20, 0.06);
-  border-color: transparent;
+.confirmation-invoice-note {
+  margin: 16px 0 0;
+  padding: 12px;
+  background: rgba(46, 59, 38, 0.08);
   color: var(--ink-soft);
-  cursor: not-allowed;
+  font-size: 12px;
   text-align: center;
 }
 .confirmation-bank-missing {

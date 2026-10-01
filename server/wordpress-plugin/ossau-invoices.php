@@ -417,7 +417,13 @@ function ossau_download_order_invoice( WP_REST_Request $request ) {
 	}
 
 	$path = ossau_invoice_file_path( $order );
-	if ( ! $path || ! file_exists( $path ) ) {
+	if ( ! $path ) {
+		return new WP_Error( 'invoice_not_found', 'Cette facture n’est pas disponible.', array( 'status' => 404 ) );
+	}
+	if ( ! file_exists( $path ) || filesize( $path ) <= 0 ) {
+		$path = ossau_generate_order_invoice( $order, $reference );
+	}
+	if ( ! $path || ! file_exists( $path ) || filesize( $path ) <= 0 ) {
 		return new WP_Error( 'invoice_not_found', 'Cette facture n’est pas disponible.', array( 'status' => 404 ) );
 	}
 

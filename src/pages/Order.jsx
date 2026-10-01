@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Clipboard, CreditCard, Download, Mail, MapPin, Printer, ShieldCheck, Truck } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Clipboard, CreditCard, Mail, MapPin, Printer, ShieldCheck, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { formatPrice } from "../lib/format";
@@ -258,15 +258,7 @@ export default function Order() {
                   <div className="confirmation-summary-vat">Enthaltene MwSt. {formatPrice(confirmationTax)}</div>
                 )}
 
-              {submitted.invoiceUrl ? (
-                <a href={submitted.invoiceUrl} className="confirmation-action-button confirmation-action-success" download>
-                  <Download size={16} /> Rechnung herunterladen (PDF)
-                </a>
-              ) : (
-                <span className="confirmation-action-button confirmation-action-disabled" aria-disabled="true">
-                  <Download size={16} /> Rechnung wird per E-Mail bereitgestellt
-                </span>
-              )}
+              <p className="confirmation-invoice-note">Die Rechnung wird als PDF an Ihre Bestätigungs-E-Mail angehängt.</p>
               <button type="button" className="confirmation-action-button confirmation-action-secondary" onClick={() => window.print()}>
                 <Printer size={16} /> Drucken
               </button>
