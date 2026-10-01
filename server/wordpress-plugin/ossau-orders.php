@@ -676,9 +676,13 @@ function ossau_queue_order_emails( $order_id, $reference ) {
 		error_log( sprintf( '[AM Holzbrennstoffe UG] Impossible de planifier les e-mails de la commande %d via Action Scheduler : %s', absint( $order_id ), $error->getMessage() ) );
 	}
 
-	$scheduled = wp_schedule_single_event( time() + 5, 'ossau_process_order_emails_async', $args );
-	if ( ! is_wp_error( $scheduled ) && false !== $scheduled ) {
-		return true;
+	try {
+		$scheduled = wp_schedule_single_event( time() + 5, 'ossau_process_order_emails_async', $args );
+		if ( ! is_wp_error( $scheduled ) && false !== $scheduled ) {
+			return true;
+		}
+	} catch ( Throwable $error ) {
+		error_log( sprintf( '[AM Holzbrennstoffe UG] Impossible de planifier les e-mails de la commande %d via WP-Cron : %s', absint( $order_id ), $error->getMessage() ) );
 	}
 
 	error_log( sprintf( '[AM Holzbrennstoffe UG] Impossible de planifier les e-mails de la commande %d.', absint( $order_id ) ) );
@@ -740,33 +744,48 @@ function ossau_create_order( WP_REST_Request $request ) {
 	$order->update_status( 'pending' );
 	$order->save();
 	$emails_queued = ossau_queue_order_emails( $order->get_id(), $reference );
-	$bank = ossau_invoice_bank_details();
-	$tax_totals = $order->get_tax_totals();
-	$order_items = array();
-	foreach ( $order->get_items( 'line_item' ) as $order_item ) {
-		$order_items[] = array(
-			'name'     => $order_item->get_name(),
-			'quantity' => (int) $order_item->get_quantity(),
-			'total'    => (float) $order_item->get_total() + (float) $order_item->get_total_tax(),
-		);
-	}
 
-	return new WP_REST_Response( array(
+	// Once the order exists, return a success response even if an optional
+	// presentation field (invoice URL, tax summary, etc.) cannot be generated.
+	// The React confirmation has safe fallbacks for all of these fields.
+	$response = array(
 		'success'  => true,
 		'order_id' => $order->get_id(),
 		'reference' => $reference,
 		'emails_queued' => $emails_queued,
 		'admin_email_sent' => (bool) $order->get_meta( '_ossau_admin_email_sent' ),
 		'customer_email_sent' => (bool) $order->get_meta( '_ossau_customer_email_sent' ),
-		'invoice_url' => ossau_invoice_download_url( $order ),
-		'bank_transfer' => $bank,
-		'order_subtotal' => (float) $order->get_subtotal() + (float) $order->get_subtotal_tax(),
-		'order_shipping' => (float) $order->get_shipping_total() + (float) $order->get_shipping_tax(),
-		'order_tax' => (float) $order->get_total_tax(),
-		'order_total' => (float) $order->get_total(),
-		'order_items' => $order_items,
-		'order_tax_lines' => array_values( array_map( static function ( $tax ) {
-			return array( 'label' => $tax->label, 'amount' => (float) $tax->amount );
-		}, $tax_totals ) ),
-	), 201 );
+	);
+
+	try {
+		$bank = ossau_invoice_bank_details();
+		$tax_totals = $order->get_tax_totals();
+		$order_items = array();
+		foreach ( $order->get_items( 'line_item' ) as $order_item ) {
+			$order_items[] = array(
+				'name'     => $order_item->get_name(),
+				'quantity' => (int) $order_item->get_quantity(),
+				'total'    => (float) $order_item->get_total() + (float) $order_item->get_total_tax(),
+			);
+		}
+
+		$response = array_merge( $response, array(
+			'invoice_url' => ossau_invoice_download_url( $order ),
+			'bank_transfer' => $bank,
+			// WC_Order has no get_subtotal_tax(); cart tax is the order-level tax
+			// corresponding to the merchandise subtotal.
+			'order_subtotal' => (float) $order->get_subtotal() + (float) $order->get_cart_tax(),
+			'order_shipping' => (float) $order->get_shipping_total() + (float) $order->get_shipping_tax(),
+			'order_tax' => (float) $order->get_total_tax(),
+			'order_total' => (float) $order->get_total(),
+			'order_items' => $order_items,
+			'order_tax_lines' => array_values( array_map( static function ( $tax ) {
+				return array( 'label' => $tax->label, 'amount' => (float) $tax->amount );
+			}, $tax_totals ) ),
+		) );
+	} catch ( Throwable $error ) {
+		error_log( sprintf( '[AM Holzbrennstoffe UG] Commande %d creee, mais certains details de confirmation sont indisponibles : %s', $order->get_id(), $error->getMessage() ) );
+	}
+
+	return new WP_REST_Response( $response, 201 );
 }

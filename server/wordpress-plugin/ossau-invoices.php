@@ -212,7 +212,8 @@ function ossau_invoice_pdf_document( WC_Order $order, $reference ) {
 	}
 
 	$tax_total = (float) $order->get_total_tax();
-	$gross_subtotal = (float) $order->get_subtotal() + (float) $order->get_subtotal_tax();
+	// get_subtotal_tax() exists on line items, not on WC_Order.
+	$gross_subtotal = (float) $order->get_subtotal() + (float) $order->get_cart_tax();
 	$gross_shipping = (float) $order->get_shipping_total() + (float) $order->get_shipping_tax();
 	$gross_discount = (float) $order->get_discount_total() + (float) $order->get_discount_tax();
 	$gross_total = (float) $order->get_total();
