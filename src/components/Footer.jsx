@@ -36,9 +36,9 @@ export default function Footer() {
         <div className="footer-main-inner">
           <div className="footer-col">
             <h3 className="footer-heading">KATALOG</h3>
-            <Link className="footer-link" to="/catalogue">Gesamter Katalog</Link>
+            <Link className="footer-link" to="/katalog">Gesamter Katalog</Link>
             {CATEGORIES.map((c) => (
-              <Link key={c.id} className="footer-link" to={`/catalogue/${c.id}`}>
+              <Link key={c.id} className="footer-link" to={`/katalog/${c.id}`}>
                 {c.name}
               </Link>
             ))}
@@ -46,19 +46,19 @@ export default function Footer() {
 
           <div className="footer-col">
             <h3 className="footer-heading">SERVICE</h3>
-            <Link className="footer-link" to="/livraison">Lieferung und Warenannahme</Link>
+            <Link className="footer-link" to="/lieferung">Lieferung und Warenannahme</Link>
             <Link className="footer-link" to="/zahlung">Zahlungsablauf</Link>
             <Link className="footer-link" to="/retouren">Widerruf und Rückgabe</Link>
-            <Link className="footer-link" to="/contact">Bestellung anfragen</Link>
+            <Link className="footer-link" to="/bestellung">Bestellung anfragen</Link>
             <Link className="footer-link" to="/faq">Häufige Fragen</Link>
-            <Link className="footer-link" to="/contact">Kontakt</Link>
+            <Link className="footer-link" to="/kontakt">Kontakt</Link>
           </div>
 
           <div className="footer-col">
             <h3 className="footer-heading">RECHTLICHES</h3>
-            <Link className="footer-link" to="/mentions-legales">Impressum</Link>
-            <Link className="footer-link" to="/politique-de-confidentialite">Datenschutz</Link>
-            <Link className="footer-link" to="/conditions-generales-de-vente">AGB</Link>
+            <Link className="footer-link" to="/impressum">Impressum</Link>
+            <Link className="footer-link" to="/datenschutz">Datenschutz</Link>
+            <Link className="footer-link" to="/agb">AGB</Link>
             <button type="button" className="footer-link" onClick={openCookieSettings}>Datenschutzeinstellungen</button>
           </div>
 

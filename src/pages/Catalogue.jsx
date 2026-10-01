@@ -19,7 +19,7 @@ export default function Catalogue() {
           <span className="section-kicker">AM Holzbrennstoffe UG · FÜR PROFIS UND PRIVATKUNDEN</span>
           <p>{activeCat ? `${filtered.length} Produkt(e) in dieser Kategorie` : "Brennstoffe einfach vergleichen und auswählen"}</p>
         </div>
-        <Link to="/contact" className="catalogue-help-link">Beratung gewünscht? <ArrowRight size={15} /></Link>
+        <Link to="/kontakt" className="catalogue-help-link">Beratung gewünscht? <ArrowRight size={15} /></Link>
       </div>
       {!activeCat && (
         <>
@@ -31,7 +31,7 @@ export default function Catalogue() {
           </p>
           <div className="filter-row">
             <Link
-              to="/catalogue"
+              to="/katalog"
               className="filter-chip active"
             >
               Alle
@@ -39,7 +39,7 @@ export default function Catalogue() {
             {CATEGORIES.map((c) => (
               <Link
                 key={c.id}
-                to={`/catalogue/${c.id}`}
+                to={`/katalog/${c.id}`}
                 className="filter-chip"
               >
                 {c.name}
@@ -48,9 +48,9 @@ export default function Catalogue() {
           </div>
         </>
       )}
-      {activeCat && <div className="catalogue-active-note"><SlidersHorizontal size={16} /><span>Aktiver Filter: <strong>{activeCat.name}</strong></span><Link to="/catalogue">Alle anzeigen</Link></div>}
+      {activeCat && <div className="catalogue-active-note"><SlidersHorizontal size={16} /><span>Aktiver Filter: <strong>{activeCat.name}</strong></span><Link to="/katalog">Alle anzeigen</Link></div>}
       {filtered.length === 0 ? (
-        <div className="empty-state"><p>Keine Produkte entsprechen Ihrer Suche.</p><Link to="/catalogue" className="btn btn-primary">Suche zurücksetzen</Link></div>
+        <div className="empty-state"><p>Keine Produkte entsprechen Ihrer Suche.</p><Link to="/katalog" className="btn btn-primary">Suche zurücksetzen</Link></div>
       ) : (
         <div className="product-grid">
           {filtered.map((p) => (

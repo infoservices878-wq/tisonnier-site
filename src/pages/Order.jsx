@@ -287,7 +287,7 @@ export default function Order() {
               <button type="button" className="confirmation-action-button confirmation-action-secondary" onClick={() => window.print()}>
                 <Printer size={16} /> Drucken
               </button>
-              <Link to="/catalogue" className="confirmation-action-button confirmation-action-secondary">
+              <Link to="/katalog" className="confirmation-action-button confirmation-action-secondary">
                 Zurück zum Shop
               </Link>
             </div>
@@ -300,7 +300,7 @@ export default function Order() {
   if (count === 0) {
     return (
       <section className="section order-page">
-        <div className="order-empty"><ShoppingBagIcon /><h1 className="page-title">Ihr Warenkorb ist leer</h1><p>Fügen Sie mindestens ein Produkt hinzu, bevor Sie Ihre Bestellung anfragen.</p><Link to="/catalogue" className="btn btn-primary">Katalog ansehen <ArrowRight size={16} /></Link></div>
+        <div className="order-empty"><ShoppingBagIcon /><h1 className="page-title">Ihr Warenkorb ist leer</h1><p>Fügen Sie mindestens ein Produkt hinzu, bevor Sie Ihre Bestellung anfragen.</p><Link to="/katalog" className="btn btn-primary">Katalog ansehen <ArrowRight size={16} /></Link></div>
       </section>
     );
   }
@@ -375,7 +375,7 @@ export default function Order() {
 
   return (
     <section className="section order-page">
-      <div className="order-breadcrumbs"><Link to="/">Startseite</Link><span aria-hidden="true">›</span><Link to="/panier">Warenkorb</Link><span aria-hidden="true">›</span><strong>Bestellung</strong></div>
+      <div className="order-breadcrumbs"><Link to="/">Startseite</Link><span aria-hidden="true">›</span><Link to="/warenkorb">Warenkorb</Link><span aria-hidden="true">›</span><strong>Bestellung</strong></div>
       <div className="order-heading"><div><span className="section-kicker">BESTELLUNG VERBINDLICH ABSCHLIESSEN</span><h1 className="page-title">Ihre Daten für die Lieferung</h1><p>Prüfen Sie Ihre Angaben und den Gesamtbetrag. Mit dem Absenden schließen Sie einen verbindlichen Kaufvertrag.</p></div><ShieldCheck size={48} strokeWidth={1.1} /></div>
       <form className="order-layout" onSubmit={submit}>
         <div className="order-form-column">
@@ -435,7 +435,7 @@ export default function Order() {
           <section className="order-form-section order-payment-section">
             <div className="order-section-heading"><span>04</span><div><h2>Zahlung per Banküberweisung</h2><p>Der Kaufvertrag kommt mit Eingang Ihrer Bestellung zustande. Das Zahlungsziel beträgt 7 Kalendertage ab Zugang der Vertragsbestätigung.</p></div></div>
             <div className="order-transfer-note"><CreditCard size={22} /><div><strong>Bankverbindung direkt mit der Vertragsbestätigung</strong><p>Sie erhalten Zahlbetrag, Bankverbindung und Zahlungsreferenz per E-Mail. Bitte geben Sie die Referenz im Verwendungszweck an.</p><Link to="/zahlung" className="order-text-link">Zahlungsablauf ansehen</Link></div></div>
-            <label className="order-checkbox"><input type="checkbox" checked={form.terms} onChange={(event) => update("terms", event.target.checked)} required /><span>Ich habe die <Link to="/conditions-generales-de-vente">Allgemeinen Geschäftsbedingungen</Link> gelesen und akzeptiere sie. *</span></label>
+            <label className="order-checkbox"><input type="checkbox" checked={form.terms} onChange={(event) => update("terms", event.target.checked)} required /><span>Ich habe die <Link to="/agb">Allgemeinen Geschäftsbedingungen</Link> gelesen und akzeptiere sie. *</span></label>
           </section>
           {submitError && (
             <div className="order-form-error" role="alert">
@@ -449,7 +449,7 @@ export default function Order() {
             <div className="summary-row"><span>Lieferung</span><strong>{shipping === 0 ? "Kostenlos" : formatPrice(shipping)}</strong></div>
             <div className="summary-total"><span>Gesamt inkl. MwSt.</span><strong>{formatPrice(total)}</strong></div>
           </div>
-          <div className="order-form-actions"><Link to="/panier" className="order-back-link"><ArrowLeft size={16} /> Zurück zum Warenkorb</Link><button className="btn btn-primary" type="submit" disabled={isSubmitting}>{isSubmitting ? "Wird übermittelt..." : "Zahlungspflichtig bestellen"} <ArrowRight size={17} /></button></div>
+          <div className="order-form-actions"><Link to="/warenkorb" className="order-back-link"><ArrowLeft size={16} /> Zurück zum Warenkorb</Link><button className="btn btn-primary" type="submit" disabled={isSubmitting}>{isSubmitting ? "Wird übermittelt..." : "Zahlungspflichtig bestellen"} <ArrowRight size={17} /></button></div>
         </div>
 
         <aside className="order-sidebar">

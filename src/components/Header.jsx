@@ -32,7 +32,7 @@ export default function Header() {
             key: `category-${category.id}`,
             label: category.name,
             type: "Kategorie",
-            to: `/catalogue?q=${encodeURIComponent(category.name)}`,
+            to: `/katalog?q=${encodeURIComponent(category.name)}`,
           })),
         ...PRODUCTS
           .filter((product) => product.name.toLowerCase().includes(normalizedSearch))
@@ -40,14 +40,14 @@ export default function Header() {
             key: `product-${product.id}`,
             label: product.name,
             type: "Produkt",
-            to: `/catalogue?q=${encodeURIComponent(product.name)}`,
+            to: `/katalog?q=${encodeURIComponent(product.name)}`,
           })),
       ].slice(0, 5)
     : [];
 
   const submitSearch = (e) => {
     e.preventDefault();
-    navigate(search ? `/catalogue?q=${encodeURIComponent(search)}` : "/catalogue");
+    navigate(search ? `/katalog?q=${encodeURIComponent(search)}` : "/katalog");
     setShowSuggestions(false);
     setMenuOpen(false);
     setMobileSearchOpen(false);
@@ -135,18 +135,18 @@ export default function Header() {
           >
             {mobileSearchOpen ? <X size={21} /> : <Search size={20} strokeWidth={1.8} />}
           </button>
-          <Link to="/connexion" className="action-btn">
+          <Link to="/anmelden" className="action-btn">
             <UserRound size={20} strokeWidth={1.6} />
             <span>{account ? account.name : "Anmelden"}</span>
           </Link>
-          <Link to="/favoris" className="action-btn">
+          <Link to="/favoriten" className="action-btn">
             <span className="action-btn-icon-wrap">
               <Heart size={20} strokeWidth={1.6} />
               {favoriteCount > 0 && <span className="cart-count">{favoriteCount}</span>}
             </span>
             <span>Favoriten</span>
           </Link>
-          <Link to="/panier" className="action-btn cart-btn" aria-label="Warenkorb anzeigen">
+          <Link to="/warenkorb" className="action-btn cart-btn" aria-label="Warenkorb anzeigen">
             <span className="action-btn-icon-wrap">
               <ShoppingCart size={20} strokeWidth={1.6} />
               {count > 0 && <span className="cart-count">{count}</span>}
@@ -201,42 +201,42 @@ export default function Header() {
       )}
 
       <nav className="category-nav" aria-label="Katalog">
-          <NavLink end to="/catalogue" className={({ isActive }) => "category-nav-link category-nav-primary" + (isActive ? " active" : "") }>
+          <NavLink end to="/katalog" className={({ isActive }) => "category-nav-link category-nav-primary" + (isActive ? " active" : "") }>
           <span className="category-nav-swatch" />
           Katalog
         </NavLink>
         {CATEGORIES.map((c) => (
           <NavLink
             key={c.id}
-            to={`/catalogue/${c.id}`}
+            to={`/katalog/${c.id}`}
             className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}
           >
             {c.name}
           </NavLink>
         ))}
         <span className="category-nav-spacer" />
-        <NavLink to="/livraison" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>Lieferung</NavLink>
-        <NavLink to="/entreprise" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>Über uns</NavLink>
+        <NavLink to="/lieferung" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>Lieferung</NavLink>
+        <NavLink to="/ueber-uns" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>Über uns</NavLink>
         <NavLink to="/faq" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>FAQ</NavLink>
-        <NavLink to="/contact" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>Contact</NavLink>
+        <NavLink to="/kontakt" className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}>Kontakt</NavLink>
       </nav>
 
       {menuOpen && (
         <div className="nav-drawer">
           <Link to="/" className="nav-drawer-link" onClick={close}>Startseite</Link>
-          <Link to="/catalogue" className="nav-drawer-link" onClick={close}>Katalog</Link>
+          <Link to="/katalog" className="nav-drawer-link" onClick={close}>Katalog</Link>
           {CATEGORIES.map((c) => (
-            <Link key={c.id} to={`/catalogue/${c.id}`} className="nav-drawer-link nav-drawer-sub" onClick={close}>
+            <Link key={c.id} to={`/katalog/${c.id}`} className="nav-drawer-link nav-drawer-sub" onClick={close}>
               {c.name}
             </Link>
           ))}
-          <Link to="/livraison" className="nav-drawer-link" onClick={close}>Lieferung</Link>
-          <Link to="/entreprise" className="nav-drawer-link" onClick={close}>Über uns</Link>
+          <Link to="/lieferung" className="nav-drawer-link" onClick={close}>Lieferung</Link>
+          <Link to="/ueber-uns" className="nav-drawer-link" onClick={close}>Über uns</Link>
           <Link to="/faq" className="nav-drawer-link" onClick={close}>FAQ</Link>
-          <Link to="/contact" className="nav-drawer-link" onClick={close}>Contact</Link>
-          <Link to="/connexion" className="nav-drawer-link" onClick={close}>Anmelden</Link>
-          <Link to="/favoris" className="nav-drawer-link" onClick={close}>Favoriten</Link>
-          <Link to="/panier" className="nav-drawer-link" onClick={close}>Warenkorb ({count})</Link>
+          <Link to="/kontakt" className="nav-drawer-link" onClick={close}>Kontakt</Link>
+          <Link to="/anmelden" className="nav-drawer-link" onClick={close}>Anmelden</Link>
+          <Link to="/favoriten" className="nav-drawer-link" onClick={close}>Favoriten</Link>
+          <Link to="/warenkorb" className="nav-drawer-link" onClick={close}>Warenkorb ({count})</Link>
         </div>
       )}
     </header>

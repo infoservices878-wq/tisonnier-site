@@ -36,13 +36,13 @@ export default function Payment() {
           <span className="service-card-label">Keine Bestätigung gefunden?</span>
           <h2>Prüfen Sie Ihr E-Mail-Postfach</h2>
           <p>Kontrollieren Sie auch den Spam-Ordner. Wenn die Nachricht fehlt oder Angaben unklar sind, kontaktieren Sie uns mit Ihrer Bestellnummer.</p>
-          <Link to="/contact" className="order-text-link">Kontakt aufnehmen <ArrowRight size={15} /></Link>
+          <Link to="/kontakt" className="order-text-link">Kontakt aufnehmen <ArrowRight size={15} /></Link>
         </article>
       </div>
 
       <div className="faq-contact">
         <div><span className="section-kicker">BEREIT FÜR DEN NÄCHSTEN SCHRITT?</span><h2>Prüfen Sie Ihren Warenkorb.</h2></div>
-        <Link to="/panier" className="btn btn-primary checkout-action-button"><ShoppingCart size={16} /> Zum Warenkorb</Link>
+        <Link to="/warenkorb" className="btn btn-primary checkout-action-button"><ShoppingCart size={16} /> Zum Warenkorb</Link>
       </div>
       <p className="legal-links-note">Die gesetzliche 30-Tage-Regel in § 286 Abs. 3 BGB ist keine Zahlungsfrist. Sie betrifft den Eintritt des Zahlungsverzugs; gegenüber Verbrauchern gilt sie nur mit ausdrücklichem Hinweis auf der Rechnung. Unser vereinbartes Zahlungsziel beträgt 7 Kalendertage ab Zugang der Vertragsbestätigung. Bei Verzug beachten wir die gesetzlichen Voraussetzungen und setzen vor einem Rücktritt grundsätzlich eine angemessene Nachfrist. <a href="https://www.gesetze-im-internet.de/bgb/__286.html" target="_blank" rel="noreferrer">§ 286 BGB</a> · <a href="https://www.gesetze-im-internet.de/bgb/__323.html" target="_blank" rel="noreferrer">§ 323 BGB</a></p>
     </section>

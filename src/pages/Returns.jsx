@@ -20,14 +20,14 @@ export default function Returns() {
           <span className="service-card-label">Widerruf</span>
           <h2>Maßgeblich sind Gesetz und AGB</h2>
           <p>Sofern das gesetzliche Widerrufsrecht gilt, beträgt die Frist grundsätzlich 14 Tage ab Erhalt der Ware. Die Widerrufsbelehrung mit Fristbeginn, Ausübung und Folgen erhalten Sie im Bestellprozess beziehungsweise mit der Auftragsbestätigung. Ihre gesetzlichen Rechte bleiben unberührt.</p>
-          <Link to="/conditions-generales-de-vente" className="order-text-link">AGB lesen <ArrowRight size={15} /></Link>
+          <Link to="/agb" className="order-text-link">AGB lesen <ArrowRight size={15} /></Link>
         </article>
         <article className="service-card">
           <Truck size={24} />
           <span className="service-card-label">Rücktransport</span>
           <h2>Palette nicht unangekündigt zurücksenden</h2>
           <p>Kontaktieren Sie uns vor dem Rücktransport mit Ihrer Bestellnummer und dem betroffenen Artikel. Wir stimmen mit Ihnen ab, wie eine Palette sicher zurückgeführt werden kann. Die Hinweise zu den Rücksendekosten finden Sie in Ihrer Widerrufsbelehrung.</p>
-          <Link to="/contact" className="order-text-link">Rückgabe mit uns abstimmen <ArrowRight size={15} /></Link>
+          <Link to="/kontakt" className="order-text-link">Rückgabe mit uns abstimmen <ArrowRight size={15} /></Link>
         </article>
       </div>
 

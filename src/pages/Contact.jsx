@@ -51,7 +51,7 @@ export default function Contact() {
       <div className="contact-grid">
         <div className="contact-info">
           <div className="contact-panel"><span className="section-kicker">DIREKTER KONTAKT</span><div className="contact-line"><Mail size={18} strokeWidth={1.6} /><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></div>{COMPANY.phone && <div className="contact-line"><Phone size={18} strokeWidth={1.6} /><span><a href={COMPANY.phoneHref}>{COMPANY.phone}</a><small>{COMPANY.phoneNotice}</small></span></div>}<div className="contact-line"><MapPin size={18} strokeWidth={1.6} /><span>{COMPANY.address}, {COMPANY.city}, {COMPANY.country}</span></div>{COMPANY.hours && <div className="contact-line"><Clock3 size={18} strokeWidth={1.6} /><span>{COMPANY.hours}</span></div>}</div>
-          <div className="contact-next"><strong>Für eine schnelle Antwort</strong><p>{COMPANY.responseTime} Nennen Sie bitte das gewünschte Produkt, Ihren Ort und Hinweise zur Zufahrt.</p><Link to="/livraison">Lieferinformationen <ArrowRight size={15} /></Link></div>
+          <div className="contact-next"><strong>Für eine schnelle Antwort</strong><p>{COMPANY.responseTime} Nennen Sie bitte das gewünschte Produkt, Ihren Ort und Hinweise zur Zufahrt.</p><Link to="/lieferung">Lieferinformationen <ArrowRight size={15} /></Link></div>
         </div>
         <form className="contact-form" onSubmit={submit}>
           {sent ? (

@@ -210,7 +210,7 @@ function ossau_send_verification_email( $email, $name, $key ) {
 
 	$verify_url = add_query_arg(
 		array( 'key' => $key, 'email' => $email ),
-		$frontend_url . '/verification-email'
+		$frontend_url . '/e-mail-bestaetigung'
 	);
 	$message = sprintf(
 		'<p>Bonjour %s,</p><p>Merci pour la creation de votre espace client AM Holzbrennstoffe UG. Confirmez votre adresse e-mail pour activer votre compte et acceder a votre tableau de bord.</p><p><a href="%s">Confirmer mon adresse e-mail</a></p><p>Ce lien est valable pendant 48 heures. Si vous n etes pas a l origine de cette inscription, vous pouvez ignorer cet e-mail.</p>',
@@ -350,7 +350,7 @@ function ossau_forgot_password( WP_REST_Request $request ) {
 			if ( ! is_wp_error( $key ) && $frontend_url ) {
 				$reset_url = add_query_arg(
 					array( 'key' => $key, 'login' => $user->user_login ),
-					$frontend_url . '/reinitialisation'
+					$frontend_url . '/passwort-zuruecksetzen'
 				);
 				$subject = 'Reinitialisez votre mot de passe AM Holzbrennstoffe UG';
 				$message = sprintf(

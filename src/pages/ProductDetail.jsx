@@ -19,7 +19,7 @@ export default function ProductDetail() {
     return (
       <section className="section">
         <h1 className="page-title">Produkt nicht gefunden</h1>
-        <Link to="/catalogue" className="btn btn-primary">Zurück zum Katalog</Link>
+        <Link to="/katalog" className="btn btn-primary">Zurück zum Katalog</Link>
       </section>
     );
   }
@@ -42,7 +42,7 @@ export default function ProductDetail() {
       <nav className="product-breadcrumbs" aria-label="Brotkrümelnavigation">
         <Link to="/">Startseite</Link>
         <span className="product-breadcrumb-separator" aria-hidden="true">›</span>
-        <Link to={`/catalogue/${product.category}`}>{cat?.name}</Link>
+        <Link to={`/katalog/${product.category}`}>{cat?.name}</Link>
         <span className="product-breadcrumb-separator" aria-hidden="true">›</span>
         <strong aria-current="page">{product.name}</strong>
       </nav>
@@ -96,7 +96,7 @@ export default function ProductDetail() {
                 {added ? <><Check size={17} /> Zum Warenkorb hinzugefügt</> : <><ShoppingCart size={17} /> In den Warenkorb</>}
               </button>
             </div>
-            {added && <Link to="/panier" className="product-cart-link">Warenkorb anzeigen →</Link>}
+            {added && <Link to="/warenkorb" className="product-cart-link">Warenkorb anzeigen →</Link>}
           </div>
           <div className="product-service-list">
             <div><Truck size={20} /><span><strong>Palettenlieferung</strong><small>Kostenlos ab {formatPrice(FREE_SHIPPING_THRESHOLD)}, sonst {formatPrice(SHIPPING_FEE)}</small></span></div>

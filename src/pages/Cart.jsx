@@ -18,7 +18,7 @@ export default function Cart() {
           <span className="section-kicker">IHRE AUSWAHL</span>
           <h1 className="page-title">Ihr Warenkorb ist noch leer</h1>
           <p>Wählen Sie Ihre Brennstoffe und stellen Sie Ihre Bestellung für die Heizsaison zusammen.</p>
-          <Link to="/catalogue" className="btn btn-primary">Katalog entdecken <ArrowRight size={16} /></Link>
+          <Link to="/katalog" className="btn btn-primary">Katalog entdecken <ArrowRight size={16} /></Link>
         </div>
         <div className="cart-assurances"><span><Truck size={18} /> Palettenversand</span><span><ShieldCheck size={18} /> Persönlicher Service</span><span><Check size={18} /> Schriftliche Bestätigung</span></div>
       </section>
@@ -41,10 +41,10 @@ export default function Cart() {
             const category = CATEGORIES.find((item) => item.id === product.category);
             return (
             <article className="cart-line" key={product.id}>
-              <div className="cart-product-visual"><Link to={`/produit/${product.id}`} aria-label={`${product.name} ansehen`}><img src={product.image || category?.image} alt="" /></Link></div>
+              <div className="cart-product-visual"><Link to={`/produkt/${product.id}`} aria-label={`${product.name} ansehen`}><img src={product.image || category?.image} alt="" /></Link></div>
               <div className="cart-product-info">
                 <span className="product-tag">{category?.name}</span>
-                <Link to={`/produit/${product.id}`} className="product-name">{product.name}</Link>
+                <Link to={`/produkt/${product.id}`} className="product-name">{product.name}</Link>
                 <span className="product-packaging">{product.packaging}</span>
                 <span className="cart-unit-price">{formatPrice(product.price)} / Einheit</span>
               </div>
@@ -53,14 +53,14 @@ export default function Cart() {
             </article>
             );
           })}
-          <div className="cart-continue"><Link to="/catalogue"><ArrowLeft size={16} /> Weiter einkaufen</Link><span><Check size={15} /> Preise inkl. MwSt.</span></div>
+          <div className="cart-continue"><Link to="/katalog"><ArrowLeft size={16} /> Weiter einkaufen</Link><span><Check size={15} /> Preise inkl. MwSt.</span></div>
         </div>
         <aside className="cart-summary">
           <h2>Zusammenfassung</h2>
           <div className="summary-row"><span>Zwischensumme</span><strong>{formatPrice(subtotal)}</strong></div>
           <div className="summary-row"><span>Lieferung</span><strong>{shipping === 0 ? "Kostenlos" : formatPrice(shipping)}</strong></div>
           <div className="summary-total"><span>Gesamt inkl. MwSt.</span><strong>{formatPrice(total)}</strong></div>
-          <Link to="/commande" className="btn btn-primary btn-block cart-checkout-button">Bestellung anfragen <ArrowRight size={17} /></Link>
+          <Link to="/bestellung" className="btn btn-primary btn-block cart-checkout-button">Bestellung anfragen <ArrowRight size={17} /></Link>
           <div className="cart-summary-note"><ShieldCheck size={17} /><span>Ihre Daten werden sicher verarbeitet.</span></div>
           <p className="summary-hint">Nach Ihrer Anfrage erhalten Sie eine Auftragsbestätigung mit den Lieferdetails.</p>
           <div className="cart-summary-services"><span><Truck size={15} /> Lieferung in 3–5 Werktagen nach Vorbereitung</span><span><Check size={15} /> Planbare Warenannahme</span></div>

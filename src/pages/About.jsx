@@ -27,7 +27,7 @@ export default function About() {
           <p>Palettenverpackungen erleichtern die Handhabung und schützen die Ware während des Transports.</p>
         </div>
       </div>
-      <div className="about-promise"><div><span className="section-kicker">Unser Versprechen</span><h2>Transparent von Anfang an</h2></div><ul><li><Check size={17} /> Produktmerkmale klar dargestellt</li><li><Check size={17} /> Lieferbedingungen vor der Bestellung sichtbar</li><li><Check size={17} /> Direkter Kontakt bei praktischen Fragen</li></ul><Link to="/contact" className="btn btn-primary">Team kontaktieren <ArrowRight size={16} /></Link></div>
+      <div className="about-promise"><div><span className="section-kicker">Unser Versprechen</span><h2>Transparent von Anfang an</h2></div><ul><li><Check size={17} /> Produktmerkmale klar dargestellt</li><li><Check size={17} /> Lieferbedingungen vor der Bestellung sichtbar</li><li><Check size={17} /> Direkter Kontakt bei praktischen Fragen</li></ul><Link to="/kontakt" className="btn btn-primary">Team kontaktieren <ArrowRight size={16} /></Link></div>
       <section className="legal-links-section" aria-labelledby="company-facts-title">
         <div>
           <span className="section-kicker">UNTERNEHMENSDATEN</span>
@@ -35,7 +35,7 @@ export default function About() {
           <p>{COMPANY.name} hat ihren Sitz in {COMPANY.city}. Die Angaben zu Geschäftsführung und Handelsregister finden Sie transparent im Impressum.</p>
         </div>
         <div className="legal-links-grid">
-          <Link to="/mentions-legales"><span>Impressum und Registerangaben</span><ArrowRight size={16} /></Link>
+          <Link to="/impressum"><span>Impressum und Registerangaben</span><ArrowRight size={16} /></Link>
           <a href={`mailto:${COMPANY.email}`}><span>{COMPANY.email}</span><ArrowRight size={16} /></a>
         </div>
       </section>

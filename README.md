@@ -61,17 +61,22 @@ npm run dev
 | URL | Page |
 |-----|------|
 | `/` | Accueil (+ FAQ) |
-| `/catalogue` | Catalogue |
-| `/catalogue/:categoryId` | Filtre catégorie |
-| `/produit/:productId` | Fiche produit |
-| `/panier` | Panier |
-| `/contact` | Contact |
-| `/entreprise` | À propos |
-| `/livraison` | Livraison sur palette |
+| `/katalog` | Catalogue |
+| `/katalog/:categoryId` | Filtre catégorie |
+| `/produkt/:productId` | Fiche produit |
+| `/warenkorb` | Panier |
+| `/bestellung` | Commande |
+| `/anmelden` | Compte client |
+| `/favoriten` | Favoris |
+| `/kontakt` | Contact |
+| `/ueber-uns` | À propos |
+| `/lieferung` | Livraison sur palette |
+| `/zahlung` | Paiement |
+| `/retouren` | Retours |
 | `/faq` | FAQ |
-| `/mentions-legales` | Mentions légales |
-| `/politique-de-confidentialite` | Confidentialité |
-| `/conditions-generales-de-vente` | CGV |
+| `/impressum` | Mentions légales |
+| `/datenschutz` | Confidentialité |
+| `/agb` | CGV |
 
 ## Connexion WordPress et commandes
 

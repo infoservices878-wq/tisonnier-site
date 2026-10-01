@@ -64,14 +64,14 @@ export default function ResetPassword() {
               <span className="section-kicker">PASSWORT GEÄNDERT</span>
               <h2>Sie können sich jetzt wieder anmelden.</h2>
               <p>Ihr neues Passwort ist für Ihr Kundenkonto aktiv.</p>
-              <Link to="/connexion" className="btn btn-primary btn-block">Anmelden <ArrowRight size={16} /></Link>
+              <Link to="/anmelden" className="btn btn-primary btn-block">Anmelden <ArrowRight size={16} /></Link>
             </div>
           ) : !hasResetLink ? (
             <div className="form-heading">
               <span className="section-kicker">UNGÜLTIGER LINK</span>
               <h2>Dieser Link kann nicht verwendet werden.</h2>
               <p>Fordern Sie auf der Anmeldeseite einen neuen Link zum Zurücksetzen an.</p>
-              <Link to="/connexion" className="btn btn-primary btn-block">Zur Anmeldung <ArrowRight size={16} /></Link>
+              <Link to="/anmelden" className="btn btn-primary btn-block">Zur Anmeldung <ArrowRight size={16} /></Link>
             </div>
           ) : (
             <>

@@ -24,7 +24,7 @@ export default function CookieConsent() {
     <div className="cookie-banner" role="dialog" aria-label="Cookie-Einwilligung">
       <p>
         Wir verwenden Cookies für den Betrieb dieser Website und – mit Ihrer Einwilligung – zur Reichweitenmessung.
-        Nicht erforderliche Cookies können Sie akzeptieren oder ablehnen. <Link to="/politique-de-confidentialite">Mehr erfahren</Link>
+        Nicht erforderliche Cookies können Sie akzeptieren oder ablehnen. <Link to="/datenschutz">Mehr erfahren</Link>
       </p>
       <div className="cookie-actions">
         <button type="button" className="btn btn-ghost-light" onClick={() => save("rejected")}>

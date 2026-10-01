@@ -13,7 +13,7 @@ export default function ProductCard({ product }) {
   return (
     <div className="product-card">
       <div className="product-card-visual">
-        <Link to={`/produit/${product.id}`} className="product-card-image-link" aria-label={`${product.name} ansehen`}>
+        <Link to={`/produkt/${product.id}`} className="product-card-image-link" aria-label={`${product.name} ansehen`}>
           {(product.image || cat?.image) && (
             <img src={product.image || cat.image} alt={product.name} loading="lazy" />
           )}
@@ -36,7 +36,7 @@ export default function ProductCard({ product }) {
       </div>
       <div className="product-card-body">
         <span className="product-tag">{cat?.name}</span>
-        <Link to={`/produit/${product.id}`} className="product-name">
+        <Link to={`/produkt/${product.id}`} className="product-name">
           {product.name}
         </Link>
         <span className="product-packaging">{product.packaging}</span>

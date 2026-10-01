@@ -27,7 +27,7 @@ export const FAQ_ITEMS = [
   {
     q: "Wann kommt der Kaufvertrag zustande?",
     a: "Wenn Sie auf „Zahlungspflichtig bestellen“ klicken und Ihre Bestellung erfolgreich bei uns eingeht, kommt der Kaufvertrag zustande. Wir bestätigen den Vertragsschluss per E-Mail.",
-    link: { to: "/conditions-generales-de-vente", label: "Zu den Allgemeinen Geschäftsbedingungen" },
+    link: { to: "/agb", label: "Zu den Allgemeinen Geschäftsbedingungen" },
   },
   {
     q: "Was passiert, wenn die Überweisung nicht innerhalb von 7 Tagen eingeht?",

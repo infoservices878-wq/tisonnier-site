@@ -30,7 +30,7 @@ define( 'OSSAU_COMPANY_PHONE', '+41 265190382' );
 
 Ne renseignez `OSSAU_COMPANY_VAT_ID` que si ce numero est exact et applicable a votre regime fiscal.
 
-`OSSAU_FRONTEND_URL` doit correspondre a l URL publique du site React. Les e-mails de mot de passe oublie contiennent un lien vers `/reinitialisation` sur ce domaine, jamais vers l interface WordPress. Cette page transmet ensuite la demande a l API WordPress pour modifier le mot de passe du compte.
+`OSSAU_FRONTEND_URL` doit correspondre a l URL publique du site React. Les e-mails de mot de passe oublie contiennent un lien vers `/passwort-zuruecksetzen` sur ce domaine, jamais vers l interface WordPress. Cette page transmet ensuite la demande a l API WordPress pour modifier le mot de passe du compte.
 
 Les trois valeurs ci-dessus sont des exemples volontairement invalides. Le plugin utilise par défaut les coordonnées de règlement renseignées dans `ossau_order_transfer_details()` et ignore les valeurs de démonstration; des constantes valides dans `wp-config.php` peuvent remplacer ces coordonnées. Remplacez la configuration par le compte à utiliser avant la mise en production. N'utilisez jamais un IBAN inventé.
 
@@ -42,7 +42,7 @@ Les coordonnées bancaires de l'e-mail de confirmation sont lues dans `OSSAU_BAN
 
 La version 1.7.0 corrige la limitation des tentatives d authentification : les requetes autorisees ne sont plus comptees, seuls les echecs de connexion ou de creation de compte declenchent la protection temporaire.
 
-La version 1.9.0 active la verification d adresse e-mail. Apres une inscription, aucun compte WordPress et aucun jeton de connexion ne sont crees avant confirmation. Les donnees d attente sont conservees temporairement et le mot de passe y est chiffre. Un lien valable 48 heures est envoye a l adresse saisie et pointe vers `/verification-email` sur le site. Le compte WordPress est cree uniquement apres validation du lien. Les comptes existants restent utilisables.
+La version 1.9.0 active la verification d adresse e-mail. Apres une inscription, aucun compte WordPress et aucun jeton de connexion ne sont crees avant confirmation. Les donnees d attente sont conservees temporairement et le mot de passe y est chiffre. Un lien valable 48 heures est envoye a l adresse saisie et pointe vers `/e-mail-bestaetigung` sur le site. Le compte WordPress est cree uniquement apres validation du lien. Les comptes existants restent utilisables.
 
 La version 1.10.0 met l'envoi des e-mails de commande en file d'attente pour que la page de confirmation n'attende pas le serveur SMTP. Vérifiez WooCommerce > État > Actions planifiées pour le statut des envois. Les échecs d'envoi sont également consignés dans le journal PHP de WordPress.
 
