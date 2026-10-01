@@ -145,11 +145,15 @@ export default function Order() {
     const confirmationLines = submitted.orderItems?.length
       ? submitted.orderItems.map((item) => ({ product: { name: item.name }, qty: item.quantity, lineTotal: item.total }))
       : submitted.orderLines || lines || [];
-    const confirmationSubtotal = submitted.orderSubtotal ?? subtotal;
+    const calculatedSubtotal = confirmationLines.reduce((sum, line) => {
+      const lineTotal = line.lineTotal ?? line.product?.price * line.qty ?? 0;
+      return sum + Number(lineTotal || 0);
+    }, 0);
+    const confirmationSubtotal = submitted.orderSubtotal ?? (calculatedSubtotal || subtotal);
     const confirmationShipping = submitted.orderShipping ?? shipping;
     const confirmationTax = submitted.orderTax ?? 0;
     const confirmationTaxLines = submitted.orderTaxLines || [];
-    const confirmationTotal = submitted.orderTotal ?? total;
+    const confirmationTotal = submitted.orderTotal ?? (confirmationSubtotal + confirmationShipping);
 
     return (
       <section className="section order-page order-confirmation-page">
@@ -171,18 +175,15 @@ export default function Order() {
                 Bitte überweisen Sie den Gesamtbetrag von <strong>{formatPrice(confirmationTotal)}</strong> auf das unten angegebene Konto. Bitte nennen Sie dabei die Bestellnummer, damit wir Ihre Zahlung sauber zuordnen können.
               </p>
 
-              <div className="bank-detail-row">
-                <span className="bank-label">Kontoinhaber</span>
-                <span className="bank-value">{bankDetails.holder || ""}</span>
-              </div>
-              <div className="bank-detail-row bank-detail-highlight">
-                <span className="bank-label">IBAN</span>
-                <span className="bank-value">{bankDetails.iban || ""}</span>
-              </div>
-              <div className="bank-detail-row">
-                <span className="bank-label">BIC</span>
-                <span className="bank-value">{bankDetails.bic || ""}</span>
-              </div>
+              {bankDetails.iban ? (
+                <>
+                  {bankDetails.holder && <div className="bank-detail-row"><span className="bank-label">Kontoinhaber</span><span className="bank-value">{bankDetails.holder}</span></div>}
+                  <div className="bank-detail-row bank-detail-highlight"><span className="bank-label">IBAN</span><span className="bank-value">{bankDetails.iban}</span></div>
+                  {bankDetails.bic && <div className="bank-detail-row"><span className="bank-label">BIC</span><span className="bank-value">{bankDetails.bic}</span></div>}
+                </>
+              ) : (
+                <p className="confirmation-bank-missing">Die Bankverbindung und Ihre Zahlungsreferenz stehen in der Vertragsbestätigung per E-Mail. Bei Fragen kontaktieren Sie uns unter {COMPANY.email}.</p>
+              )}
               <div className="bank-detail-row">
                 <span className="bank-label">Zahlungsziel</span>
                 <span className="bank-value">7 Kalendertage nach Erhalt der Bestellbestätigung</span>
@@ -196,12 +197,12 @@ export default function Order() {
               </div>
               <ol className="confirmation-steps">
                 <li>Wir bestätigen den Eingang Ihrer Zahlung.</li>
-                <li>Ihre Bestellung wird innerhalb von 1 bis 2 Werktagen vorbereitet.</li>
-                <li>Der Spediteur vereinbart mit Ihnen die Lieferzeit und den Zustelltermin.</li>
+                <li>Nach Zahlungseingang bereiten wir Ihre Bestellung vor.</li>
+                <li>Die Spedition stimmt die Lieferzeit und den Zustelltermin mit Ihnen ab.</li>
               </ol>
               <div className="confirmation-delivery-window">
                 <Truck size={16} />
-                <span>CH, LI, DE, AT, LU · 3 bis 15 Werktage</span>
+                <span>Lieferung auf Palette · Richtwert: 6 bis 8 Werktage</span>
               </div>
             </div>
 
@@ -257,17 +258,22 @@ export default function Order() {
                   <div className="confirmation-summary-vat">Enthaltene MwSt. {formatPrice(confirmationTax)}</div>
                 )}
 
-              {submitted.invoiceUrl && (
-                <a href={submitted.invoiceUrl} className="confirmation-action-button confirmation-action-success">
+              {submitted.invoiceUrl ? (
+                <a href={submitted.invoiceUrl} className="confirmation-action-button confirmation-action-success" download>
                   <Download size={16} /> Rechnung herunterladen (PDF)
                 </a>
+              ) : (
+                <span className="confirmation-action-button confirmation-action-disabled" aria-disabled="true">
+                  <Download size={16} /> Rechnung wird per E-Mail bereitgestellt
+                </span>
               )}
               <button type="button" className="confirmation-action-button confirmation-action-secondary" onClick={() => window.print()}>
                 <Printer size={16} /> Drucken
               </button>
+              <Link to="/catalogue" className="confirmation-action-button confirmation-action-secondary">
+                Zurück zum Shop
+              </Link>
             </div>
-
-            <Link to="/catalogue" className="confirmation-back-link">Zurück zum Shop</Link>
           </aside>
         </div>
       </section>
