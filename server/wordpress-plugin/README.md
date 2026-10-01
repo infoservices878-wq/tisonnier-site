@@ -13,6 +13,23 @@ define( 'OSSAU_BANK_IBAN', 'DE00 0000 0000 0000 0000 00' );
 define( 'OSSAU_BANK_BIC', 'PLATZHALTER' );
 ```
 
+La facture PDF reprend les donnees enregistrees dans WooCommerce : client, adresses, articles, quantites, prix, livraison, taxes, total, reference et echeance. Son identite legale peut etre ajustee sans modifier le plugin :
+
+```php
+define( 'OSSAU_COMPANY_NAME', 'AM Holzbrennstoffe UG (haftungsbeschraenkt)' );
+define( 'OSSAU_COMPANY_ADDRESS', 'Duennenriede 3' );
+define( 'OSSAU_COMPANY_CITY', '30853 Langenhagen' );
+define( 'OSSAU_COMPANY_COUNTRY', 'Deutschland' );
+define( 'OSSAU_COMPANY_MANAGER', 'Andreas Mueller' );
+define( 'OSSAU_COMPANY_REGISTER_COURT', 'Amtsgericht Hannover' );
+define( 'OSSAU_COMPANY_REGISTER_NUMBER', 'HRB 223515' );
+define( 'OSSAU_COMPANY_VAT_ID', 'votre-numero-de-tva-si-applicable' );
+define( 'OSSAU_COMPANY_EMAIL', 'info@amholzbrennstoffeug.de' );
+define( 'OSSAU_COMPANY_PHONE', '+41 265190382' );
+```
+
+Ne renseignez `OSSAU_COMPANY_VAT_ID` que si ce numero est exact et applicable a votre regime fiscal.
+
 `OSSAU_FRONTEND_URL` doit correspondre a l URL publique du site React. Les e-mails de mot de passe oublie contiennent un lien vers `/reinitialisation` sur ce domaine, jamais vers l interface WordPress. Cette page transmet ensuite la demande a l API WordPress pour modifier le mot de passe du compte.
 
 Les trois valeurs ci-dessus sont des exemples volontairement invalides. Le plugin utilise par défaut les coordonnées de règlement renseignées dans `ossau_order_transfer_details()` et ignore les valeurs de démonstration; des constantes valides dans `wp-config.php` peuvent remplacer ces coordonnées. Remplacez la configuration par le compte à utiliser avant la mise en production. N'utilisez jamais un IBAN inventé.

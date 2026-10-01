@@ -11,7 +11,12 @@ add_action( 'rest_api_init', function () {
 } );
 
 function ossau_invoice_company_details() {
-	return array(
+	$setting = static function ( $constant, $default = '' ) {
+		$value = defined( $constant ) ? trim( (string) constant( $constant ) ) : '';
+		return '' !== $value ? $value : $default;
+	};
+
+	$details = array(
 		'name'          => 'AM Holzbrennstoffe UG (haftungsbeschränkt)',
 		'address'       => 'Dünnenriede 3',
 		'city'          => '30853 Langenhagen',
@@ -21,7 +26,21 @@ function ossau_invoice_company_details() {
 		'register_number' => 'HRB 223515',
 		'email'         => 'info@amholzbrennstoffeug.de',
 		'phone'         => '+41 265190382',
+		'vat_id'        => '',
 	);
+
+	$details['name'] = $setting( 'OSSAU_COMPANY_NAME', $details['name'] );
+	$details['address'] = $setting( 'OSSAU_COMPANY_ADDRESS', $details['address'] );
+	$details['city'] = $setting( 'OSSAU_COMPANY_CITY', $details['city'] );
+	$details['country'] = $setting( 'OSSAU_COMPANY_COUNTRY', $details['country'] );
+	$details['manager'] = $setting( 'OSSAU_COMPANY_MANAGER', $details['manager'] );
+	$details['register_court'] = $setting( 'OSSAU_COMPANY_REGISTER_COURT', $details['register_court'] );
+	$details['register_number'] = $setting( 'OSSAU_COMPANY_REGISTER_NUMBER', $details['register_number'] );
+	$details['vat_id'] = $setting( 'OSSAU_COMPANY_VAT_ID' );
+	$details['email'] = $setting( 'OSSAU_COMPANY_EMAIL', $details['email'] );
+	$details['phone'] = $setting( 'OSSAU_COMPANY_PHONE', $details['phone'] );
+
+	return $details;
 }
 
 function ossau_invoice_bank_details() {
@@ -98,10 +117,11 @@ function ossau_invoice_pdf_wrap( $value, $max_chars ) {
 	return explode( "\n", wordwrap( $value, $max_chars, "\n", true ) );
 }
 
-function ossau_invoice_pdf_page_header( &$stream, $reference, $continuation = false ) {
-	ossau_invoice_pdf_text( $stream, 'AM HOLZBRENNSTOFFE UG', 40, 30, 16, true, '2e3b26' );
-	ossau_invoice_pdf_text( $stream, 'Dünnenriede 3 · 30853 Langenhagen · Deutschland', 40, 52, 8.5, false, '6f6a60' );
-	ossau_invoice_pdf_text( $stream, $continuation ? 'FACTURE · SUITE' : 'FACTURE', 390, 28, 17, true, '24241f' );
+function ossau_invoice_pdf_page_header( &$stream, $company, $reference, $continuation = false ) {
+	$company_address = implode( ' · ', array_filter( array( $company['address'], $company['city'], $company['country'] ) ) );
+	ossau_invoice_pdf_text( $stream, $company['name'], 40, 30, 16, true, '2e3b26' );
+	ossau_invoice_pdf_text( $stream, $company_address, 40, 52, 8.5, false, '6f6a60' );
+	ossau_invoice_pdf_text( $stream, $continuation ? 'RECHNUNG · FORTSETZUNG' : 'RECHNUNG', 390, 28, 17, true, '24241f' );
 	ossau_invoice_pdf_text_right( $stream, $reference, 555, 52, 11, true, '6f6a60' );
 	ossau_invoice_pdf_line( $stream, 40, 76, 555, 76, '2e3b26', 1.4 );
 }
@@ -148,9 +168,9 @@ function ossau_invoice_pdf_document( WC_Order $order, $reference ) {
 	$stream = '';
 	$y = 0;
 
-	ossau_invoice_pdf_page_header( $stream, $reference );
-	ossau_invoice_pdf_text( $stream, 'FACTURÉ À', 40, 101, 8, true, '8b857b' );
-	ossau_invoice_pdf_text( $stream, 'LIVRÉ À', 310, 101, 8, true, '8b857b' );
+	ossau_invoice_pdf_page_header( $stream, $company, $reference );
+	ossau_invoice_pdf_text( $stream, 'RECHNUNGSADRESSE', 40, 101, 8, true, '8b857b' );
+	ossau_invoice_pdf_text( $stream, 'LIEFERADRESSE', 310, 101, 8, true, '8b857b' );
 	$billing = ossau_invoice_pdf_address_lines( $order, 'billing' );
 	$shipping = ossau_invoice_pdf_address_lines( $order, 'shipping' );
 	foreach ( $billing as $index => $line ) {
@@ -162,9 +182,9 @@ function ossau_invoice_pdf_document( WC_Order $order, $reference ) {
 
 	ossau_invoice_pdf_rect( $stream, 40, 207, 515, 48, 'f6f0e2' );
 	$metadata = array(
-		array( 'N° DE FACTURE', $reference, 55 ),
-		array( 'DATE', $invoice_date, 225 ),
-		array( 'À PAYER AVANT LE', $due_date, 395 ),
+		array( 'RECHNUNGSNUMMER', $reference, 55 ),
+		array( 'RECHNUNGSDATUM', $invoice_date, 225 ),
+		array( 'FÄLLIG AM', $due_date, 395 ),
 	);
 	foreach ( $metadata as $field ) {
 		ossau_invoice_pdf_text( $stream, $field[0], $field[2], 218, 7.5, true, '8b857b' );
@@ -172,10 +192,10 @@ function ossau_invoice_pdf_document( WC_Order $order, $reference ) {
 	}
 
 	$draw_table_header = static function ( &$page_stream, $top ) {
-		ossau_invoice_pdf_text( $page_stream, 'DÉSIGNATION', 40, $top, 8, true, '8b857b' );
-		ossau_invoice_pdf_text_right( $page_stream, 'QTÉ', 384, $top, 8, true, '8b857b' );
-		ossau_invoice_pdf_text_right( $page_stream, 'PRIX UNITAIRE', 470, $top, 8, true, '8b857b' );
-		ossau_invoice_pdf_text_right( $page_stream, 'TOTAL', 555, $top, 8, true, '8b857b' );
+		ossau_invoice_pdf_text( $page_stream, 'BEZEICHNUNG', 40, $top, 8, true, '8b857b' );
+		ossau_invoice_pdf_text_right( $page_stream, 'MENGE', 384, $top, 8, true, '8b857b' );
+		ossau_invoice_pdf_text_right( $page_stream, 'EINZELPREIS', 470, $top, 8, true, '8b857b' );
+		ossau_invoice_pdf_text_right( $page_stream, 'GESAMT', 555, $top, 8, true, '8b857b' );
 		ossau_invoice_pdf_line( $page_stream, 40, $top + 15, 555, $top + 15, 'd8d2c7' );
 	};
 	$draw_table_header( $stream, 276 );
@@ -193,7 +213,7 @@ function ossau_invoice_pdf_document( WC_Order $order, $reference ) {
 		if ( $y + $row_height > 660 ) {
 			$pages[] = $stream;
 			$stream = '';
-			ossau_invoice_pdf_page_header( $stream, $reference, true );
+			ossau_invoice_pdf_page_header( $stream, $company, $reference, true );
 			$draw_table_header( $stream, 99 );
 			$y = 124;
 		}
@@ -202,7 +222,7 @@ function ossau_invoice_pdf_document( WC_Order $order, $reference ) {
 			ossau_invoice_pdf_text( $stream, $line, 40, $y + ( $line_index * 13 ), 9.5, 0 === $line_index, '24241f' );
 		}
 		if ( $sku ) {
-			ossau_invoice_pdf_text( $stream, 'Référence ' . $sku, 40, $y + ( count( $description ) * 13 ), 8, false, '8b857b' );
+			ossau_invoice_pdf_text( $stream, 'Artikel-Nr. ' . $sku, 40, $y + ( count( $description ) * 13 ), 8, false, '8b857b' );
 		}
 		ossau_invoice_pdf_text_right( $stream, (string) $quantity, 384, $y, 9.5 );
 		ossau_invoice_pdf_text_right( $stream, ossau_invoice_money( $unit_total, $currency ), 470, $y, 9.5 );
@@ -222,7 +242,7 @@ function ossau_invoice_pdf_document( WC_Order $order, $reference ) {
 	if ( $y + $summary_height + 245 > 785 ) {
 		$pages[] = $stream;
 		$stream = '';
-		ossau_invoice_pdf_page_header( $stream, $reference, true );
+		ossau_invoice_pdf_page_header( $stream, $company, $reference, true );
 		$y = 105;
 	}
 
@@ -231,19 +251,19 @@ function ossau_invoice_pdf_document( WC_Order $order, $reference ) {
 		ossau_invoice_pdf_text( $page_stream, $label, 340, $top, $bold ? 10 : 9.5, $bold, '24241f' );
 		ossau_invoice_pdf_text_right( $page_stream, ossau_invoice_money( $amount, $currency ), 555, $top, $bold ? 10 : 9.5, $bold, '24241f' );
 	};
-	$summary_row( $stream, 'Sous-total', $gross_subtotal, $summary_y );
+	$summary_row( $stream, 'Zwischensumme', $gross_subtotal, $summary_y );
 	$summary_y += 19;
 	if ( $gross_discount > 0 ) {
-		$summary_row( $stream, 'Rabais', -$gross_discount, $summary_y );
+		$summary_row( $stream, 'Rabatt', -$gross_discount, $summary_y );
 		$summary_y += 19;
 	}
-	$summary_row( $stream, 'Livraison', $gross_shipping, $summary_y );
+	$summary_row( $stream, 'Versand', $gross_shipping, $summary_y );
 	$summary_y += 19;
 	foreach ( $order->get_items( 'fee' ) as $fee ) {
 		$summary_row( $stream, $fee->get_name(), (float) $fee->get_total() + (float) $fee->get_total_tax(), $summary_y );
 		$summary_y += 19;
 	}
-	$summary_row( $stream, 'Montant net', $gross_total - $tax_total, $summary_y );
+	$summary_row( $stream, 'Nettobetrag', $gross_total - $tax_total, $summary_y );
 	$summary_y += 19;
 	if ( $taxes ) {
 		foreach ( $taxes as $tax ) {
@@ -251,37 +271,37 @@ function ossau_invoice_pdf_document( WC_Order $order, $reference ) {
 			$summary_y += 18;
 		}
 	} elseif ( $tax_total > 0 ) {
-		$summary_row( $stream, 'TVA incluse', $tax_total, $summary_y );
+		$summary_row( $stream, 'Enthaltene Umsatzsteuer', $tax_total, $summary_y );
 		$summary_y += 18;
 	}
 	ossau_invoice_pdf_rect( $stream, 340, $summary_y + 3, 215, 38, 'edf5dc' );
-	ossau_invoice_pdf_text( $stream, 'TOTAL À PAYER', 352, $summary_y + 15, 10, true, '24241f' );
+	ossau_invoice_pdf_text( $stream, 'GESAMTBETRAG', 352, $summary_y + 15, 10, true, '24241f' );
 	ossau_invoice_pdf_text_right( $stream, ossau_invoice_money( $gross_total, $currency ), 545, $summary_y + 13, 13, true, '24241f' );
 	$payment_y = $summary_y + 58;
 
 	if ( $payment_y + 175 > 785 ) {
 		$pages[] = $stream;
 		$stream = '';
-		ossau_invoice_pdf_page_header( $stream, $reference, true );
+		ossau_invoice_pdf_page_header( $stream, $company, $reference, true );
 		$payment_y = 100;
 	}
 
 	ossau_invoice_pdf_rect( $stream, 40, $payment_y, 515, 151, 'f8f6f1' );
 	ossau_invoice_pdf_rect( $stream, 40, $payment_y, 5, 151, '2e3b26' );
-	ossau_invoice_pdf_text( $stream, 'Paiement par virement bancaire', 58, $payment_y + 16, 13, true, '24241f' );
-	ossau_invoice_pdf_text( $stream, 'Merci de virer le montant total dans les 7 jours calendaires et', 58, $payment_y + 38, 8.5, false, '6f6a60' );
-	ossau_invoice_pdf_text( $stream, 'd’indiquer la référence de la facture comme motif du paiement.', 58, $payment_y + 51, 8.5, false, '6f6a60' );
+	ossau_invoice_pdf_text( $stream, 'Zahlung per Banküberweisung', 58, $payment_y + 16, 13, true, '24241f' );
+	ossau_invoice_pdf_text( $stream, 'Bitte überweisen Sie den Gesamtbetrag innerhalb von 7 Kalendertagen und', 58, $payment_y + 38, 8.5, false, '6f6a60' );
+	ossau_invoice_pdf_text( $stream, 'geben Sie die Rechnungsnummer als Verwendungszweck an.', 58, $payment_y + 51, 8.5, false, '6f6a60' );
 	ossau_invoice_pdf_text( $stream, 'IBAN', 58, $payment_y + 72, 7, true, '8b857b' );
 	ossau_invoice_pdf_text( $stream, $bank['iban'] . ' · BIC ' . $bank['bic'], 58, $payment_y + 85, 9, true, '24241f' );
-	ossau_invoice_pdf_text( $stream, 'BÉNÉFICIAIRE', 58, $payment_y + 105, 7, true, '8b857b' );
+	ossau_invoice_pdf_text( $stream, 'ZAHLUNGSEMPFÄNGER', 58, $payment_y + 105, 7, true, '8b857b' );
 	ossau_invoice_pdf_text( $stream, $bank['holder'], 58, $payment_y + 118, 9, true, '24241f' );
-	ossau_invoice_pdf_text( $stream, 'RÉFÉRENCE À INDIQUER', 340, $payment_y + 72, 7, true, '8b857b' );
+	ossau_invoice_pdf_text( $stream, 'VERWENDUNGSZWECK', 340, $payment_y + 72, 7, true, '8b857b' );
 	ossau_invoice_pdf_text( $stream, $reference, 340, $payment_y + 85, 9, true, '24241f' );
-	ossau_invoice_pdf_text( $stream, 'MONTANT', 340, $payment_y + 105, 7, true, '8b857b' );
+	ossau_invoice_pdf_text( $stream, 'ZU ZAHLEN', 340, $payment_y + 105, 7, true, '8b857b' );
 	ossau_invoice_pdf_text( $stream, ossau_invoice_money( $gross_total, $currency ), 340, $payment_y + 118, 9, true, '24241f' );
 
 	$delivery_y = $payment_y + 166;
-	ossau_invoice_pdf_text( $stream, 'Traitement : 1 à 2 jours ouvrables après réception du paiement, puis livraison en 3 à 5 jours ouvrables.', 40, $delivery_y, 8, false, '6f6a60' );
+	ossau_invoice_pdf_text( $stream, 'Bearbeitung: 1 bis 2 Werktage nach Zahlungseingang, anschliessend Lieferung in 3 bis 5 Werktagen.', 40, $delivery_y, 8, false, '6f6a60' );
 	$delivery_day = sanitize_text_field( $order->get_meta( '_ossau_delivery_day' ) );
 	$delivery_window = sanitize_key( $order->get_meta( '_ossau_delivery_window' ) );
 	$window_labels = array(
@@ -292,10 +312,10 @@ function ossau_invoice_pdf_document( WC_Order $order, $reference ) {
 	);
 	$delivery_preference = array();
 	if ( $delivery_day ) {
-		$delivery_preference[] = 'Livraison souhaitée : ' . $delivery_day;
+		$delivery_preference[] = 'Wunschtag: ' . $delivery_day;
 	}
 	if ( isset( $window_labels[ $delivery_window ] ) ) {
-		$delivery_preference[] = 'Créneau souhaité : ' . $window_labels[ $delivery_window ];
+		$delivery_preference[] = 'Zeitfenster: ' . $window_labels[ $delivery_window ];
 	}
 	if ( $delivery_preference ) {
 		ossau_invoice_pdf_text( $stream, implode( ' · ', $delivery_preference ), 40, $delivery_y + 15, 8, false, '6f6a60' );
@@ -307,14 +327,25 @@ function ossau_invoice_pdf_document( WC_Order $order, $reference ) {
 		ossau_invoice_pdf_line( $page_stream, 40, 795, 555, 795, 'e6e1d8', 0.5 );
 		$footer_left = sprintf( '%s · %s · %s · %s', $company['name'], $company['address'], $company['city'], $company['country'] );
 		$footer_right = sprintf( '%s · %s · %s · %s', $company['register_court'], $company['register_number'], $company['phone'], $company['email'] );
+		$footer_right = implode( ' · ', array_filter( array(
+			$company['register_court'],
+			$company['register_number'],
+			$company['vat_id'] ? 'USt-IdNr. ' . $company['vat_id'] : '',
+			$company['phone'],
+			$company['email'],
+		) ) );
 		ossau_invoice_pdf_text( $page_stream, $footer_left, 40, 803, 6.6, false, '8b857b' );
 		ossau_invoice_pdf_text( $page_stream, $footer_right, 40, 814, 6.6, false, '8b857b' );
 		ossau_invoice_pdf_text_right( $page_stream, sprintf( '%d / %d', $page_index + 1, $page_count ), 555, 814, 7, false, '8b857b' );
 	}
 	unset( $page_stream );
 
-	$objects = array();
-	$objects[] = '<< /Type /Catalog /Pages 2 0 R >>';
+	// Object numbers are one-based. Reserve object 2 for the Pages tree before
+	// appending page objects; otherwise the tree points to a content stream.
+	$objects = array(
+		'<< /Type /Catalog /Pages 2 0 R >>',
+		'',
+	);
 	$kids = array();
 	foreach ( $pages as $index => $page_stream ) {
 		$page_object = 3 + ( $index * 2 );
@@ -368,6 +399,12 @@ function ossau_invoice_private_directory() {
 	return $directory;
 }
 
+function ossau_invoice_template_version() {
+	// Bump this value when changing the PDF structure. The version becomes part
+	// of the private filename so existing orders receive a regenerated document.
+	return '2';
+}
+
 function ossau_invoice_file_path( WC_Order $order ) {
 	$reference = $order->get_meta( '_ossau_order_reference' );
 	$directory = ossau_invoice_private_directory();
@@ -375,7 +412,7 @@ function ossau_invoice_file_path( WC_Order $order ) {
 		return false;
 	}
 
-	$filename = hash_hmac( 'sha256', $order->get_id() . '|' . $reference, wp_salt( 'auth' ) ) . '.pdf';
+	$filename = hash_hmac( 'sha256', $order->get_id() . '|' . $reference . '|' . ossau_invoice_template_version(), wp_salt( 'auth' ) ) . '.pdf';
 	return trailingslashit( $directory ) . $filename;
 }
 
@@ -399,6 +436,7 @@ function ossau_generate_order_invoice( WC_Order $order, $reference ) {
 	}
 
 	$order->update_meta_data( '_ossau_invoice_created_at', gmdate( 'c' ) );
+	$order->update_meta_data( '_ossau_invoice_template_version', ossau_invoice_template_version() );
 	$order->save();
 	return $path;
 }
