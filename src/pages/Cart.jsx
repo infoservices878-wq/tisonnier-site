@@ -41,7 +41,7 @@ export default function Cart() {
             const category = CATEGORIES.find((item) => item.id === product.category);
             return (
             <article className="cart-line" key={product.id}>
-              <div className="cart-product-visual"><Link to={`/produkt/${product.slug}`} aria-label={`${product.name} ansehen`}><img src={product.image || category?.image} alt="" /></Link></div>
+              <div className="cart-product-visual"><Link to={`/produkt/${product.slug}`} aria-label={`${product.name} ansehen`}><img src={product.image || category?.image} alt="" decoding="async" /></Link></div>
               <div className="cart-product-info">
                 <span className="product-tag">{category?.name}</span>
                 <Link to={`/produkt/${product.slug}`} className="product-name">{product.name}</Link>

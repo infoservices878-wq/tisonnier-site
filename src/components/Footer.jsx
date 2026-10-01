@@ -14,7 +14,7 @@ export default function Footer() {
       <div className="footer-top">
         <div className="footer-top-inner">
           <div className="footer-brand">
-            <Logo textOnly />
+            <Logo src="/logo%20noir.png" />
             <p className="footer-desc">
               Brennholz, Pellets und feste Brennstoffe mit klaren
               Produktinformationen und Palettenlogistik für Privat- und

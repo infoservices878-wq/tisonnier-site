@@ -15,7 +15,7 @@ export default function ProductCard({ product }) {
       <div className="product-card-visual">
         <Link to={`/produkt/${product.slug}`} className="product-card-image-link" aria-label={`${product.name} ansehen`}>
           {(product.image || cat?.image) && (
-            <img src={product.image || cat.image} alt={product.name} loading="lazy" />
+            <img src={product.image || cat.image} alt={product.name} loading="lazy" decoding="async" />
           )}
           <span className="product-card-icon" aria-hidden>
             {cat?.icon ? <cat.icon size={36} strokeWidth={1.3} /> : null}

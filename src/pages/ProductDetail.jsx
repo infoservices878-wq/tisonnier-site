@@ -56,7 +56,7 @@ export default function ProductDetail() {
       <div className="product-detail-grid">
         <div className="product-gallery">
           <div className="product-detail-visual">
-            {(product.image || cat?.image) && <img src={product.image || cat.image} alt={product.name} />}
+            {(product.image || cat?.image) && <img src={product.image || cat.image} alt={product.name} decoding="async" />}
             <span className="product-gallery-label">{cat?.name}</span>
           </div>
           <div className="product-gallery-note"><Check size={16} /> Professionelle Palettenverpackung</div>
