@@ -1,4 +1,4 @@
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import { useParams, useSearchParams, Link, Navigate } from "react-router-dom";
 import { ArrowRight, SlidersHorizontal } from "lucide-react";
 import { CATEGORIES } from "../data/categories";
 import { filterProducts } from "../data/products";
@@ -9,8 +9,14 @@ export default function Catalogue() {
   const [params] = useSearchParams();
   const search = params.get("q") || "";
 
-  const filtered = filterProducts({ category: categoryId || null, search });
-  const activeCat = CATEGORIES.find((c) => c.id === categoryId);
+  const activeCat = CATEGORIES.find((c) => c.id === categoryId || c.slug === categoryId);
+  const filtered = filterProducts({ category: activeCat?.id || categoryId || null, search });
+
+  // Redirect legacy French/internal category paths to their German public URL.
+  if (activeCat && categoryId !== activeCat.slug) {
+    const query = params.toString();
+    return <Navigate replace to={`/katalog/${activeCat.slug}${query ? `?${query}` : ""}`} />;
+  }
 
   return (
     <section className="section">
@@ -39,7 +45,7 @@ export default function Catalogue() {
             {CATEGORIES.map((c) => (
               <Link
                 key={c.id}
-                to={`/katalog/${c.id}`}
+                to={`/katalog/${c.slug}`}
                 className="filter-chip"
               >
                 {c.name}

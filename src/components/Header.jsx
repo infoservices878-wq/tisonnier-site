@@ -208,7 +208,7 @@ export default function Header() {
         {CATEGORIES.map((c) => (
           <NavLink
             key={c.id}
-            to={`/katalog/${c.id}`}
+            to={`/katalog/${c.slug}`}
             className={({ isActive }) => "category-nav-link" + (isActive ? " active" : "")}
           >
             {c.name}
@@ -226,7 +226,7 @@ export default function Header() {
           <Link to="/" className="nav-drawer-link" onClick={close}>Startseite</Link>
           <Link to="/katalog" className="nav-drawer-link" onClick={close}>Katalog</Link>
           {CATEGORIES.map((c) => (
-            <Link key={c.id} to={`/katalog/${c.id}`} className="nav-drawer-link nav-drawer-sub" onClick={close}>
+            <Link key={c.id} to={`/katalog/${c.slug}`} className="nav-drawer-link nav-drawer-sub" onClick={close}>
               {c.name}
             </Link>
           ))}

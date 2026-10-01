@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { ArrowLeft, Check, Heart, Minus, Plus, ShieldCheck, ShoppingCart, Truck } from "lucide-react";
 import { getProductById } from "../data/products";
 import { CATEGORIES } from "../data/categories";
@@ -24,6 +24,12 @@ export default function ProductDetail() {
     );
   }
 
+  // Keep external links and search-engine entries that use the old internal
+  // (French) identifiers working, but always expose the German URL.
+  if (productId !== product.slug) {
+    return <Navigate to={`/produkt/${product.slug}`} replace />;
+  }
+
   const cat = CATEGORIES.find((c) => c.id === product.category);
   const highlights = [
     ["Marke", product.brand || "Holzbrennstoffe"],
@@ -42,7 +48,7 @@ export default function ProductDetail() {
       <nav className="product-breadcrumbs" aria-label="Brotkrümelnavigation">
         <Link to="/">Startseite</Link>
         <span className="product-breadcrumb-separator" aria-hidden="true">›</span>
-        <Link to={`/katalog/${product.category}`}>{cat?.name}</Link>
+        <Link to={`/katalog/${cat?.slug}`}>{cat?.name}</Link>
         <span className="product-breadcrumb-separator" aria-hidden="true">›</span>
         <strong aria-current="page">{product.name}</strong>
       </nav>

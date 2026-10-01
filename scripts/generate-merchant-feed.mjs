@@ -54,7 +54,7 @@ const rows = PRODUCTS.map((product) => {
     id: product.id,
     title: product.name,
     description: productDescription(product),
-    link: absoluteUrl(`/produit/${product.id}`),
+    link: absoluteUrl(`/produkt/${product.slug}`),
     image_link: absoluteUrl(product.image),
     availability: product.stock === "Auf Lager" ? "in_stock" : "out_of_stock",
     price: `${regularPrice.toFixed(2)} EUR`,

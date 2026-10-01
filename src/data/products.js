@@ -285,7 +285,7 @@ export const PRODUCTS = [
     name: "Heizfuxx Red ENplus A1 granulés de bois dur 6 mm · palette complète 975 kg",
     brand: "Heizfuxx",
     reference: "HEIZFUXX-RED-975",
-    image: "https://pelletwerk.com/assets/uploads/products/9/final-20260902-v2-primary.webp",
+    image: "/imgproducts/heizfuxx-red-enplus-a1-975kg.png",
     packaging: "Palette de 975 kg — 65 sacs de 15 kg",
     price: 369,
     promoPrice: null,
@@ -324,7 +324,7 @@ export const PRODUCTS = [
     name: "Heizfuxx Blue ENplus A1 granulés de bois 6 mm · palette complète 975 kg",
     brand: "Heizfuxx",
     reference: "HEIZFUXX-BLUE-975",
-    image: "https://pelletwerk.com/assets/uploads/products/10/final-20260902-v2-primary.webp",
+    image: "/imgproducts/heizfuxx-blue-enplus-a1-975kg.png",
     packaging: "Palette de 975 kg — 65 sacs de 15 kg",
     price: 349,
     promoPrice: null,
@@ -363,7 +363,7 @@ export const PRODUCTS = [
     name: "Granulés de résineux Heizfuxx Gold HD ENplus A1 6 mm · palette 975 kg (65 × 15 kg)",
     brand: "HEIZFUXX",
     reference: "HEIZFUXX-GOLD-HD-975",
-    image: "https://pelletwerk.com/assets/uploads/products/17/final-20260902-v2-primary.webp",
+    image: "/imgproducts/heizfuxx-gold-hd-enplus-a1-975kg.png",
     packaging: "Palette de 975 kg — 65 sacs de 15 kg",
     price: 379,
     promoPrice: null,
@@ -1477,6 +1477,25 @@ PRODUCTS.forEach((product) => {
   });
 });
 
+// `id` remains the stable internal key used by the cart and favorites. Some of
+// those keys predate the German storefront, so build the public URL from the
+// current German product name instead of exposing the legacy French key.
+function createProductSlug(name) {
+  return name
+    .replace(/\([^)]*\)/g, "")
+    .replace(/(\d)\.(\d{3})/g, "$1$2")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ß/g, "ss")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+PRODUCTS.forEach((product) => {
+  product.slug = createProductSlug(product.name);
+});
+
 function translateSpecLabel(label) {
   const labels = {
     "Essence": "Holzart", "Essences": "Holzarten", "Longueur": "Länge", "Longueur des bûches": "Scheitlänge", "Diamètre": "Durchmesser", "Dimensions": "Abmessungen", "Dimensions de la palette": "Palettenmaße", "Section": "Scheitstärke", "Sections classiques": "Standard-Scheitstärke", "Sections fines": "Dünne Scheitstärke",
@@ -1505,7 +1524,7 @@ export const FREE_SHIPPING_THRESHOLD = 229;
 export const SHIPPING_FEE = 24.9;
 
 export function getProductById(id) {
-  return PRODUCTS.find((p) => p.id === id) || null;
+  return PRODUCTS.find((p) => p.id === id || p.slug === id) || null;
 }
 
 export function filterProducts({ category = null, search = "" } = {}) {

@@ -38,7 +38,7 @@ export default function Footer() {
             <h3 className="footer-heading">KATALOG</h3>
             <Link className="footer-link" to="/katalog">Gesamter Katalog</Link>
             {CATEGORIES.map((c) => (
-              <Link key={c.id} className="footer-link" to={`/katalog/${c.id}`}>
+              <Link key={c.id} className="footer-link" to={`/katalog/${c.slug}`}>
                 {c.name}
               </Link>
             ))}
