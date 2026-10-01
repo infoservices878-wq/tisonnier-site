@@ -5,7 +5,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Wie lange dauert die Lieferung?",
-    a: "Rechnen Sie je nach Region und Verfügbarkeit mit durchschnittlich 6 bis 8 Werktagen zwischen Auftragsbestätigung und Lieferung. Einen voraussichtlichen Liefertermin erhalten Sie vorab per E-Mail.",
+    a: "Nach Zahlungseingang bereiten wir die Bestellung innerhalb von 1 bis 2 Werktagen vor. Die anschließende Lieferung dauert in der Regel 3 bis 5 Werktage. Einen voraussichtlichen Liefertermin erhalten Sie vorab per E-Mail.",
   },
   {
     q: "Wie wird meine Bestellung versendet?",

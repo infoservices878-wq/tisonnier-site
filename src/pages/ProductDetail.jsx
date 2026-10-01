@@ -117,7 +117,7 @@ export default function ProductDetail() {
               <article><h3>Produktaufbereitung</h3><p>{product.preparation || "Sorgfältig für den Transport vorbereitet und verpackt."}</p></article>
               <article><h3>Anwendung</h3><p>{product.usage || "Für Geräte geeignet, die mit dieser Brennstoffkategorie betrieben werden können."}</p></article>
               <article><h3>Lagerung</h3><p>{product.storage || "Trocken und vor Feuchtigkeit geschützt lagern."}</p></article>
-              <article className="product-reception-card"><h3>Warenannahme vorbereiten</h3><p>{product.delivery || "Bitte halten Sie eine für das Lieferfahrzeug zugängliche Fläche und eine Möglichkeit zum Bewegen der Palette bereit."}</p><div><span>Kostenlose Lieferung ab {formatPrice(FREE_SHIPPING_THRESHOLD)}</span><span>Richtwert: 7 Tage</span></div></article>
+              <article className="product-reception-card"><h3>Warenannahme vorbereiten</h3><p>{product.delivery || "Bitte halten Sie eine für das Lieferfahrzeug zugängliche Fläche und eine Möglichkeit zum Bewegen der Palette bereit."}</p><div><span>Kostenlose Lieferung ab {formatPrice(FREE_SHIPPING_THRESHOLD)}</span><span>Vorbereitung 1–2 Tage · Lieferung 3–5 Tage</span></div></article>
             </div>
           </div>
           <aside className="product-specs-panel">

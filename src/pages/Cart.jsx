@@ -63,7 +63,7 @@ export default function Cart() {
           <Link to="/commande" className="btn btn-primary btn-block cart-checkout-button">Bestellung anfragen <ArrowRight size={17} /></Link>
           <div className="cart-summary-note"><ShieldCheck size={17} /><span>Ihre Daten werden sicher verarbeitet.</span></div>
           <p className="summary-hint">Nach Ihrer Anfrage erhalten Sie eine Auftragsbestätigung mit den Lieferdetails.</p>
-          <div className="cart-summary-services"><span><Truck size={15} /> Lieferung in 6–8 Werktagen</span><span><Check size={15} /> Planbare Warenannahme</span></div>
+          <div className="cart-summary-services"><span><Truck size={15} /> Lieferung in 3–5 Werktagen nach Vorbereitung</span><span><Check size={15} /> Planbare Warenannahme</span></div>
         </aside>
       </div>
     </section>

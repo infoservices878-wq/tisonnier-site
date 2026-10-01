@@ -280,7 +280,7 @@ function ossau_invoice_pdf_document( WC_Order $order, $reference ) {
 	ossau_invoice_pdf_text( $stream, ossau_invoice_money( $gross_total, $currency ), 340, $payment_y + 118, 9, true, '24241f' );
 
 	$delivery_y = $payment_y + 166;
-	ossau_invoice_pdf_text( $stream, 'Bearbeitung: 1 bis 2 Werktage nach Zahlungseingang. Voraussichtliche Lieferung: 6 bis 8 Werktage.', 40, $delivery_y, 8, false, '6f6a60' );
+	ossau_invoice_pdf_text( $stream, 'Bearbeitung: 1 bis 2 Werktage nach Zahlungseingang. Voraussichtliche Lieferung: 3 bis 5 Werktage.', 40, $delivery_y, 8, false, '6f6a60' );
 	$delivery_day = sanitize_text_field( $order->get_meta( '_ossau_delivery_day' ) );
 	$delivery_window = sanitize_key( $order->get_meta( '_ossau_delivery_window' ) );
 	$window_labels = array(

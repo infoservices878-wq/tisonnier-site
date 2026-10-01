@@ -31,7 +31,7 @@ La version 1.10.0 met l'envoi des e-mails de commande en file d'attente pour que
 
 La version 1.8.1 corrige l encodage du lien de verification et journalise les echecs `wp_mail`. Si le client ne recoit pas le message alors que l inscription indique une reussite, configurez un plugin SMTP WordPress avec `info@amholzbrennstoffeug.de` comme adresse d expedition, puis testez l envoi vers une adresse externe. Verifiez aussi les dossiers spam et les enregistrements DNS SPF, DKIM et DMARC du domaine `amholzbrennstoffeug.de`.
 
-Le plugin crée des commandes WooCommerce avec les coordonnées de facturation et de livraison renseignées. La référence retournée est `OB-année-30000`, puis `OB-année-30001`, etc. Elle est stockée dans la méta `_ossau_order_reference`.
+Le plugin crée des commandes WooCommerce avec les coordonnées de facturation et de livraison renseignées. La référence retournée suit le format `AMHUG26-135`, puis `AMHUG26-136`, etc. Elle est stockée dans la méta `_ossau_order_reference`.
 
 À chaque création de commande, deux e-mails HTML sont envoyés automatiquement :
 

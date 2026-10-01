@@ -1148,8 +1148,8 @@ export const PRODUCTS = [
       reference: "BCG10698",
       image: "/imgproducts/innovconsult-pellini-enplus-a1.jpg",
       packaging: "Palette jetable de 66 sacs × 15 kg",
-      price: 251,
-      promoPrice: 309,
+      price: 309,
+      promoPrice: 251,
       stock: "En stock",
       description:
         "Granulés de bois allemands Pellini certifiés ENplus A1, en diamètre 6 mm, conditionnés en 66 sacs de 15 kg pour un poids total de 990 kg.",
@@ -1164,7 +1164,7 @@ export const PRODUCTS = [
       usage:
         "Utiliser dans un poêle ou une chaudière à granulés compatible avec des pellets de 6 mm.",
       storage: "Stocker impérativement dans un endroit sec et protéger les sacs de l’humidité.",
-      delivery: "Livraison gratuite dans toute la France selon les conditions du fournisseur.",
+      delivery: "Livraison gratuite dans tout l'Allemagne selon les conditions du fournisseur.",
       specs: [
         ["Certification", "ENplus A1"],
         ["Diamètre", "6 mm"],
@@ -1331,8 +1331,8 @@ export const PRODUCTS = [
       reference: "BCG10474",
       image: "/briquette/innovconsult-buches-nuit-480kg.webp",
       packaging: "Demi-palette de 480 kg",
-      price: 100,
-      promoPrice: 102,
+      price: 102,
+      promoPrice: 100,
       stock: "En stock",
       description:
         "Bûches densifiées longue durée en petit format, conçues pour être déposées sur un lit de braises en fin de feu. Elles offrent 6 à 8 heures de combustion et prennent peu de place au stockage.",

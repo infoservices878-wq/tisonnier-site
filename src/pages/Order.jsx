@@ -23,7 +23,7 @@ const initialForm = {
 const FORM_STORAGE_KEY = "ossau-bois-order-form";
 const SUBMITTED_STORAGE_KEY = "ossau-bois-order-submitted";
 const ORDER_REFERENCE_COUNTER_KEY = "ossau-bois-next-order-reference";
-const ORDER_REFERENCE_START = 30000;
+const ORDER_REFERENCE_START = 135;
 const WORDPRESS_API_URL = (import.meta.env.VITE_WORDPRESS_API_URL || "").replace(/\/+$/, "");
 const WORDPRESS_API_KEY = import.meta.env.VITE_WORDPRESS_API_KEY || "";
 const DELIVERY_DAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
@@ -108,11 +108,11 @@ function createOrderReference() {
     ? storedValue
     : ORDER_REFERENCE_START;
 
-  return `OB-${new Date().getFullYear()}-${number}`;
+  return `AMHUG${String(new Date().getFullYear()).slice(-2)}-${number}`;
 }
 
 function saveNextOrderReference(reference) {
-  const match = String(reference).match(/^OB-\d{4}-(\d+)$/);
+  const match = String(reference).match(/^AMHUG\d{2}-(\d+)$/);
   const number = match ? Number.parseInt(match[1], 10) : ORDER_REFERENCE_START;
 
   localStorage.setItem(ORDER_REFERENCE_COUNTER_KEY, String(number + 1));
@@ -197,12 +197,12 @@ export default function Order() {
               </div>
               <ol className="confirmation-steps">
                 <li>Wir bestätigen den Eingang Ihrer Zahlung.</li>
-                <li>Nach Zahlungseingang bereiten wir Ihre Bestellung vor.</li>
+                <li>Wir bereiten Ihre Bestellung innerhalb von 1 bis 2 Werktagen nach Zahlungseingang vor.</li>
                 <li>Die Spedition stimmt die Lieferzeit und den Zustelltermin mit Ihnen ab.</li>
               </ol>
               <div className="confirmation-delivery-window">
                 <Truck size={16} />
-                <span>Lieferung auf Palette · Richtwert: 6 bis 8 Werktage</span>
+                <span>Lieferung auf Palette · Richtwert: 3 bis 5 Werktage</span>
               </div>
             </div>
 
@@ -372,7 +372,7 @@ export default function Order() {
           <section className="order-form-section">
             <div className="order-section-heading"><span>02</span><div><h2>Lieferadresse</h2><p>Ihre Bestellung wird auf Palette an die angegebene Adresse versendet. Die Lieferdetails erhalten Sie vorab.</p></div></div>
             <div className="order-delivery-options">
-              <div className="order-delivery-option active"><Truck size={21} /><span><strong>Palettenlieferung · {shipping === 0 ? "kostenlos" : formatPrice(shipping)}</strong><small>An die angegebene Adresse · Richtwert 6 bis 8 Werktage</small></span></div>
+              <div className="order-delivery-option active"><Truck size={21} /><span><strong>Palettenlieferung · {shipping === 0 ? "kostenlos" : formatPrice(shipping)}</strong><small>Vorbereitung 1 bis 2 Werktage nach Zahlung · Lieferung anschließend in 3 bis 5 Werktagen</small></span></div>
             </div>
             <div className="order-form-grid order-address-grid"><label className="field order-field-full"><span>Adresse *</span><input required value={form.address} onChange={(event) => update("address", event.target.value)} autoComplete="street-address" placeholder="Hausnummer und Straße" /></label><label className="field"><span>Postleitzahl *</span><input required value={form.postalCode} onChange={(event) => update("postalCode", event.target.value)} autoComplete="postal-code" /></label><label className="field"><span>Ort *</span><input required value={form.city} onChange={(event) => update("city", event.target.value)} autoComplete="address-level2" /></label></div>
             <label className="field order-note-field"><span>Zusätzliche Hinweise <small>optional</small></span><textarea rows="3" value={form.note} onChange={(event) => update("note", event.target.value)} placeholder="Zufahrt, Anwesenheit vor Ort, Hinweise für die Spedition ..." /></label>
