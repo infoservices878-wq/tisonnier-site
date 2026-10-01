@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check, Minus, Plus, ShieldCheck, ShoppingBag, Trash2, Truck } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { formatPrice } from "../lib/format";
+import { versionedImageUrl } from "../lib/versionedImageUrl";
 import { CATEGORIES } from "../data/categories";
 
 export default function Cart() {
@@ -41,7 +42,7 @@ export default function Cart() {
             const category = CATEGORIES.find((item) => item.id === product.category);
             return (
             <article className="cart-line" key={product.id}>
-              <div className="cart-product-visual"><Link to={`/produkt/${product.slug}`} aria-label={`${product.name} ansehen`}><img src={product.image || category?.image} alt="" decoding="async" /></Link></div>
+              <div className="cart-product-visual"><Link to={`/produkt/${product.slug}`} aria-label={`${product.name} ansehen`}><img src={versionedImageUrl(product.image || category?.image)} alt="" decoding="async" /></Link></div>
               <div className="cart-product-info">
                 <span className="product-tag">{category?.name}</span>
                 <Link to={`/produkt/${product.slug}`} className="product-name">{product.name}</Link>

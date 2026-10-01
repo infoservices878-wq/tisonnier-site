@@ -4,6 +4,7 @@ import { ArrowLeft, Check, Heart, Minus, Plus, ShieldCheck, ShoppingCart, Truck 
 import { getProductById } from "../data/products";
 import { CATEGORIES } from "../data/categories";
 import { formatPrice } from "../lib/format";
+import { versionedImageUrl } from "../lib/versionedImageUrl";
 import { useCart } from "../context/CartContext";
 import { useFavorites } from "../context/FavoritesContext";
 
@@ -56,7 +57,7 @@ export default function ProductDetail() {
       <div className="product-detail-grid">
         <div className="product-gallery">
           <div className="product-detail-visual">
-            {(product.image || cat?.image) && <img src={product.image || cat.image} alt={product.name} decoding="async" />}
+            {(product.image || cat?.image) && <img src={versionedImageUrl(product.image || cat.image)} alt={product.name} decoding="async" />}
             <span className="product-gallery-label">{cat?.name}</span>
           </div>
           <div className="product-gallery-note"><Check size={16} /> Professionelle Palettenverpackung</div>

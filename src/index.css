@@ -271,7 +271,7 @@
         @media (min-width: 760px) {
           .steps-intro { grid-template-columns: 1.35fr 1fr; gap: 40px; }
           .steps-section .section-title { font-size: 46px; max-width: 24ch; }
-          .steps { grid-template-columns: repeat(3, 1fr); }
+          .steps { grid-template-columns: repeat(4, 1fr); }
         }
         @media (max-width: 759px) {
           .step { border-right: 1px solid rgba(246,240,226,0.2); border-bottom: none; min-height: 0; }
