@@ -3,6 +3,25 @@ import { createContext, useContext, useEffect, useState } from "react";
 const AccountContext = createContext(null);
 const STORAGE_KEY = "ossau-bois-account";
 const WORDPRESS_API_URL = (import.meta.env.VITE_WORDPRESS_API_URL || "").replace(/\/+$/, "");
+const AUTH_ERROR_MESSAGES = {
+  auth_rate_limited: "Zu viele Versuche. Bitte versuchen Sie es in einigen Minuten erneut.",
+  auth_required: "Bitte melden Sie sich an.",
+  invalid_session: "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+  invalid_registration: "Bitte überprüfen Sie Ihren Namen, Ihre E-Mail-Adresse und Ihr Passwort (mindestens 8 Zeichen).",
+  email_exists: "Diese E-Mail-Adresse ist bereits registriert. Bitte melden Sie sich an.",
+  verification_email_failed: "Die Bestätigungs-E-Mail konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+  email_not_verified: "Bitte bestätigen Sie Ihre E-Mail-Adresse über den Link in der E-Mail, bevor Sie sich anmelden.",
+  invalid_login: "E-Mail-Adresse oder Passwort ist nicht korrekt.",
+  invalid_verification_key: "Der Bestätigungslink ist ungültig oder abgelaufen.",
+  registration_failed: "Das Konto konnte nicht erstellt werden. Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
+  invalid_password: "Das Passwort muss mindestens 8 Zeichen lang sein.",
+  invalid_reset_key: "Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen.",
+  woocommerce_missing: "Die Anmeldung ist derzeit nicht verfügbar. Bitte versuchen Sie es später erneut.",
+};
+
+function getAuthErrorMessage(error, fallback) {
+  return AUTH_ERROR_MESSAGES[error?.code] || fallback;
+}
 
 function readStoredAccount() {
   try {
@@ -29,7 +48,7 @@ async function authRequest(path, options = {}) {
   const payload = await response.json().catch(() => ({}));
 
   if (!response.ok || payload.success === false) {
-    const error = new Error(payload.message || "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.");
+    const error = new Error("Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.");
     error.code = payload.code || "";
     throw error;
   }
@@ -96,7 +115,7 @@ export function AccountProvider({ children }) {
       });
       return payload;
     } catch (error) {
-      setAuthError(error.message || "Das Konto konnte nicht erstellt werden.");
+      setAuthError(getAuthErrorMessage(error, "Das Konto konnte nicht erstellt werden. Bitte versuchen Sie es erneut."));
       return false;
     } finally {
       setIsAuthenticating(false);
@@ -117,7 +136,7 @@ export function AccountProvider({ children }) {
       saveAccount(payload.user);
       return true;
     } catch (error) {
-      setAuthError(error.message || "E-Mail-Adresse oder Passwort ist nicht korrekt.");
+      setAuthError(getAuthErrorMessage(error, "Die Anmeldung ist fehlgeschlagen. Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut."));
       return false;
     } finally {
       setIsAuthenticating(false);
@@ -134,7 +153,7 @@ export function AccountProvider({ children }) {
       });
       return true;
     } catch (error) {
-      setAuthError(error.message || "Die E-Mail zum Zurücksetzen konnte nicht gesendet werden.");
+      setAuthError(getAuthErrorMessage(error, "Die E-Mail zum Zurücksetzen konnte nicht gesendet werden. Bitte versuchen Sie es erneut."));
       return false;
     } finally {
       setIsAuthenticating(false);
@@ -151,7 +170,7 @@ export function AccountProvider({ children }) {
       });
       return true;
     } catch (error) {
-      setAuthError(error.message || "Das Passwort konnte nicht geändert werden.");
+      setAuthError(getAuthErrorMessage(error, "Das Passwort konnte nicht geändert werden. Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut."));
       return false;
     } finally {
       setIsAuthenticating(false);
@@ -168,7 +187,7 @@ export function AccountProvider({ children }) {
       });
       return true;
     } catch (error) {
-      setAuthError(error.message || "Diese E-Mail-Adresse konnte nicht bestätigt werden.");
+      setAuthError(getAuthErrorMessage(error, "Diese E-Mail-Adresse konnte nicht bestätigt werden. Bitte versuchen Sie es erneut."));
       return false;
     } finally {
       setIsAuthenticating(false);
